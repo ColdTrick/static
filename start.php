@@ -3,35 +3,29 @@
 	function static_init(){
 		
 		// register page handler for nice URL's
-		register_page_handler("static", "static_page_handler");
+		elgg_register_page_handler("static", "static_page_handler");
 		
 		// Register a URL handler 
-		register_entity_url_handler('static_url','object','static');
+		elgg_register_entity_url_handler('object', 'static', 'static_url');
 	}
 	
 	function static_page_handler($page){	
-		switch($page[0]){			
-			case "list":
-				include(dirname(__FILE__) . "/pages/list.php");
-				break;
-			case "edit":
-				set_input("edit", true);
-				set_input("guid", $page[1]);
-				include(dirname(__FILE__) . "/pages/static.php");
-				break;
-			case "new":
-				set_input("new", true);
-			default:
-				set_input("guid", $page[0]);
-				include(dirname(__FILE__) . "/pages/static.php");
-				break;
-		}		
+		set_input("guid", $page[0]);
+		include(dirname(__FILE__) . "/pages/static.php");
 	}
 	
 	function static_page_setup(){
 		global $CONFIG;
-		if(get_context() == "admin" && isadminloggedin()){
-			add_submenu_item(elgg_echo("static:admin:manage"), $CONFIG->wwwroot . "pg/static/list");
+		if(elgg_get_context() == "admin" && elgg_is_admin_logged_in()) {
+
+            $item = array(
+                'name' => elgg_echo("static:admin:manage"),
+                'text' => elgg_echo("static:admin:manage"),
+                'href' => $CONFIG->wwwroot . "admin/static/list",
+                'context' => "admin",
+                'section' => 'administer',
+            );
+            elgg_register_menu_item('page', $item);
 		}
 	}
 	
@@ -43,11 +37,11 @@
 	}
 	
 	// register default elgg events
-	register_elgg_event_handler("init", "system", "static_init");
-	register_elgg_event_handler('pagesetup', 'system', 'static_page_setup');
+	elgg_register_event_handler('init', 'system', "static_init");
+
+	elgg_register_event_handler('pagesetup', 'system', 'static_page_setup');
 	
-	register_action("static/edit",false, dirname(__FILE__). "/actions/edit.php", true);
-	register_action("static/delete",false, dirname(__FILE__). "/actions/delete.php", true);
+	elgg_register_action("static/edit", dirname(__FILE__). "/actions/edit.php", 'admin');
+
+	elgg_register_action("static/delete", dirname(__FILE__). "/actions/delete.php", 'admin');
 	
-	
-?>

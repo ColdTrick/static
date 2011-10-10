@@ -9,6 +9,6 @@
 		}
 	}
 
-	forward("pg/static/list");
+	forward("admin/static/list");
 
 ?>
