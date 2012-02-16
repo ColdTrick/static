@@ -1,0 +1,23 @@
+= Version history: =
+2.1 (2012-02-16):
+
+- added: Full Support for Elgg 1.8.3
+- added: permalinks to pages
+- changed: always use content layout for static pages for consistent styling
+
+2.0 (2011-10-25):
+
+- changed: made compatible with Elgg 1.8
+
+1.2 (2011-07-12):
+
+- added: friendly title links (no more guids)
+	
+1.1 (2011-07-08):
+
+- added: option to create subpages (max 1 level)
+- added: 2 column layout + menu when page has subpages or is a subpage
+
+1.0:
+
+- initial version

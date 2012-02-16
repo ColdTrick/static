@@ -9,6 +9,4 @@
 		}
 	}
 
-	forward("pg/static/list");
-
-?>
+	forward("static/list");

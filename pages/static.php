@@ -1,71 +1,106 @@
 <?php 
 
-	global $CONFIG;
-
 	$guid = get_input("guid");
+	$parent_guid = get_input("parent_guid");
+	$page_title = get_input("page_title");
 	$edit = get_input("edit", false);
 	$new = get_input("new", false);
 
 	if($guid){
 		$content = get_entity($guid);
+	} elseif(!empty($page_title)){
+		if(is_numeric($page_title)){
+			// support old links
+			$content = get_entity($page_title);
+			if($content->getSubtype() != "static"){
+				unset($content);
+			}
+		}
+		
+		if(!$content){
+			$options = array(
+					"type" => "object",
+					"subtype" => "static",
+					"metadata_name_value_pairs" => array("friendly_title" => $page_title),
+					"limit" => 1
+				);
+			if($entities = elgg_get_entities_from_metadata($options)){
+				$content = $entities[0];
+			}
+		}
 	}
 	
 	if($content && ($content->getSubtype() == "static") && !$edit){
 		
 		// show content
-		$title_text = $content->title;
-		$title = elgg_view_title($title_text);
-		$body = elgg_view("page_elements/contentwrapper", array("body" => $content->description));
+		$title = $content->title;
+		$body = elgg_view("output/longtext", array("value" => $content->description));
 		
 		if($content->canEdit()){
-			$edit_link = elgg_view("output/url", array("href" => $CONFIG->wwwroot . "pg/static/edit/" . $content->getGUID(), "text" => elgg_echo("edit")));
-			$delete_link = elgg_view("output/confirmlink", array("href" => $CONFIG->wwwroot . "action/static/delete?guid=" . $content->getGUID(), "text" => elgg_echo("delete")));
+			$edit_link = elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static/new?guid=" . $content->getGUID(), "text" => elgg_echo("edit")));
+			$delete_link = elgg_view("output/confirmlink", array("href" => elgg_get_site_url() . "action/static/delete?guid=" . $content->getGUID(), "text" => elgg_echo("delete")));
 	
 			$actions = $edit_link . " | " . $delete_link;
+			if(empty($content->parent_guid)){
+				$actions .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static/new?parent_guid=" . $content->getGUID(), "text" => elgg_echo("static:admin:create:subpage")));
+			}
 			
-			$body .= elgg_view("page_elements/contentwrapper", array("body" => $actions));
+			$action .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static", "text" => elgg_echo("static:admin:manage")));
+			$body .= $actions;
 		}
 		
-		$page = elgg_view_layout("one_column", $title . $body);
+		$parent_guid = $content->parent_guid;
+		if(empty($parent_guid)){
+			$parent_guid = $content->getGUID();
+		}
 		
-		page_draw($title_text, $page);
-	} else {
-		if(isadminloggedin() && ($new || $edit)){
-			set_context("admin");
-			
-			// create form
-			if($new){
-				$title_text = elgg_echo("static:admin:create");
-			} else {
-				$title_text = elgg_echo("static:admin:edit");
+		$options = array(
+			"type" => "object",
+			"subtype" => "static",
+			"metadata_name_value_pairs" => array("parent_guid" => $parent_guid),
+			"limit" => false,
+			"order_by" => "e.time_created asc"
+			);
+		
+		if($menu_entities = elgg_get_entities_from_metadata($options)){
+			if($parent_guid != $content->parent_guid){
+				elgg_register_menu_item('page', array(
+					'name' => $content->getGUID(),
+					'href' => $content->getURL(),
+					'text' => $content->title,
+					'context' => "static"
+				));
+			} elseif($parent = get_entity($parent_guid)) {
+				elgg_register_menu_item('page', array(
+					'name' => $parent->getGUID(),
+					'href' => $parent->getURL(),
+					'text' => $parent->title,
+					'context' => "static"
+				));
 			}
 			
-			$title = elgg_view_title($title_text);
-			
-			if($content){
-				$content_guid = $content->getGUID();
-				$content_title = $content->title;
-				$content_description = $content->description;
-				$content_access_id = $content->access_id;
+			foreach($menu_entities as $menu_item){
+				elgg_register_menu_item('page', array(
+					'name' => $menu_item->getGUID(),
+					'href' => $menu_item->getURL(),
+					'text' => $menu_item->title,
+					'context' => "static"
+				));
 			}
-
-			$form_body .= elgg_view("input/hidden", array("internalname" => "guid", "value" => $content_guid));
-			$form_body .= "<label>" . elgg_echo("title") . "</label><br />";
-			$form_body .= elgg_view("input/text", array("internalname" => "title", "value" => $content_title)) . "<br />";
-			$form_body .= "<label>" . elgg_echo("description") . "</label><br />";
-			$form_body .= elgg_view("input/longtext", array("internalname" => "description", "value" => $content_description)) . "<br />";
-			$form_body .= "<label>" . elgg_echo("access") . "</label><br />";
-			$form_body .= elgg_view("input/access", array("internalname" => "access_id", "value" => $content_access_id)) . "<br />";
-			$form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
-			
-			$form = elgg_view("input/form", array("body" => $form_body, "action" => $CONFIG->wwwroot . "action/static/edit"));
-			$form = elgg_view("page_elements/contentwrapper", array("body" => $form));
-			$page = elgg_view_layout("one_column", $title . $form);
-			
-			page_draw($title_text, $page);
+			$page = elgg_view_layout('content', array(
+					'filter' => '',
+					'content' => $body,
+					'title' => $title
+				));
 		} else {
-			forward();
+			$page = elgg_view_layout('content', array(
+					'filter' => '',
+					'content' => $body,
+					'title' => $title
+				));
 		}
+		
+		echo elgg_view_page($title, $page);
+	} else {
+		forward();
 	}
-
-?>

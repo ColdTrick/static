@@ -1,12 +1,13 @@
 <?php
 	$english = array(
 		'static:admin:empty' => "No static pages created",
-		'static:admin:manage' => "Manage static pages",
-		'static:admin:create' => "Create a static page",
-		'static:admin:edit' => "Edit a static page",
+		'admin:appearance:static' => "Manage static pages",
+		'admin:appearance:static:new' => "Create/Edit a static page",
+		'admin:appearance:static:new:permalink' => "Permalink",
 		
+		'static:admin:create' => "Create a static page",
+		'static:admin:create:subpage' => "Create a subpage",
 		
 	);
 	
 	add_translation("en", $english);
-?>
