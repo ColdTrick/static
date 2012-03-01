@@ -1,4 +1,8 @@
 = Version history: =
+x.x:
+
+- added: dutch translation
+
 2.1 (2012-02-16):
 
 - added: Full Support for Elgg 1.8.3

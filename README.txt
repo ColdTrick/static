@@ -5,3 +5,4 @@
 = Todo = 
 
 - page edit links should be entity menu items
+- check for valid permalinks
