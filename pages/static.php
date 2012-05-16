@@ -93,7 +93,7 @@
 					'title' => $title
 				));
 		} else {
-			$page = elgg_view_layout('content', array(
+			$page = elgg_view_layout('one_column', array(
 					'filter' => '',
 					'content' => $body,
 					'title' => $title
