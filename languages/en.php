@@ -1,5 +1,6 @@
 <?php
 	$english = array(
+		'item:object:static' => "Static page",
 		'static:admin:empty' => "No static pages created",
 		'admin:appearance:static' => "Manage static pages",
 		'admin:appearance:static:new' => "Create/Edit a static page",

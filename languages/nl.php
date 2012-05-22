@@ -1,5 +1,6 @@
 <?php
 $language = array (
+	'item:object:static' => "Statische pagina",
   'static:admin:empty' => 'Geen statische pagina\'s gemaakt',
   'admin:appearance:static' => 'Beheer statische pagina\'s',
   'admin:appearance:static:new' => 'Maak/Bewerk een statische pagina',
