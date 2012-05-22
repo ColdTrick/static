@@ -11,6 +11,9 @@
 		elgg_extend_view("css/admin", "static/css/admin");
 		
 		elgg_register_plugin_hook_handler("route", "all", "static_route_handler");
+		
+		// Register for search.
+		elgg_register_entity_type('object', 'static');
 	}
 	
 	function static_page_handler($page){	
