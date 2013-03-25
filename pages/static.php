@@ -5,7 +5,9 @@
 	$page_title = get_input("page_title");
 	$edit = get_input("edit", false);
 	$new = get_input("new", false);
-
+	
+	$content = false;
+	
 	if($guid){
 		$content = get_entity($guid);
 	} elseif(!empty($page_title)){
@@ -45,7 +47,7 @@
 				$actions .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static/new?parent_guid=" . $content->getGUID(), "text" => elgg_echo("static:admin:create:subpage")));
 			}
 			
-			$action .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static", "text" => elgg_echo("static:admin:manage")));
+			$actions .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static", "text" => elgg_echo("admin:appearance:static")));
 			$body .= $actions;
 		}
 		
