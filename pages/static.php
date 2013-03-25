@@ -65,16 +65,17 @@
 			);
 		
 		if($menu_entities = elgg_get_entities_from_metadata($options)){
+			$menu_name = "static_1";
 			if($parent_guid != $content->parent_guid){
 				elgg_register_menu_item('page', array(
-					'name' => $content->getGUID(),
+					'name' => $menu_name,
 					'href' => $content->getURL(),
 					'text' => $content->title,
 					'context' => "static"
 				));
 			} elseif($parent = get_entity($parent_guid)) {
 				elgg_register_menu_item('page', array(
-					'name' => $parent->getGUID(),
+					'name' => $menu_name,
 					'href' => $parent->getURL(),
 					'text' => $parent->title,
 					'context' => "static"
@@ -82,8 +83,9 @@
 			}
 			
 			foreach($menu_entities as $menu_item){
+				$menu_name .= "1";
 				elgg_register_menu_item('page', array(
-					'name' => $menu_item->getGUID(),
+					'name' => $menu_name,
 					'href' => $menu_item->getURL(),
 					'text' => $menu_item->title,
 					'context' => "static"
