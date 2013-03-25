@@ -9,4 +9,4 @@
 		}
 	}
 
-	forward("static/list");
+	forward("admin/appearance/static");

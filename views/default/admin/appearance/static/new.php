@@ -11,15 +11,22 @@
 			forward();
 		}
 	}
-	if($entity){
+	
+	$content_guid = ELGG_ENTITIES_ANY_VALUE;
+	$content_title = ELGG_ENTITIES_ANY_VALUE;
+	$content_description = ELGG_ENTITIES_ANY_VALUE;
+	$content_access_id = ELGG_ENTITIES_ANY_VALUE;
+	$friendly_title = ELGG_ENTITIES_ANY_VALUE;
+	
+	if(isset($entity)){
 		$content_guid = $entity->getGUID();
 		$content_title = $entity->title;
 		$content_description = $entity->description;
 		$content_access_id = $entity->access_id;
 		$friendly_title = $entity->friendly_title;
-	}
+	} 
 
-	$form_body .= elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
+	$form_body = elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
 	$form_body .= elgg_view("input/hidden", array("name" => "parent_guid", "value" => $parent_guid));
 	$form_body .= "<label>" . elgg_echo("title") . "</label><br />";
 	$form_body .= elgg_view("input/text", array("name" => "title", "value" => $content_title)) . "<br />";
