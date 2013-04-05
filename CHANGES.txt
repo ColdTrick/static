@@ -1,7 +1,14 @@
 = Version history: =
-x.x:
+
+2.2 (2013-04-05):
 
 - added: dutch translation
+- added: static pages are searchable
+- changed: static page without subpages now in one column layout
+- fixed: missing language key for object:static
+- fixed: manage link not showing
+- fixed: sorting of menu items
+- fixed: when deleting a parent page, the first child will be the new parent
 
 2.1 (2012-02-16):
 
