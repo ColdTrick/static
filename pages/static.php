@@ -13,9 +13,10 @@
 	} elseif(!empty($page_title)){
 		if(is_numeric($page_title)){
 			// support old links
-			$content = get_entity($page_title);
-			if($content->getSubtype() != "static"){
-				unset($content);
+			if($content = get_entity($page_title)){
+				if($content->getSubtype() != "static"){
+					unset($content);
+				}
 			}
 		}
 		
