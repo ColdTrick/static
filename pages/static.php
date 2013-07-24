@@ -1,13 +1,13 @@
-<?php 
+<?php
 
 	$guid = get_input("guid");
 	$parent_guid = get_input("parent_guid");
 	$page_title = get_input("page_title");
 	$edit = get_input("edit", false);
 	$new = get_input("new", false);
-	
+
 	$content = false;
-	
+
 	if($guid){
 		$content = get_entity($guid);
 	} elseif(!empty($page_title)){
@@ -19,7 +19,7 @@
 				}
 			}
 		}
-		
+
 		if(!$content){
 			$options = array(
 					"type" => "object",
@@ -32,31 +32,19 @@
 			}
 		}
 	}
-	
+
 	if($content && ($content->getSubtype() == "static") && !$edit){
-		
+
 		// show content
 		$title = $content->title;
-		$body = elgg_view("output/longtext", array("value" => $content->description));
-		
-		if($content->canEdit()){
-			$edit_link = elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static/new?guid=" . $content->getGUID(), "text" => elgg_echo("edit")));
-			$delete_link = elgg_view("output/confirmlink", array("href" => elgg_get_site_url() . "action/static/delete?guid=" . $content->getGUID(), "text" => elgg_echo("delete")));
-	
-			$actions = $edit_link . " | " . $delete_link;
-			if(empty($content->parent_guid)){
-				$actions .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static/new?parent_guid=" . $content->getGUID(), "text" => elgg_echo("static:admin:create:subpage")));
-			}
-			
-			$actions .= " | " . elgg_view("output/url", array("href" => elgg_get_site_url() . "admin/appearance/static", "text" => elgg_echo("admin:appearance:static")));
-			$body .= $actions;
-		}
-		
+
+		$body = elgg_view_entity($content, array('full_view' => true));
+
 		$parent_guid = $content->parent_guid;
 		if(empty($parent_guid)){
 			$parent_guid = $content->getGUID();
 		}
-		
+
 		$options = array(
 			"type" => "object",
 			"subtype" => "static",
@@ -64,7 +52,7 @@
 			"limit" => false,
 			"order_by" => "e.time_created asc"
 			);
-		
+
 		if($menu_entities = elgg_get_entities_from_metadata($options)){
 			$menu_name = "static_1";
 			if($parent_guid != $content->parent_guid){
@@ -82,11 +70,16 @@
 					'context' => "static"
 				));
 			}
-			
+
 			foreach($menu_entities as $menu_item){
-				$menu_name .= "1";
+				$order = $menu_item->order;
+				if (!$order) {
+					$order = "9999" . $menu_item->time_created;
+				}
+
+				$sub_menu_name = $menu_name . $order;
 				elgg_register_menu_item('page', array(
-					'name' => $menu_name,
+					'name' => $sub_menu_name,
 					'href' => $menu_item->getURL(),
 					'text' => $menu_item->title,
 					'context' => "static"
@@ -104,7 +97,7 @@
 					'title' => $title
 				));
 		}
-		
+
 		echo elgg_view_page($title, $page);
 	} else {
 		forward();
