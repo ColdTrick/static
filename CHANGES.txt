@@ -1,5 +1,11 @@
 = Version history: =
 
+2.3 (2013-07-24):
+
+- added: sorting of subpages
+- added: static subpages can be moved to other parent page (by editing)
+- added: own view for search results
+
 2.2 (2013-04-05):
 
 - added: dutch translation
