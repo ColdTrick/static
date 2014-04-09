@@ -1,4 +1,7 @@
 <?php
+/**
+ * Start file for the Static plugin
+ */
 
 /**
  * Initializes the static plugin
@@ -69,7 +72,7 @@ function static_route_handler($hook, $type, $return_value, $params) {
 				"type" => "object",
 				"subtype" => "static",
 				"limit" => 1,
-				"metadata_name_value_pairs" => array( "friendly_title" => $handler)
+				"metadata_name_value_pairs" => array("friendly_title" => $handler)
 			);
 			
 			$entities = elgg_get_entities_from_metadata($options);
