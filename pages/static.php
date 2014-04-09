@@ -8,32 +8,32 @@ $new = get_input("new", false);
 
 $content = false;
 
-if($guid){
+if ($guid) {
 	$content = get_entity($guid);
-} elseif(!empty($page_title)){
-	if(is_numeric($page_title)){
+} elseif (!empty($page_title)) {
+	if (is_numeric($page_title)) {
 		// support old links
-		if($content = get_entity($page_title)){
-			if($content->getSubtype() != "static"){
+		if ($content = get_entity($page_title)) {
+			if ($content->getSubtype() != "static") {
 				unset($content);
 			}
 		}
 	}
 
-	if(!$content){
+	if (!$content) {
 		$options = array(
 			"type" => "object",
 			"subtype" => "static",
 			"metadata_name_value_pairs" => array("friendly_title" => $page_title),
 			"limit" => 1
 		);
-		if($entities = elgg_get_entities_from_metadata($options)){
+		if ($entities = elgg_get_entities_from_metadata($options)) {
 			$content = $entities[0];
 		}
 	}
 }
 
-if($content && ($content->getSubtype() == "static") && !$edit){
+if ($content && ($content->getSubtype() == "static") && !$edit) {
 
 	// show content
 	$title = $content->title;
@@ -41,7 +41,7 @@ if($content && ($content->getSubtype() == "static") && !$edit){
 	$body = elgg_view_entity($content, array('full_view' => true));
 
 	$parent_guid = (int) $content->parent_guid;
-	if(empty($parent_guid)){
+	if (empty($parent_guid)) {
 		$parent_guid = (int) $content->getGUID();
 	}
 
@@ -53,16 +53,16 @@ if($content && ($content->getSubtype() == "static") && !$edit){
 		"order_by" => "e.time_created asc"
 	);
 
-	if($menu_entities = elgg_get_entities_from_metadata($options)){
+	if ($menu_entities = elgg_get_entities_from_metadata($options)) {
 		$menu_name = "static";
-		if($parent_guid != $content->parent_guid){
+		if ($parent_guid != $content->parent_guid) {
 			elgg_register_menu_item('page', array(
 				'name' => $menu_name,
 				'href' => $content->getURL(),
 				'text' => $content->title,
 				'context' => "static"
 			));
-		} elseif($parent = get_entity($parent_guid)) {
+		} elseif ($parent = get_entity($parent_guid)) {
 			elgg_register_menu_item('page', array(
 				'name' => $menu_name,
 				'href' => $parent->getURL(),
@@ -72,7 +72,7 @@ if($content && ($content->getSubtype() == "static") && !$edit){
 		}
 
 		$padding = strlen(count($menu_entities));
-		foreach($menu_entities as $menu_item){
+		foreach ($menu_entities as $menu_item) {
 			$order = $menu_item->order;
 			if (!$order) {
 				$order = "9999" . $menu_item->time_created;
@@ -88,6 +88,7 @@ if($content && ($content->getSubtype() == "static") && !$edit){
 				'context' => "static"
 			));
 		}
+		
 		$page = elgg_view_layout('content', array(
 				'filter' => '',
 				'content' => $body,

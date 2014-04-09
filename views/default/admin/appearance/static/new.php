@@ -2,10 +2,11 @@
 
 $guid = get_input("guid");
 $parent_guid = get_input("parent_guid");
+$entity = null;
 
-if($guid && ($entity = get_entity($guid))){
+if ($guid && ($entity = get_entity($guid))) {
 
-	if($entity->getSubtype() != "static"){
+	if ($entity->getSubtype() != "static") {
 		forward();
 	}
 }
@@ -37,10 +38,10 @@ $parent_options = array();
 $children = false;
 if ($entity) {
 	$children_options = array(
-			"type" => "object",
-			"subtype" => "static",
-			"metadata_name_value_pairs" => array("parent_guid" => $entity->getGUID()),
-			"count" => true
+		"type" => "object",
+		"subtype" => "static",
+		"metadata_name_value_pairs" => array("parent_guid" => $entity->getGUID()),
+		"count" => true
 	);
 	$children = elgg_get_entities_from_metadata($children_options);
 }
@@ -48,21 +49,22 @@ if ($entity) {
 if (!$children) {
 	// only allow parent change for pages without children
 	$options = array(
-			"type" => "object",
-			"subtype" => "static",
-			"limit" => false,
-			"order_by" => "e.time_created asc"
+		"type" => "object",
+		"subtype" => "static",
+		"limit" => false,
+		"order_by" => "e.time_created asc"
 	);
 
 	$parent_guid_metadata_id = add_metastring('parent_guid');
 	$zero_metadata_id = add_metastring(0);
 
 	$options["wheres"] = array(
-			"NOT EXISTS (
-			SELECT 1 FROM " . elgg_get_config("dbprefix") . "metadata md
-			WHERE md.entity_guid = e.guid
-			AND md.name_id = " . $parent_guid_metadata_id . " AND NOT (md.value_id = " . $zero_metadata_id. "))"
+		"NOT EXISTS (
+		SELECT 1 FROM " . elgg_get_config("dbprefix") . "metadata md
+		WHERE md.entity_guid = e.guid
+		AND md.name_id = " . $parent_guid_metadata_id . " AND NOT (md.value_id = " . $zero_metadata_id . "))"
 	);
+	
 	if ($entity) {
 		$options["wheres"][] = "e.guid <> " . $entity->guid;
 	}
@@ -74,7 +76,6 @@ if (!$children) {
 			$parent_options[$parent->guid] = $parent->title;
 		}
 	}
-
 }
 
 $form_body = elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
@@ -103,6 +104,4 @@ $form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
 
 $form = elgg_view("input/form", array("body" => $form_body, "action" => "action/static/edit"));
 
-$page = $form;
-
-echo $page;
+echo $form;

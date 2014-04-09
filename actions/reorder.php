@@ -1,6 +1,7 @@
 <?php
 $guid = get_input("guid");
 $order = get_input("order");
+
 if (!empty($guid) && ($parent = get_entity($guid)) && ($parent->getSubtype() == "static") && empty($parent->parent_guid)) {
 	if (!empty($order)) {
 		$guids = explode(",", $order);
