@@ -3,13 +3,12 @@
 elgg.provide("elgg.static");
 
 elgg.static.init = function() {
-	$(".static-children-sortable").sortable({
-		items: "tr",
-		handle: ".elgg-icon-drag-arrow",
+	$(".elgg-menu-page-static > li").sortable({
+		items: "li",
 		forcePlaceholderSize: true,
 		revert: true,
 		tolerance: "pointer",
-		containment: "parent",
+		containment: ".elgg-menu-page-static",
 		update: function(event, ui) {
    			elgg.static.reorder(ui.item);
    		}
@@ -32,6 +31,5 @@ elgg.static.reorder = function(elem) {
 		}
 	});
 }
-
 
 elgg.register_hook_handler('init', 'system', elgg.static.init);

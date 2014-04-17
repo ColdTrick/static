@@ -11,49 +11,68 @@ $friendly_title = elgg_get_friendly_title($friendly_title);
 $description = get_input("description");
 $access_id = get_input("access_id", ACCESS_PUBLIC);
 
-if ($guid) {
-	$content = get_entity($guid);
-	if (empty($content) || ($content->getSubtype() !== "static") || !($content->canEdit())) {
-		forward(REFERER);
-	} else {
-		if (!empty($title)) {
-			$content->title = $title;
-		}
-		$content->description = $description;
-		$content->access_id = $access_id;
-		$content->save();
+$site = elgg_get_site_entity();
 
-		if (!empty($parent_guid)) {
-			if ($parent_guid !== $content->parent_guid) {
-				unset($content->order);
-			}
-			$content->parent_guid = $parent_guid;
-		} else {
-			unset($content->parent_guid);
-			unset($content->order);
-		}
-
-		$content->friendly_title = $friendly_title;
-		forward($content->getURL());
+if ($parent_guid) {
+	$parent = get_entity($parent_guid);
+	if (!elgg_instanceof($parent, "object", "static")) {
+		$parent_guid = $site->getGUID();
 	}
-
 } else {
-	if (!empty($title)) {
-		$site = elgg_get_site_entity();
-		
-		$content = new ElggObject();
-		$content->subtype = "static";
-		$content->access_id = $access_id;
-		$content->owner_guid = $site->getGUID();
-		$content->container_guid = $site->getGUID();
-		$content->title = $title;
-		$content->description = $description;
-		$content->parent_guid = $parent_guid;
-		$content->friendly_title = $friendly_title;
-		$content->save();
+	$parent_guid = $site->getGUID();
+}
 
-		forward($content->getURL());
-	} else {
+if (empty($title)) {
+	forward(REFERER);
+}
+
+if ($guid) {
+	$entity = get_entity($guid);
+
+	if (!elgg_instanceof($entity, "object", "static") || !($entity->canEdit())) {
 		forward(REFERER);
 	}
 }
+
+if (!$entity) {
+	$entity = new ElggObject();
+	$entity->subtype = "static";
+	$entity->owner_guid = $site->getGUID();
+	$entity->container_guid = $parent_guid;
+	$entity->access_id = $access_id;
+	$entity->save();
+}
+
+if ($parent_guid !== $entity->container_guid) {
+	// reset order if moved to another parent
+	unset($entity->order);
+}
+
+if ($parent_guid !== $site->getGUID()) {
+	$parent = get_entity($parent_guid);
+	if (elgg_instanceof($parent, "object", "static")) {
+		if ($parent->container_guid == $site->getGUID()) {
+			$subpage_relationship_guid = $parent_guid;
+		} else {
+			$relations = $parent->getEntitiesFromRelationship(array("relation" => "subpage_of", "limit" => 1));
+			if ($relations) {
+				$subpage_relationship_guid = $relations[0]->getGUID();
+			}
+		}
+		if ($subpage_relationship_guid) {
+			$entity->addRelationship($subpage_relationship_guid, "subpage_of");
+		}
+	}
+}
+
+$entity->title = $title;
+$entity->description = $description;
+$entity->access_id = $access_id;
+$entity->container_guid = $parent_guid;
+
+$entity->friendly_title = $friendly_title;
+$entity->save();
+
+$entity->annotate("static_revision", $description);
+
+forward($entity->getURL());
