@@ -71,7 +71,9 @@ $form_body .= "<div><label>" . elgg_echo("access") . "</label><br />";
 $form_body .= elgg_view("input/access", array("name" => "access_id", "value" => $content_access_id)) . "</div>";
 
 $form_body .= "<div class='elgg-foot'>";
-$form_body .= elgg_view("output/confirmlink", array("href" => "action/static/delete?guid=" . $entity->getGUID(), "text" => elgg_echo("delete"), "class" => "elgg-button elgg-button-delete float-alt"));
+if ($entity) {
+	$form_body .= elgg_view("output/confirmlink", array("href" => "action/static/delete?guid=" . $entity->getGUID(), "text" => elgg_echo("delete"), "class" => "elgg-button elgg-button-delete float-alt"));
+}
 $form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
 $form_body .= "</div>";
 
