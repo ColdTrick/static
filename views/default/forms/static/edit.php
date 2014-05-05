@@ -35,26 +35,7 @@ $comment_options = array(
 	"yes" => elgg_echo("option:yes")
 );
 
-$parent_options = array();
-
-$options = array(
-	"type" => "object",
-	"subtype" => "static",
-	"container_guid" => elgg_get_site_entity()->getGUID(),
-	"limit" => false,
-);
-
-if ($parent_entities = elgg_get_entities_from_metadata($options)) {
-	$parent_options[0] = elgg_echo("static:new:parent:top_level");
-
-	foreach ($parent_entities as $parent) {
-		$parent_options[$parent->getGUID()] = $parent->title;
-	}
-	
-	if ($entity) {
-		unset($parent_options[$entity->guid]);
-	}
-}
+$parent_options = static_get_parent_options();
 
 $form_body = elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
 

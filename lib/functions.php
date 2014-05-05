@@ -96,3 +96,37 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 	
 	return $result;
 }
+
+/**
+ * Get the parent select options for the edit form
+ * 
+ * @param int $parent_guid the current parent to check the children of (default: site)
+ * @param int $depth       internal depth counter
+ * 
+ * @return array
+ */
+function static_get_parent_options($parent_guid = 0, $depth = 0) {
+	$result = array();
+	
+	if (empty($parent_guid)) {
+		$parent_guid = elgg_get_site_entity()->getGUID();
+		$result[0] = elgg_echo("static:new:parent:top_level");
+	}
+	
+	$options = array(
+		"type" => "object",
+		"subtype" => "static",
+		"container_guid" => $parent_guid,
+		"limit" => false,
+	);
+	
+	// more memory friendly
+	$parent_entities = new ElggBatch("elgg_get_entities", $options);
+	foreach ($parent_entities as $parent) {
+		$result[$parent->getGUID()] = trim(str_repeat("-", $depth) . " " . $parent->title);
+		
+		$result += static_get_parent_options($parent->getGUID(), $depth + 1);
+	}
+	
+	return $result;
+}
