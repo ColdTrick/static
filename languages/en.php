@@ -9,6 +9,7 @@ $english = array(
 	'static:new:permalink' => "Permalink",
 	'static:new:parent' => "Select parent page",
 	'static:new:parent:top_level' => "No parent page / Top Level",
+	'static:new:comment' => "Allow comments",
 
 	'static:add' => "Create a static page",
 	'static:add:subpage' => "Create a subpage",

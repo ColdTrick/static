@@ -10,6 +10,7 @@ $friendly_title = elgg_get_friendly_title($friendly_title);
 
 $description = get_input("description");
 $access_id = get_input("access_id", ACCESS_PUBLIC);
+$enable_comments = get_input("enable_comments");
 
 $site = elgg_get_site_entity();
 
@@ -71,6 +72,7 @@ $entity->access_id = $access_id;
 $entity->container_guid = $parent_guid;
 
 $entity->friendly_title = $friendly_title;
+$entity->enable_comments = $enable_comments;
 $entity->save();
 
 $entity->annotate("static_revision", $description);

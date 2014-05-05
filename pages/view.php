@@ -42,6 +42,10 @@ if (elgg_instanceof($entity, "object", "static")) {
 	$title = $entity->title;
 
 	$body = elgg_view_entity($entity, array('full_view' => true));
+	
+	if ($entity->enable_comments == "yes") {
+		$body .= elgg_view_comments($entity);
+	}
 
 	static_setup_page_menu($entity);
 	

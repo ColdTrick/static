@@ -9,6 +9,7 @@ $content_title = ELGG_ENTITIES_ANY_VALUE;
 $content_description = ELGG_ENTITIES_ANY_VALUE;
 $content_access_id = ACCESS_DEFAULT;
 $friendly_title = ELGG_ENTITIES_ANY_VALUE;
+$content_enable_comments = "no";
 
 if ($entity) {
 	$content_guid = $entity->getGUID();
@@ -17,6 +18,7 @@ if ($entity) {
 	$content_access_id = $entity->access_id;
 	$friendly_title = $entity->friendly_title;
 	$parent_guid = $entity->parent_guid;
+	$content_enable_comments = $entity->enable_comments;
 } else {
 	if (!empty($parent_guid)) {
 		$parent = get_entity($parent_guid);
@@ -25,6 +27,11 @@ if ($entity) {
 		}
 	}
 }
+
+$comment_options = array(
+	"no" => elgg_echo("option:no"),
+	"yes" => elgg_echo("option:yes")
+);
 
 $parent_options = array();
 
@@ -69,6 +76,9 @@ if (!empty($parent_options)) {
 
 $form_body .= "<div><label>" . elgg_echo("access") . "</label><br />";
 $form_body .= elgg_view("input/access", array("name" => "access_id", "value" => $content_access_id)) . "</div>";
+
+$form_body .= "<div><label>" . elgg_echo("static:new:comment") . "</label><br />";
+$form_body .= elgg_view("input/select", array("name" => "enable_comments", "value" => $content_enable_comments, "options_values" => $comment_options)) . "</div>";
 
 $form_body .= "<div class='elgg-foot'>";
 if ($entity) {
