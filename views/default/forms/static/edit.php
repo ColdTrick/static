@@ -74,11 +74,11 @@ if (!empty($parent_options)) {
 	$form_body .= elgg_view("input/hidden", array("name" => "parent_guid", "value" => $parent_guid));
 }
 
-$form_body .= "<div><label>" . elgg_echo("access") . "</label><br />";
-$form_body .= elgg_view("input/access", array("name" => "access_id", "value" => $content_access_id)) . "</div>";
-
 $form_body .= "<div><label>" . elgg_echo("static:new:comment") . "</label><br />";
 $form_body .= elgg_view("input/select", array("name" => "enable_comments", "value" => $content_enable_comments, "options_values" => $comment_options)) . "</div>";
+
+$form_body .= "<div><label>" . elgg_echo("access") . "</label><br />";
+$form_body .= elgg_view("input/access", array("name" => "access_id", "value" => $content_access_id)) . "</div>";
 
 $form_body .= "<div class='elgg-foot'>";
 if ($entity) {
