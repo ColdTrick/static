@@ -9,8 +9,10 @@ $friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ri
 $friendly_title = elgg_get_friendly_title($friendly_title);
 
 $description = get_input("description");
-$access_id = get_input("access_id", ACCESS_PUBLIC);
+$access_id = (int) get_input("access_id", ACCESS_PUBLIC);
+
 $enable_comments = get_input("enable_comments");
+$moderators = get_input("moderators");
 
 $site = elgg_get_site_entity();
 
@@ -41,7 +43,11 @@ if (!$entity) {
 	$entity->owner_guid = $site->getGUID();
 	$entity->container_guid = $parent_guid;
 	$entity->access_id = $access_id;
-	$entity->save();
+	
+	if (!$entity->save()) {
+		register_error(elgg_echo("actionunauthorized"));
+		forward(REFERER);
+	}
 }
 
 if ($parent_guid !== $entity->container_guid) {
@@ -73,6 +79,7 @@ $entity->container_guid = $parent_guid;
 
 $entity->friendly_title = $friendly_title;
 $entity->enable_comments = $enable_comments;
+$entity->moderators = $moderators;
 $entity->save();
 
 $entity->annotate("static_revision", $description);

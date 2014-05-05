@@ -10,6 +10,7 @@ $english = array(
 	'static:new:parent' => "Select parent page",
 	'static:new:parent:top_level' => "No parent page / Top Level",
 	'static:new:comment' => "Allow comments",
+	'static:new:moderators' => "Assign moderators",
 
 	'static:add' => "Create a static page",
 	'static:add:subpage' => "Create a subpage",
