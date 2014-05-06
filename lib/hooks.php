@@ -113,14 +113,58 @@ function static_permissions_check_hook_handler($hook, $type, $return_value, $par
 	return $return_value;
 }
 
+/**
+ * Allow moderators to write static pages
+ *
+ * @param string $hook         'container_permissions_check'
+ * @param string $type         'object'
+ * @param bool   $return_value can the user write to this container
+ * @param array  $params       supplied params
+ *
+ * @return bool
+ */
 function static_container_permissions_check_hook_handler($hook, $type, $return_value, $params) {
 	
-	if (!$return_value && !empty($params) && is_array($params)) {
-		$container = elgg_extract("container", $params);
-		$subtype = elgg_extract("subtype", $params);
+	if (!empty($type) && $type == "object") {
 		
-		if ($subtype == "static" && elgg_instanceof($container, "site")) {
-			$return_value = true;
+		if (!empty($params) && is_array($params)) {
+			$container = elgg_extract("container", $params);
+			$subtype = elgg_extract("subtype", $params);
+			
+			if ($subtype == "static" && elgg_instanceof($container, "site")) {
+				$return_value = true;
+			} elseif ($subtype == "static" && elgg_instanceof($container, "group") && !$container->canEdit()) {
+				$return_value = false;
+			}
+		}
+	}
+	
+	return $return_value;
+}
+
+/**
+ * Add menu items to the owner block menu
+ * 
+ * @param string         $hook         'register'
+ * @param string         $type         'menu:owner_block'
+ * @param ElggMenuItem[] $return_value the menu items
+ * @param array          $params       supplied params
+ * 
+ * @return ElggMenuItem[]
+ */
+function static_register_owner_block_menu_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (!empty($params) && is_array($params)) {
+		$owner = elgg_extract("entity", $params);
+		
+		if (!empty($owner) && elgg_instanceof($owner, "group")) {
+			if ($owner->static_enable != "no") {
+				$return_value[] = ElggMenuItem::factory(array(
+					"name" => "static",
+					"text" => elgg_echo("static:groups:owner_block"),
+					"href" => "static/group/" . $owner->getGUID()
+				));
+			}
 		}
 	}
 	

@@ -27,6 +27,12 @@ if (elgg_instanceof($entity, "object", "static")) {
 		));
 	}
 	
+	// page owner (for groups)
+	$owner = $entity->getOwnerEntity();
+	if (elgg_instanceof($owner, "group")) {
+		elgg_set_page_owner_guid($owner->getGUID());
+	}
+	
 	// show content
 	$container_entity = $entity->getContainerEntity();
 	if (elgg_instanceof($container_entity, "object", "static")) {

@@ -24,15 +24,20 @@ function static_init() {
 	elgg_extend_view("js/elgg", "js/static/site");
 	elgg_extend_view("css/elgg", "css/static/site");
 
-	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");
-
 	// Register for search.
 	elgg_register_entity_type('object', 'static');
 	
+	// groups
+	add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
+	
+	// plugin hooks
+	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");
 	elgg_register_plugin_hook_handler("entity:url", "object", "static_entity_url_hook_handler");
 	elgg_register_plugin_hook_handler("permissions_check", "object", "static_permissions_check_hook_handler");
-	elgg_register_plugin_hook_handler("container_permissions_check", "object", "static_container_permissions_check_hook_handler");
+	elgg_register_plugin_hook_handler("container_permissions_check", "all", "static_container_permissions_check_hook_handler");
+	elgg_register_plugin_hook_handler("register", "menu:owner_block", "static_register_owner_block_menu_hook_handler");
 	
+	// actions
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");
 	elgg_register_action("static/delete", dirname(__FILE__) . "/actions/delete.php");
 	elgg_register_action("static/reorder", dirname(__FILE__) . "/actions/reorder.php", "admin");
@@ -44,6 +49,7 @@ function static_init() {
  * @return void
  */
 function static_page_setup() {
+	
 	elgg_register_menu_item('page', array(
 		'name' => "static",
 		'href' => "static/all",

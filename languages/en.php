@@ -11,6 +11,10 @@ $english = array(
 	'static:new:parent:top_level' => "No parent page / Top Level",
 	'static:new:comment' => "Allow comments",
 	'static:new:moderators' => "Assign moderators",
+	
+	'static:groups:title' => "Manage group static pages",
+	'static:groups:owner_block' => "Group static pages",
+	'static:groups:tool_option' => "Enable static pages",
 
 	'static:add' => "Create a static page",
 	'static:add:subpage' => "Create a subpage",

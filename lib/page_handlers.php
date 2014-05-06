@@ -21,6 +21,10 @@ function static_page_handler($page) {
 		case "add":
 			include(dirname(dirname(__FILE__)) . "/pages/edit.php");
 			break;
+		case "group":
+			set_input("guid", $page[1]);
+			include(dirname(dirname(__FILE__)) . "/pages/group.php");
+			break;
 		case "all":
 		default:
 			include(dirname(dirname(__FILE__)) . "/pages/all.php");

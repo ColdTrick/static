@@ -1,6 +1,7 @@
 <?php
 
 $guid = (int) get_input("guid");
+$owner_guid = (int) get_input("owner_guid");
 $parent_guid = (int) get_input("parent_guid");
 $title = get_input("title");
 
@@ -14,15 +15,18 @@ $access_id = (int) get_input("access_id", ACCESS_PUBLIC);
 $enable_comments = get_input("enable_comments");
 $moderators = get_input("moderators");
 
-$site = elgg_get_site_entity();
+$owner = get_entity($owner_guid);
+if (!elgg_instanceof($owner, "group")) {
+	$owner = elgg_get_site_entity();
+}
 
 if ($parent_guid) {
 	$parent = get_entity($parent_guid);
 	if (!elgg_instanceof($parent, "object", "static")) {
-		$parent_guid = $site->getGUID();
+		$parent_guid = $owner->getGUID();
 	}
 } else {
-	$parent_guid = $site->getGUID();
+	$parent_guid = $owner->getGUID();
 }
 
 if (empty($title)) {
@@ -40,7 +44,7 @@ if ($guid) {
 if (!$entity) {
 	$entity = new ElggObject();
 	$entity->subtype = "static";
-	$entity->owner_guid = $site->getGUID();
+	$entity->owner_guid = $owner->getGUID();
 	$entity->container_guid = $parent_guid;
 	$entity->access_id = $access_id;
 	
@@ -55,10 +59,10 @@ if ($parent_guid !== $entity->container_guid) {
 	unset($entity->order);
 }
 
-if ($parent_guid !== $site->getGUID()) {
+if ($parent_guid !== $owner->getGUID()) {
 	$parent = get_entity($parent_guid);
 	if (elgg_instanceof($parent, "object", "static")) {
-		if ($parent->container_guid == $site->getGUID()) {
+		if ($parent->container_guid == $owner->getGUID()) {
 			$subpage_relationship_guid = $parent_guid;
 		} else {
 			$relations = $parent->getEntitiesFromRelationship(array("relation" => "subpage_of", "limit" => 1));

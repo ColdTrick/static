@@ -110,6 +110,10 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 	
 	if (empty($parent_guid)) {
 		$parent_guid = elgg_get_site_entity()->getGUID();
+	}
+	
+	$parent = get_entity($parent_guid);
+	if (elgg_instanceof($parent, "site") || elgg_instanceof($parent, "group")) {
 		$result[0] = elgg_echo("static:new:parent:top_level");
 	}
 	

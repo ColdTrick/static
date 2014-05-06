@@ -1,8 +1,8 @@
 <?php
 
-
 $parent_guid = (int) get_input("parent_guid");
-$entity = $vars["entity"];
+$entity = elgg_extract("entity", $vars);
+$owner = elgg_extract("owner", $vars);
 
 $content_guid = ELGG_ENTITIES_ANY_VALUE;
 $content_title = ELGG_ENTITIES_ANY_VALUE;
@@ -11,6 +11,14 @@ $content_access_id = ACCESS_DEFAULT;
 $friendly_title = ELGG_ENTITIES_ANY_VALUE;
 $content_enable_comments = "no";
 $content_moderators = ELGG_ENTITIES_NO_VALUE;
+$content_owner_guid = $owner->getGUID();
+
+$comment_options = array(
+	"no" => elgg_echo("option:no"),
+	"yes" => elgg_echo("option:yes")
+);
+
+$parent_options = static_get_parent_options($owner->getGUID());
 
 if ($entity) {
 	$content_guid = $entity->getGUID();
@@ -21,6 +29,9 @@ if ($entity) {
 	$parent_guid = $entity->getContainerGUID();
 	$content_enable_comments = $entity->enable_comments;
 	$content_moderators = $entity->moderators;
+	$content_owner_guid = $entity->getOwnerGUID();
+	
+	unset($parent_options[$entity->getGUID()]);
 } else {
 	if (!empty($parent_guid)) {
 		$parent = get_entity($parent_guid);
@@ -30,16 +41,8 @@ if ($entity) {
 	}
 }
 
-$comment_options = array(
-	"no" => elgg_echo("option:no"),
-	"yes" => elgg_echo("option:yes")
-);
-
-$parent_options = static_get_parent_options();
-
-$form_body = elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
-
-$form_body .= "<div><label>" . elgg_echo("title") . "</label><br />";
+// build the form
+$form_body = "<div><label>" . elgg_echo("title") . "</label><br />";
 $form_body .= elgg_view("input/text", array("name" => "title", "value" => $content_title)) . "</div>";
 
 if (!empty($friendly_title)) {
@@ -67,6 +70,8 @@ $form_body .= "<div><label>" . elgg_echo("access") . "</label><br />";
 $form_body .= elgg_view("input/access", array("name" => "access_id", "value" => $content_access_id)) . "</div>";
 
 $form_body .= "<div class='elgg-foot mtm'>";
+$form_body .= elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
+$form_body .= elgg_view("input/hidden", array("name" => "owner_guid", "value" => $content_owner_guid));
 if ($entity) {
 	$form_body .= elgg_view("output/confirmlink", array("href" => "action/static/delete?guid=" . $entity->getGUID(), "text" => elgg_echo("delete"), "class" => "elgg-button elgg-button-delete float-alt"));
 }
