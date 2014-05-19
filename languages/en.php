@@ -20,6 +20,10 @@ $english = array(
 	'static:add:subpage' => "Create a subpage",
 		
 	'static:revisions' => "Revisions",
+	
+	// actions
+	'static:action:edit:error:title_description' => "Please enter a Title and Description",
+	'static:action:edit:success' => "Save successfull",
 );
 
 add_translation("en", $english);

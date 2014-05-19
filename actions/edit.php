@@ -1,5 +1,7 @@
 <?php
 
+elgg_make_sticky_form("static");
+
 $guid = (int) get_input("guid");
 $owner_guid = (int) get_input("owner_guid");
 $parent_guid = (int) get_input("parent_guid");
@@ -29,7 +31,8 @@ if ($parent_guid) {
 	$parent_guid = $owner->getGUID();
 }
 
-if (empty($title)) {
+if (empty($title) || empty($description)) {
+	register_error(elgg_echo("static:action:edit:error:title_description"));
 	forward(REFERER);
 }
 
@@ -87,5 +90,8 @@ $entity->moderators = $moderators;
 $entity->save();
 
 $entity->annotate("static_revision", $description);
+
+elgg_clear_sticky_form("static");
+system_message(elgg_echo("static:action:edit:success"));
 
 forward($entity->getURL());
