@@ -6,7 +6,9 @@ $options = array(
 	"type" => "object",
 	"subtype" => "static",
 	"limit" => false,
-	"container_guid" => elgg_get_site_entity()->getGUID()
+	"container_guid" => elgg_get_site_entity()->getGUID(),
+	"joins" => array("JOIN " . elgg_get_config("dbprefix") . "objects_entity oe ON e.guid = oe.guid"),
+	"order_by" => "oe.title asc"
 );
 
 $entities = elgg_get_entities($options);
