@@ -4,6 +4,7 @@
  */
 
 require_once(dirname(__FILE__) . "/lib/functions.php");
+require_once(dirname(__FILE__) . "/lib/events.php");
 require_once(dirname(__FILE__) . "/lib/hooks.php");
 require_once(dirname(__FILE__) . "/lib/page_handlers.php");
 
@@ -29,6 +30,9 @@ function static_init() {
 	
 	// groups
 	add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
+	
+	// events
+	elgg_register_event_handler("create", "object", "static_create_comment_handler");;
 	
 	// plugin hooks
 	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");
