@@ -55,5 +55,8 @@ function static_create_comment_handler($event, $type, ElggObject $object) {
 		"action" => "create",
 	);
 
-	notify_user($static_owner->getGUID(), $comment_owner->getGUID(), $subject, $message, $params);
+	// don't notify yourself
+	if ($static_owner->getGUID() != $comment_owner->getGUID()) {
+		notify_user($static_owner->getGUID(), $comment_owner->getGUID(), $subject, $message, $params);
+	}
 }
