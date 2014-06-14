@@ -21,7 +21,7 @@ if (elgg_instanceof($entity, "object", "static")) {
 			
 		elgg_register_menu_item("title", array(
 			"name" => "create_subpage",
-			"href" => "static/add/" . elgg_get_logged_in_user_guid() . "?parent_guid=" . $entity->getGUID(),
+			"href" => "static/add/" . $entity->getOwnerGUID() . "?parent_guid=" . $entity->getGUID(),
 			"text" => elgg_echo("static:add:subpage"),
 			"link_class" => "elgg-button elgg-button-action",
 		));
