@@ -40,6 +40,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler("permissions_check", "object", "static_permissions_check_hook_handler");
 	elgg_register_plugin_hook_handler("container_permissions_check", "all", "static_container_permissions_check_hook_handler");
 	elgg_register_plugin_hook_handler("register", "menu:owner_block", "static_register_owner_block_menu_hook_handler");
+	elgg_register_plugin_hook_handler("entity_types", "content_subscriptions", "static_content_subscriptions_entity_types_handler");
 	
 	// actions
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");

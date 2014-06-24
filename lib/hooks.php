@@ -75,12 +75,12 @@ function static_entity_url_hook_handler($hook, $type, $return_value, $params) {
 
 /**
  * Allow moderators to edit static pages and their children
- * 
+ *
  * @param string $hook         'permissions_check'
  * @param string $type         'object'
  * @param bool   $return_value can the user edit this entity
  * @param array  $params       supplied params
- * 
+ *
  * @return bool
  */
 function static_permissions_check_hook_handler($hook, $type, $return_value, $params) {
@@ -144,12 +144,12 @@ function static_container_permissions_check_hook_handler($hook, $type, $return_v
 
 /**
  * Add menu items to the owner block menu
- * 
+ *
  * @param string         $hook         'register'
  * @param string         $type         'menu:owner_block'
  * @param ElggMenuItem[] $return_value the menu items
  * @param array          $params       supplied params
- * 
+ *
  * @return ElggMenuItem[]
  */
 function static_register_owner_block_menu_hook_handler($hook, $type, $return_value, $params) {
@@ -167,6 +167,30 @@ function static_register_owner_block_menu_hook_handler($hook, $type, $return_val
 			}
 		}
 	}
+	
+	return $return_value;
+}
+
+/**
+ *
+ * @param string $hook         'entity_types'
+ * @param string $type         'content_subscriptions'
+ * @param array  $return_value the current supported entity types
+ * @param array  $params       supplied params
+ *
+ * @return array
+ */
+function static_content_subscriptions_entity_types_handler($hook, $type, $return_value, $params) {
+	
+	if (!is_array($return_value)) {
+		$return_value = array();
+	}
+	
+	if (!isset($return_value["object"])) {
+		$return_value["object"] = array();
+	}
+	
+	$return_value["object"][] = "static";
 	
 	return $return_value;
 }
