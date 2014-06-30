@@ -8,14 +8,23 @@ $parent_guid = (int) get_input("parent_guid");
 $title = get_input("title");
 
 $friendly_title = get_input("friendly_title", $title);
-$friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($friendly_title, ENT_QUOTES, 'UTF-8'));
-$friendly_title = elgg_get_friendly_title($friendly_title);
+$friendly_title = static_make_friendly_title($friendly_title, $guid);
 
 $description = get_input("description");
 $access_id = (int) get_input("access_id", ACCESS_PUBLIC);
 
 $enable_comments = get_input("enable_comments");
 $moderators = get_input("moderators");
+
+if (empty($title) || empty($description)) {
+	register_error(elgg_echo("static:action:edit:error:title_description"));
+	forward(REFERER);
+}
+
+if (empty($friendly_title)) {
+	register_error(elgg_echo("static:action:edit:error:friendly_title"));
+	forward(REFERER);
+}
 
 $owner = get_entity($owner_guid);
 if (!elgg_instanceof($owner, "group")) {
@@ -29,11 +38,6 @@ if ($parent_guid) {
 	}
 } else {
 	$parent_guid = $owner->getGUID();
-}
-
-if (empty($title) || empty($description)) {
-	register_error(elgg_echo("static:action:edit:error:title_description"));
-	forward(REFERER);
 }
 
 if ($guid) {

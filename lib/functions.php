@@ -143,3 +143,62 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 	
 	return $result;
 }
+
+/**
+ * Make a unique friendly title/permalink, when editing it validates to make sure it's unique
+ *
+ * @param string $friendly_title the input friendly title
+ * @param int    $entity_guid    when provided it validates for uniques
+ *
+ * @return bool|string false when not unique, string otherwise
+ */
+function static_make_friendly_title($friendly_title, $entity_guid = 0) {
+	
+	if (empty($friendly_title)) {
+		return false;
+	}
+	
+	$entity_guid = sanitise_int($entity_guid, false);
+	
+	// make an URL friendly title
+	$friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($friendly_title, ENT_QUOTES, 'UTF-8'));
+	$friendly_title = elgg_get_friendly_title($friendly_title);
+	
+	// check for duplicates
+	$options = array(
+		"type" => "object",
+		"subtype" => "static",
+		"metadata_name_value_pairs" => array(
+			"name" => "friendly_title",
+			"value" => $friendly_title
+		),
+		"count" => true
+	);
+	
+	if (!empty($entity_guid)) {
+		$options["wheres"] = array("(e.guid <> " . $entity_guid . ")");
+	}
+	
+	$ia = elgg_set_ignore_access(true);
+	$entities = elgg_get_entities_from_metadata($options);
+	if (!empty($entities)) {
+		
+		if (!empty($entity_guid)) {
+			elgg_set_ignore_access($ia);
+			return false;
+		}
+		
+		$counter = 1;
+		$options["metadata_name_value_pairs"]["value"] = $friendly_title . $counter;
+		while (elgg_get_entities_from_metadata($options)) {
+			$counter++;
+			$options["metadata_name_value_pairs"]["value"] = $friendly_title . $counter;
+		}
+		
+		$friendly_title = $friendly_title . $counter;
+	}
+	
+	elgg_set_ignore_access($ia);
+	
+	return $friendly_title;
+}
