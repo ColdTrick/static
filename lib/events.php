@@ -5,11 +5,11 @@
 
 /**
  * Make sure the last editor of a static page gets notified about a comment
- * 
+ *
  * @param string     $event  'create'
  * @param string     $type   'object'
  * @param ElggObject $object the object that was just created
- * 
+ *
  * @return void
  */
 function static_create_comment_handler($event, $type, ElggObject $object) {
@@ -30,7 +30,7 @@ function static_create_comment_handler($event, $type, ElggObject $object) {
 	// get last revisor
 	$ia = elgg_set_ignore_access(true);
 	$revisions = $container->getAnnotations(array(
-		"name" => "static_revision",
+		"annotation_name" => "static_revision",
 		"limit" => 1,
 		"reverse_order_by" => true
 	));
