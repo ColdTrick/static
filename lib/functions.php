@@ -25,13 +25,25 @@ function static_setup_page_menu($entity) {
 	}
 
 	if ($root_entity) {
-		// add main menu items
-		elgg_register_menu_item("page", array(
+		$priority = $root_entity->order;
+		if (empty($priority)) {
+			$priority = $root_entity->time_created;
+		}
+		
+		$root_menu_options = array(
 			"name" => $root_entity->guid,
+			"rel" => $root_entity->guid,
 			"href" => $root_entity->getURL(),
 			"text" => $root_entity->title,
+			"priority" => $priority,
 			"section" => "static"
-		));
+		);
+		
+		if ($root_entity->canEdit()) {
+			$root_menu_options["itemClass"] = array("static-sortable");
+		}
+		// add main menu items
+		elgg_register_menu_item("page", $root_menu_options);
 
 		// add sub menu items
 		$submenu_options = array(
@@ -44,10 +56,17 @@ function static_setup_page_menu($entity) {
 		
 		if ($submenu_entities) {
 			foreach($submenu_entities as $submenu_item) {
+				$priority = $submenu_item->order;
+				if (empty($priority)) {
+					$priority = $submenu_item->time_created;
+				}
+								
 				elgg_register_menu_item("page", array(
 					"name" => $submenu_item->guid,
+					"rel" => $submenu_item->guid,
 					"href" => $submenu_item->getURL(),
 					"text" => $submenu_item->title,
+					"priority" => $priority,
 					"parent_name" => $submenu_item->container_guid,
 					"section" => "static"
 				));
@@ -201,4 +220,32 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 	elgg_set_ignore_access($ia);
 	
 	return $friendly_title;
+}
+
+/**
+ * Recursively orders menu items
+ *
+ * @param array $menu_items array of menu items that need to be sorted
+ *
+ * @return array
+ */
+function static_order_menu($menu_items) {
+	
+	if (is_array($menu_items)) {
+		$ordered = array();
+		foreach($menu_items as $menu_item) {
+			$children = $menu_item->getChildren();
+			if ($children) {
+				$ordered_children = static_order_menu($children);
+				$menu_item->setChildren($ordered_children);
+			}
+			
+			$ordered[$menu_item->getPriority()] = $menu_item;
+		}
+		ksort($ordered);
+		
+		return $ordered;
+	} else {
+		return $menu_items;
+	}
 }

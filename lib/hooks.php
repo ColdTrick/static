@@ -143,6 +143,26 @@ function static_container_permissions_check_hook_handler($hook, $type, $return_v
 }
 
 /**
+ * Orders the items in the static page menu
+ *
+ * @param string         $hook         'prepare'
+ * @param string         $type         'menu:page'
+ * @param ElggMenuItem[] $return_value the menu items
+ * @param array          $params       supplied params
+ *
+ * @return ElggMenuItem[]
+ */
+function static_prepare_page_menu_hook_handler($hook, $type, $return_value, $params) {
+	$static = elgg_extract("static", $return_value);
+	
+	if (is_array($static)) {
+		$return_value["static"] = static_order_menu($static);
+	}
+	
+	return $return_value;
+}
+
+/**
  * Add menu items to the owner block menu
  *
  * @param string         $hook         'register'
