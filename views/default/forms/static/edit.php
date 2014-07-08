@@ -43,7 +43,7 @@ if ($entity) {
 
 // build the form
 $form_body = "<div><label>" . elgg_echo("title") . "</label><br />";
-$form_body .= elgg_view("input/text", array("name" => "title", "value" => elgg_get_sticky_value("static", "title", $content_title))) . "</div>";
+$form_body .= elgg_view("input/text", array("name" => "title", "value" => elgg_get_sticky_value("static", "title", $content_title), "required" => true)) . "</div>";
 
 if (!empty($friendly_title)) {
 	$form_body .= "<div><label>" . elgg_echo("static:new:permalink") . "</label><br />";
@@ -51,7 +51,7 @@ if (!empty($friendly_title)) {
 }
 
 $form_body .= "<div><label>" . elgg_echo("description") . "</label><br />";
-$form_body .= elgg_view("input/longtext", array("name" => "description", "value" => elgg_get_sticky_value("static", "description", $content_description))) . "</div>";
+$form_body .= elgg_view("input/longtext", array("name" => "description", "value" => elgg_get_sticky_value("static", "description", $content_description), "required" => true)) . "</div>";
 
 if (!empty($parent_options)) {
 	$form_body .= "<div><label>" . elgg_echo("static:new:parent") . "</label><br />";
