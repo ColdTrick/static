@@ -13,7 +13,7 @@ if ($vars["full_view"]) {
 	$title = $entity->getVolatileData("search_matched_title");
 	$description = $entity->getVolatileData("search_matched_description");
 	
-	$title = elgg_view("output/url", array("text" => $entity->title, "href" => $entity->getURL(), "is_trusted" => true));
+	$title = elgg_view("output/url", array("text" => $title, "href" => $entity->getURL(), "is_trusted" => true));
 	$body = $title . "<br />" . $description;
 
 	echo elgg_view_image_block("", $body);
