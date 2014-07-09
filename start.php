@@ -30,6 +30,7 @@ function static_init() {
 	
 	// groups
 	add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
+	elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), array("groups"));
 	
 	// events
 	elgg_register_event_handler("create", "object", "static_create_comment_handler");;
@@ -42,6 +43,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler("register", "menu:owner_block", "static_register_owner_block_menu_hook_handler");
 	elgg_register_plugin_hook_handler("prepare", "menu:page", "static_prepare_page_menu_hook_handler");
 	elgg_register_plugin_hook_handler("entity_types", "content_subscriptions", "static_content_subscriptions_entity_types_handler");
+	elgg_register_plugin_hook_handler("group_tool_widgets", "widget_manager", "static_group_tool_widgets_handler");
 	
 	// actions
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");

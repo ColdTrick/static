@@ -10,19 +10,20 @@ if ($vars["full_view"]) {
 } elseif (elgg_in_context("search")) {
 	// probably search
 
-	$title = $entity->getVolatileData('search_matched_title');
-	$description = $entity->getVolatileData('search_matched_description');
-	$url = $entity->getURL();
-
-	$title = "<a href=\"$url\">$title</a>";
-	$body = "$title<br />$description";
+	$title = $entity->getVolatileData("search_matched_title");
+	$description = $entity->getVolatileData("search_matched_description");
+	
+	$title = elgg_view("output/url", array("text" => $entity->title, "href" => $entity->getURL(), "is_trusted" => true));
+	$body = $title . "<br />" . $description;
 
 	echo elgg_view_image_block("", $body);
 } else {
 
+	$show_edit = elgg_extract("show_edit", $vars, true);
+	
 	$body = "<tr>";
-	$body .= "<td><a href='" . $entity->getURL() . "'>" . $entity->title . "</a></td>";
-	if ($entity->canEdit()) {
+	$body .= "<td>" . elgg_view("output/url", array("text" => $entity->title, "href" => $entity->getURL(), "is_trusted" => true)) . "</td>";
+	if ($show_edit && $entity->canEdit()) {
 		$edit_link = elgg_view("output/url", array("href" => "static/edit/" . $entity->getGUID(), "text" => elgg_view_icon("settings-alt")));
 		$delete_link = elgg_view("output/confirmlink", array("href" => "action/static/delete?guid=" . $entity->getGUID(), "text" => elgg_view_icon("delete")));
 	

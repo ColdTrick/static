@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v2.0
- * On 2014-06-30 12:11
+ * On 2014-07-09 16:44
  */
 
 $language = array (
+  'static:widgets:static_groups:title' => 'Statische pagina\'s',
+  'static:widgets:static_groups:description' => 'Toon de statische pagina\'s van de groep',
   'static:groups:title' => 'Beheer groep statische pagina\'s',
   'static:groups:owner_block' => 'Groep statische pagina\'s',
   'static:groups:tool_option' => 'Schakel statische pagina\'s in',

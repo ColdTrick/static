@@ -1,6 +1,6 @@
 <?php
 
-$english = array(
+return array(
 	'item:object:static' => "Static page",
 	
 	'static:admin:empty' => "No static pages created",
@@ -22,11 +22,12 @@ $english = array(
 		
 	'static:revisions' => "Revisions",
 	
+	// widgets
+	'static:widgets:static_groups:title' => "Static pages",
+	'static:widgets:static_groups:description' => "Show the group static pages",
+	
 	// actions
 	'static:action:edit:error:title_description' => "Please enter a Title and Description",
 	'static:action:edit:error:friendly_title' => "The permalink is already taken, please choose another one",
 	'static:action:edit:success' => "Save successfull",
 );
-
-add_translation("en", $english);
-	

@@ -48,7 +48,7 @@ function static_route_hook_handler($hook, $type, $return_value, $params) {
 }
 
 /**
- * Returns a url for a static content page
+ * Returns a url for a static content page or a static widget
  *
  * @param string $hook         name of the hook
  * @param string $type         type of the hook
@@ -58,19 +58,35 @@ function static_route_hook_handler($hook, $type, $return_value, $params) {
  * @return string
  */
 function static_entity_url_hook_handler($hook, $type, $return_value, $params) {
-	$entity = $params["entity"];
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
 	if (elgg_instanceof($entity, "object", "static")) {
+		// static pages
 		$friendly_title = $entity->friendly_title;
 		if ($friendly_title) {
-			return elgg_get_site_url() . $friendly_title;
+			$return_value = elgg_get_site_url() . $friendly_title;
 		} else {
-			$friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($entity->title, ENT_QUOTES, 'UTF-8'));
-			$friendly_title = elgg_get_friendly_title($friendly_title);
+			
+			$friendly_title = static_make_friendly_title($entity->title, $entity->getGUID());
 			$entity->friendly_title = $friendly_title;
 
-			return $entity->getURL();
+			$return_value = elgg_get_site_url() . $friendly_title;
+		}
+	} elseif (!$return_value && elgg_instanceof($entity, "object", "widget")) {
+		// widgets
+		switch ($entity->handler) {
+			case "static_groups":
+				$return_value = "static/group/" . $entity->getOwnerGUID();
+				
+				break;
 		}
 	}
+	
+	return $return_value;
 }
 
 /**
@@ -211,6 +227,44 @@ function static_content_subscriptions_entity_types_handler($hook, $type, $return
 	}
 	
 	$return_value["object"][] = "static";
+	
+	return $return_value;
+}
+
+/**
+ * Add or remove widgets based on the group tool option
+ *
+ * @param string $hook         'group_tool_widgets'
+ * @param string $type         'widget_manager'
+ * @param array  $return_value current enable/disable widget handlers
+ * @param array  $params       supplied params
+ *
+ * @return array
+ */
+function static_group_tool_widgets_handler($hook, $type, $return_value, $params) {
+	
+	if (!empty($params) && is_array($params)) {
+		$entity = elgg_extract("entity", $params);
+		
+		if (!empty($entity) && elgg_instanceof($entity, "group")) {
+			if (!is_array($return_value)) {
+				$return_value = array();
+			}
+			
+			if (!isset($return_value["enable"])) {
+				$return_value["enable"] = array();
+			}
+			if (!isset($return_value["disable"])) {
+				$return_value["disable"] = array();
+			}
+			
+			if ($entity->static_enable == "yes") {
+				$return_value["enable"][] = "static_groups";
+			} else {
+				$return_value["disable"][] = "static_groups";
+			}
+		}
+	}
 	
 	return $return_value;
 }
