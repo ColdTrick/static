@@ -34,10 +34,12 @@ function static_init() {
 	
 	// events
 	elgg_register_event_handler("create", "object", "static_create_comment_handler");;
+	elgg_register_event_handler("delete", "object", "static_delete_object_handler");;
 	
 	// plugin hooks
 	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");
 	elgg_register_plugin_hook_handler("entity:url", "object", "static_entity_url_hook_handler");
+	elgg_register_plugin_hook_handler("entity:icon:url", "object", "static_entity_icon_url_hook_handler");
 	elgg_register_plugin_hook_handler("permissions_check", "object", "static_permissions_check_hook_handler");
 	elgg_register_plugin_hook_handler("container_permissions_check", "all", "static_container_permissions_check_hook_handler");
 	elgg_register_plugin_hook_handler("register", "menu:owner_block", "static_register_owner_block_menu_hook_handler");

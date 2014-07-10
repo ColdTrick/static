@@ -3,9 +3,16 @@
 $entity = $vars["entity"];
 
 if ($vars["full_view"]) {
-	$body = elgg_view("output/longtext", array("value" => $entity->description));
-
-	echo "<div class='elgg-content'>" . $body . "</div>";
+	$body = "";
+	
+	if ($entity->icontime) {
+		$body .= elgg_view_entity_icon($entity, "large", array("href" => false, "class" => "float-alt"));
+	}
+	$body .= elgg_view("output/longtext", array("value" => $entity->description));
+	
+	echo elgg_view('object/elements/full', array(
+		'body' => $body,
+	));
 
 } elseif (elgg_in_context("search")) {
 	// probably search

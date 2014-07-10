@@ -60,3 +60,23 @@ function static_create_comment_handler($event, $type, ElggObject $object) {
 		notify_user($static_owner->getGUID(), $comment_owner->getGUID(), $subject, $message, $params);
 	}
 }
+
+/**
+ * Listen to the delete event of an ElggObject to remove a static thumbnail when needed
+ *
+ * @param string     $event  'delete'
+ * @param string     $type   'object'
+ * @param ElggObject $entity the entity about to be removed
+ *
+ * @return void
+ */
+function static_delete_object_handler($event, $type, ElggObject $entity) {
+	
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return;
+	}
+	
+	if ($entity->icontime) {
+		static_remove_thumbnail($entity->getGUID());
+	}
+}

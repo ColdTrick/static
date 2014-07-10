@@ -40,7 +40,7 @@ if (!empty($entity)) {
 }
 
 
-$body = elgg_view_form("static/edit", array("class" => "elgg-form-alt"), $body_vars);
+$body = elgg_view_form("static/edit", array("class" => "elgg-form-alt", "enctype" => "multipart/form-data"), $body_vars);
 
 $title_text = elgg_echo("static:edit");
 

@@ -249,3 +249,48 @@ function static_order_menu($menu_items) {
 		return $menu_items;
 	}
 }
+
+/**
+ * Remove the thumbnails from a static page
+ *
+ * @param int $entity_guid the GUID of the static page
+ *
+ * @return bool
+ */
+function static_remove_thumbnail($entity_guid) {
+	
+	$entity_guid = sanitize_int($entity_guid, false);
+	
+	if (empty($entity_guid)) {
+		return false;
+	}
+	
+	$entity = get_entity($entity_guid);
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return false;
+	}
+	
+	if (!$entity->icontime) {
+		return false;
+	}
+	
+	$fh = new ElggFile();
+	$fh->owner_guid = $entity_guid;
+	
+	$prefix = "thumb";
+	$icon_sizes = elgg_get_config("icon_sizes");
+	
+	if (!empty($icon_sizes)) {
+		foreach ($icon_sizes as $size => $info) {
+			$fh->setFilename($prefix . $size . ".jpg");
+			
+			if ($fh->exists()) {
+				$fh->delete();
+			}
+		}
+		
+		unset($entity->icontime);
+	}
+	
+	return true;
+}

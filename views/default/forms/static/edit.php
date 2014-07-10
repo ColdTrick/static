@@ -50,6 +50,13 @@ if (!empty($friendly_title)) {
 	$form_body .= elgg_view("input/text", array("name" => "friendly_title", "value" => elgg_get_sticky_value("static", "friendly_title", $friendly_title))) . "</div>";
 }
 
+$form_body .= "<div class='mbm'><label>" . elgg_echo("static:new:thumbnail") . "</label><br />";
+$form_body .= elgg_view("input/file", array("name" => "thumbnail"));
+if ($entity && $entity->icontime) {
+	$form_body .= elgg_view("input/checkbox", array("name" => "remove_thumbnail", "value" => "1", "label" => elgg_echo("static:new:remove_thumbnail")));
+}
+$form_body .= "</div>";
+
 $form_body .= "<div><label>" . elgg_echo("description") . "</label><br />";
 $form_body .= elgg_view("input/longtext", array("name" => "description", "value" => elgg_get_sticky_value("static", "description", $content_description), "required" => true)) . "</div>";
 

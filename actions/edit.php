@@ -16,6 +16,8 @@ $access_id = (int) get_input("access_id", ACCESS_PUBLIC);
 $enable_comments = get_input("enable_comments");
 $moderators = get_input("moderators");
 
+$remove_icon = (int) get_input("remove_thumbnail");
+
 if (empty($title) || empty($description)) {
 	register_error(elgg_echo("static:action:edit:error:title_description"));
 	forward(REFERER);
@@ -92,6 +94,33 @@ $entity->friendly_title = $friendly_title;
 $entity->enable_comments = $enable_comments;
 $entity->moderators = $moderators;
 $entity->save();
+
+// icon
+if ($remove_icon) {
+	static_remove_thumbnail($entity->getGUID());
+} elseif (get_resized_image_from_uploaded_file("thumbnail", 200, 200)) {
+	$fh = new ElggFile();
+	$fh->owner_guid = $entity->getGUID();
+	
+	$prefix = "thumb";
+	$icon_sizes = elgg_get_config("icon_sizes");
+	
+	if (!empty($icon_sizes)) {
+		foreach ($icon_sizes as $size => $info) {
+			$fh->setFilename($prefix . $size . ".jpg");
+			
+			$contents = get_resized_image_from_uploaded_file("thumbnail", $info["w"], $info["h"], $info["square"], $info["upscale"]);
+			if (!empty($contents)) {
+				$fh->open("write");
+				$fh->write($contents);
+				$fh->close();
+			}
+		}
+		
+		$entity->icontime = time();
+		$entity->save();
+	}
+}
 
 $entity->annotate("static_revision", $description);
 

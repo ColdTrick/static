@@ -90,6 +90,34 @@ function static_entity_url_hook_handler($hook, $type, $return_value, $params) {
 }
 
 /**
+ * Returns a url for a static thumbnail page
+ *
+ * @param string $hook         name of the hook
+ * @param string $type         type of the hook
+ * @param array  $return_value return value
+ * @param array  $params       hook parameters
+ *
+ * @return string
+ */
+function static_entity_icon_url_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
+	if (elgg_instanceof($entity, "object", "static")) {
+		$size = elgg_extract("size", $params);
+		
+		if ($entity->icontime) {
+			$return_value = "static/thumbnail/" . $entity->getGUID() . "/" . $size . "/" . $entity->icontime . ".jpg";
+		}
+	}
+	
+	return $return_value;
+}
+
+/**
  * Allow moderators to edit static pages and their children
  *
  * @param string $hook         'permissions_check'

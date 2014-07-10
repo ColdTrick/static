@@ -25,6 +25,11 @@ function static_page_handler($page) {
 			set_input("guid", $page[1]);
 			include(dirname(dirname(__FILE__)) . "/pages/group.php");
 			break;
+		case "thumbnail":
+			set_input("guid", $page[1]);
+			set_input("size", $page[2]);
+			include(dirname(dirname(__FILE__)) . "/pages/thumbnail.php");
+			break;
 		case "all":
 		default:
 			include(dirname(dirname(__FILE__)) . "/pages/all.php");
