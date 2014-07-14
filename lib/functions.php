@@ -178,6 +178,7 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 	}
 	
 	$entity_guid = sanitise_int($entity_guid, false);
+	$friendly_title = strtolower($friendly_title);
 	
 	// make an URL friendly title
 	$friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($friendly_title, ENT_QUOTES, 'UTF-8'));
@@ -191,6 +192,7 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 			"name" => "friendly_title",
 			"value" => $friendly_title
 		),
+		"metadata_case_sensitive" => false,
 		"count" => true
 	);
 	

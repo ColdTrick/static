@@ -31,7 +31,8 @@ function static_route_hook_handler($hook, $type, $return_value, $params) {
 				"type" => "object",
 				"subtype" => "static",
 				"limit" => 1,
-				"metadata_name_value_pairs" => array("friendly_title" => $identifier)
+				"metadata_name_value_pairs" => array("friendly_title" => $identifier),
+				"metadata_case_sensitive" => false
 			);
 				
 			$entities = elgg_get_entities_from_metadata($options);
