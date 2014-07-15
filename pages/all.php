@@ -2,11 +2,13 @@
 
 elgg_gatekeeper();
 
+$site = elgg_get_site_entity();
+
 $options = array(
 	"type" => "object",
 	"subtype" => "static",
 	"limit" => false,
-	"container_guid" => elgg_get_site_entity()->getGUID(),
+	"container_guid" => $site->getGUID(),
 	"joins" => array("JOIN " . elgg_get_config("dbprefix") . "objects_entity oe ON e.guid = oe.guid"),
 	"order_by" => "oe.title asc"
 );
@@ -32,7 +34,9 @@ if (empty($body)) {
 	$body = elgg_echo("static:admin:empty");
 }
 
-elgg_register_title_button();
+if (can_write_to_container(elgg_get_logged_in_user_guid(), $site->getGUID(), "object", "static")) {
+	elgg_register_title_button();
+}
 
 $title_text = elgg_echo("static:all");
 $body = elgg_view_layout('one_column', array('content' => $body, "title" => $title_text));
