@@ -46,6 +46,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler("prepare", "menu:page", "static_prepare_page_menu_hook_handler");
 	elgg_register_plugin_hook_handler("entity_types", "content_subscriptions", "static_content_subscriptions_entity_types_handler");
 	elgg_register_plugin_hook_handler("group_tool_widgets", "widget_manager", "static_group_tool_widgets_handler");
+	elgg_register_plugin_hook_handler("autocomplete", "search_advanced", "static_search_advanced_autocomplete_handler");
 	
 	// actions
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");

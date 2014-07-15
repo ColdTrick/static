@@ -297,3 +297,62 @@ function static_group_tool_widgets_handler($hook, $type, $return_value, $params)
 	
 	return $return_value;
 }
+
+/**
+ * Add or remove widgets based on the group tool option
+ *
+ * @param string $hook         'autocomplete'
+ * @param string $type         'search_advanced'
+ * @param array  $return_value current search results
+ * @param array  $params       supplied params
+ *
+ * @return array
+ */
+function static_search_advanced_autocomplete_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$query = elgg_extract("query", $params);
+	if (empty($query)) {
+		return $return_value;
+	}
+	
+	$limit = (int) elgg_extract("limit", $params, 5);
+	
+	$options = array(
+		"type" => "object",
+		"subtype" => "static",
+		"limit" => $limit,
+		"joins" => array("JOIN " . elgg_get_config("dbprefix") . "objects_entity oe ON e.guid = oe.guid"),
+		"wheres" => array("(oe.title LIKE '%" . $query . "%' OR oe.description LIKE '%" . $query . "%')")
+	);
+	$entities = elgg_get_entities($options);
+	
+	if (!empty($entities)) {
+		if (count($entities) >= $limit) {
+			$options["count"] = true;
+			$static_count = elgg_get_entities($options);
+		} else {
+			$static_count = count($entities);
+		}
+		
+		$return_value[] = array(
+			"type" => "placeholder",
+			"content" => "<label>" . elgg_echo("item:object:static") . " (" . $static_count . ")</label>",
+			"href" => elgg_normalize_url("search?entity_subtype=static&entity_type=object&search_type=entities&q=" . $query)
+		);
+		
+		foreach ($entities as $entity) {
+			$return_value[] = array(
+				"type" => "object",
+				"value" => $entity->title,
+				"href" => $entity->getURL(),
+				"content" => elgg_view("static/search_advanced/item", array("entity" => $entity)
+			));
+		}
+	}
+	
+	return $return_value;
+}
