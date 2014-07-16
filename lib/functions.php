@@ -25,14 +25,14 @@ function static_setup_page_menu($entity) {
 	}
 
 	if ($root_entity) {
-		$priority = $root_entity->order;
+		$priority = (int) $root_entity->order;
 		if (empty($priority)) {
-			$priority = $root_entity->time_created;
+			$priority = (int) $root_entity->time_created;
 		}
 		
 		$root_menu_options = array(
-			"name" => $root_entity->guid,
-			"rel" => $root_entity->guid,
+			"name" => $root_entity->getGUID(),
+			"rel" => $root_entity->getGUID(),
 			"href" => $root_entity->getURL(),
 			"text" => $root_entity->title,
 			"priority" => $priority,
@@ -46,28 +46,39 @@ function static_setup_page_menu($entity) {
 		elgg_register_menu_item("page", $root_menu_options);
 
 		// add sub menu items
+		$ia = elgg_set_ignore_access(true);
 		$submenu_options = array(
-			"relationship_guid" => $root_entity->guid,
+			"type" => "object",
+			"subtype" => "static",
+			"relationship_guid" => $root_entity->getGUID(),
 			"relationship" => "subpage_of",
 			"limit" => false,
 			"inverse_relationship" => true
 		);
 		$submenu_entities = elgg_get_entities_from_relationship($submenu_options);
+		elgg_set_ignore_access($ia);
 		
 		if ($submenu_entities) {
-			foreach($submenu_entities as $submenu_item) {
-				$priority = $submenu_item->order;
-				if (empty($priority)) {
-					$priority = $submenu_item->time_created;
+			foreach ($submenu_entities as $submenu_item) {
+				
+				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
+					continue;
 				}
-								
+				
+				$ia = elgg_set_ignore_access(true);
+				$priority = (int) $submenu_item->order;
+				if (empty($priority)) {
+					$priority = (int) $submenu_item->time_created;
+				}
+				elgg_set_ignore_access($ia);
+				
 				elgg_register_menu_item("page", array(
-					"name" => $submenu_item->guid,
-					"rel" => $submenu_item->guid,
+					"name" => $submenu_item->getGUID(),
+					"rel" => $submenu_item->getGUID(),
 					"href" => $submenu_item->getURL(),
 					"text" => $submenu_item->title,
 					"priority" => $priority,
-					"parent_name" => $submenu_item->container_guid,
+					"parent_name" => $submenu_item->getContainerGUID(),
 					"section" => "static"
 				));
 			}

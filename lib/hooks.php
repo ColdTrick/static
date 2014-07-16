@@ -34,15 +34,22 @@ function static_route_hook_handler($hook, $type, $return_value, $params) {
 				"metadata_name_value_pairs" => array("friendly_title" => $identifier),
 				"metadata_case_sensitive" => false
 			);
-				
+			
+			$ia = elgg_set_ignore_access(true);
 			$entities = elgg_get_entities_from_metadata($options);
+			elgg_set_ignore_access($ia);
+			
 			if (!empty($entities)) {
-				$entity_guid = $entities[0]->getGUID();
-
-				$return_value['segments'] = array("view", $entity_guid);
-				$return_value['identifier'] = "static";
-
-				return $return_value;
+				$entity = $entities[0];
+				if (has_access_to_entity($entity) || $entity->canEdit()) {
+					
+					$entity_guid = $entities[0]->getGUID();
+	
+					$return_value['segments'] = array("view", $entity_guid);
+					$return_value['identifier'] = "static";
+	
+					return $return_value;
+				}
 			}
 		}
 	}

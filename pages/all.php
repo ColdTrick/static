@@ -13,7 +13,10 @@ $options = array(
 	"order_by" => "oe.title asc"
 );
 
+$ia = elgg_set_ignore_access(true);
 $entities = elgg_get_entities($options);
+elgg_set_ignore_access($ia);
+
 if ($entities) {
 	$body = "<table class='elgg-table-alt' id='static-pages-list'>";
 	$body .= "<thead><tr>";
@@ -23,9 +26,13 @@ if ($entities) {
 	$body .= "</tr></thead>";
 
 	foreach ($entities as $entity) {
-
+		
+		if (!has_access_to_entity($entity) && !$entity->canEdit()) {
+			continue;
+		}
+		
 		$body .= elgg_view_entity($entity, array("full_view" => false));
-
+		
 	}
 	$body .= "</table>";
 }
