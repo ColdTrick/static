@@ -96,6 +96,8 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 	$result = array();
 	
 	if (!empty($entity) && elgg_instanceof($entity, "object", "static")) {
+		$ia = elgg_set_ignore_access(true);
+		
 		if ($entity->getContainerGUID() != $entity->site_guid) {
 			$parent = $entity->getContainerEntity();
 			if (!empty($parent)) {
@@ -120,6 +122,8 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 				$result += static_get_parent_moderators($parent, $guid_only);
 			}
 		}
+		
+		elgg_set_ignore_access($ia);
 	}
 	
 	return $result;

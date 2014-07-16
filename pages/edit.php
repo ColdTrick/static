@@ -17,9 +17,13 @@ $body_vars["owner"] = $page_owner;
 elgg_push_breadcrumb(elgg_echo("static:all"), "static/all");
 
 if ($guid) {
+	$ia = elgg_set_ignore_access(true);
+	
 	elgg_entity_gatekeeper($guid, "object", "static");
 	
 	$entity = get_entity($guid);
+	
+	elgg_set_ignore_access($ia);
 	if (!$entity->canEdit()) {
 		forward(REFERER);
 	}

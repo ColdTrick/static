@@ -135,6 +135,7 @@ function static_permissions_check_hook_handler($hook, $type, $return_value, $par
 		$user = elgg_extract("user", $params);
 		
 		if (!empty($entity) && elgg_instanceof($entity, "object", "static")) {
+			$ia = elgg_set_ignore_access(true);
 			// check if the user is a moderator of this static page
 			$moderators = $entity->moderators;
 			if (!empty($moderators)) {
@@ -144,6 +145,8 @@ function static_permissions_check_hook_handler($hook, $type, $return_value, $par
 				
 				$return_value = in_array($user->getGUID(), $moderators);
 			}
+			
+			elgg_set_ignore_access($ia);
 			
 			// if not moderator, check higher pages (if any)
 			if (!$return_value && ($entity->getContainerGUID() != $entity->site_guid)) {
