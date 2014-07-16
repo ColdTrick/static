@@ -2,7 +2,7 @@
 
 elgg_gatekeeper();
 
-$guid = get_input("guid");
+$guid = (int) get_input("guid");
 $body_vars = array();
 $sidebar = "";
 $page_owner = elgg_get_page_owner_entity();
@@ -17,8 +17,10 @@ $body_vars["owner"] = $page_owner;
 elgg_push_breadcrumb(elgg_echo("static:all"), "static/all");
 
 if ($guid) {
+	elgg_entity_gatekeeper($guid, "object", "static");
+	
 	$entity = get_entity($guid);
-	if (!elgg_instanceof($entity, "object", "static")) {
+	if (!$entity->canEdit()) {
 		forward(REFERER);
 	}
 	
