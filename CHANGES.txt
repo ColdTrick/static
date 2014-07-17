@@ -1,6 +1,10 @@
 Version history
 ===============
 
+3.0:
+
+- changes for Elgg 1.9
+
 2.3 (2013-07-24):
 
 - added: sorting of subpages
