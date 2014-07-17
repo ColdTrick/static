@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v2.0
- * On 2014-07-09 16:44
+ * On 2014-07-17 10:03
  */
 
 $language = array (
+  'static:new:thumbnail' => 'Upload afbeelding',
+  'static:new:remove_thumbnail' => 'Verwijder afbeelding',
   'static:widgets:static_groups:title' => 'Statische pagina\'s',
   'static:widgets:static_groups:description' => 'Toon de statische pagina\'s van de groep',
   'static:groups:title' => 'Beheer groep statische pagina\'s',
