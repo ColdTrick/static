@@ -196,7 +196,12 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 	$friendly_title = strtolower($friendly_title);
 	
 	// make an URL friendly title
+	$friendly_title = str_replace('"', "", $friendly_title);
+	$friendly_title = str_replace("'", "", $friendly_title);
+	$friendly_title = str_replace("`", "", $friendly_title);
 	$friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($friendly_title, ENT_QUOTES, 'UTF-8'));
+	$friendly_title = preg_replace('~&([a-z]{1,2})(quo);~i', '', $friendly_title); // rich text editor double quotes
+	
 	$friendly_title = elgg_get_friendly_title($friendly_title);
 	
 	// check for duplicates
