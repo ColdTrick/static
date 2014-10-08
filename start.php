@@ -40,13 +40,19 @@ function static_init() {
 	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");
 	elgg_register_plugin_hook_handler("entity:url", "object", "static_entity_url_hook_handler");
 	elgg_register_plugin_hook_handler("entity:icon:url", "object", "static_entity_icon_url_hook_handler");
+	
 	elgg_register_plugin_hook_handler("permissions_check", "object", "static_permissions_check_hook_handler");
 	elgg_register_plugin_hook_handler("container_permissions_check", "all", "static_container_permissions_check_hook_handler");
+	
 	elgg_register_plugin_hook_handler("register", "menu:owner_block", "static_register_owner_block_menu_hook_handler");
+	elgg_register_plugin_hook_handler("register", "menu:filter", "static_register_filter_menu_hook_handler");
 	elgg_register_plugin_hook_handler("prepare", "menu:page", "static_prepare_page_menu_hook_handler");
+	
 	elgg_register_plugin_hook_handler("entity_types", "content_subscriptions", "static_content_subscriptions_entity_types_handler");
 	elgg_register_plugin_hook_handler("group_tool_widgets", "widget_manager", "static_group_tool_widgets_handler");
 	elgg_register_plugin_hook_handler("autocomplete", "search_advanced", "static_search_advanced_autocomplete_handler");
+	
+	elgg_register_plugin_hook_handler("cron", "daily", "static_daily_cron_handler");
 	
 	// actions
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");

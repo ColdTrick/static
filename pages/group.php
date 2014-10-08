@@ -50,11 +50,16 @@ if ($can_write) {
 	elgg_register_title_button();
 }
 
+$filter = "";
+if (static_out_of_date_enabled()) {
+	$filter = elgg_view("page/layouts/elements/filter");
+}
+
 $title_text = elgg_echo("static:groups:title");
 $body = elgg_view_layout("content", array(
-	"content" => $body, 
+	"content" => $body,
 	"title" => $title_text,
-	"filter" => ""
+	"filter" => $filter
 ));
 
 echo elgg_view_page($title_text, $body);

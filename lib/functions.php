@@ -320,3 +320,26 @@ function static_remove_thumbnail($entity_guid) {
 	
 	return true;
 }
+
+/**
+ * Check of the out of date listing/notifications is enabled
+ *
+ * @return bool
+ */
+function static_out_of_date_enabled() {
+	static $result;
+	
+	if (!isset($result)) {
+		$result = false;
+		
+		$setting = elgg_get_plugin_setting("enable_out_of_date", "static");
+		if ($setting == "yes") {
+			$days = (int) elgg_get_plugin_setting("out_of_date_days", "static");
+			if ($days > 0) {
+				$result = true;
+			}
+		}
+	}
+	
+	return $result;
+}

@@ -3,6 +3,11 @@
 return array(
 	'item:object:static' => "Static page",
 	
+	// settings
+	'static:settings:enable_out_of_date' => "Enable out-of-date notifications/listing",
+	'static:settings:out_of_date_days' => "Number of days before content is out-of-date",
+	'static:settings:out_of_date_days:days' => "days",
+	
 	'static:admin:empty' => "No static pages created",
 	'static:all' => "Manage static pages",
 	'static:edit' => "Create/Edit a static page",
@@ -23,6 +28,23 @@ return array(
 	'static:add:subpage' => "Create a subpage",
 		
 	'static:revisions' => "Revisions",
+	
+	// out of date
+	'static:menu:filter:out_of_date' => "All out-of-date content",
+	'static:menu:filter:out_of_date:mine' => "My out-of-date content",
+	'static:menu:filter:out_of_date:group' => "Group out-of-date content",
+	
+	'static:out_of_date:title' => "Out-of-date content",
+	'static:out_of_date:owner:title' => "Out-of-date content for: %s",
+	'static:out_of_date:none' => "No outdated content was found",
+	
+	'static:out_of_date:notification:subject' => "Your static content is out-of-date",
+	'static:out_of_date:notification:message' => "Hi %s,
+
+Some of your static content pages are out-of-date. Please have a look if the information is still current/usefull.
+
+Click here for a complete list:
+%s",
 	
 	// widgets
 	'static:widgets:static_groups:title' => "Static pages",

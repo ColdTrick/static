@@ -41,11 +41,19 @@ if (empty($body)) {
 	$body = elgg_echo("static:admin:empty");
 }
 
+$filter = "";
+if (static_out_of_date_enabled()) {
+	$filter = elgg_view("page/layouts/elements/filter");
+}
+
 if (can_write_to_container(elgg_get_logged_in_user_guid(), $site->getGUID(), "object", "static")) {
 	elgg_register_title_button();
 }
 
 $title_text = elgg_echo("static:all");
-$body = elgg_view_layout('one_column', array('content' => $body, "title" => $title_text));
+$body = elgg_view_layout("one_column", array(
+	"title" => $title_text,
+	"content" => $filter . $body
+));
 
 echo elgg_view_page($title_text, $body);
