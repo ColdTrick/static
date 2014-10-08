@@ -24,6 +24,12 @@ if ($vars["full_view"]) {
 	$body = $title . "<br />" . $description;
 
 	echo elgg_view_image_block("", $body);
+} elseif (elgg_in_context("widgets")) {
+	$body = elgg_view("output/url", array(
+			"text" => $entity->title,
+			"href" => $entity->getURL()
+	));
+	echo elgg_view_image_block("", $body);
 } else {
 
 	$show_edit = elgg_extract("show_edit", $vars, true);
