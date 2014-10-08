@@ -1,10 +1,27 @@
 <?php
 /**
  * This file was created by Translation Editor v2.0
- * On 2014-07-17 10:03
+ * On 2014-10-08 17:29
  */
 
-$language = array (
+return array (
+  'static:settings:enable_out_of_date' => 'Schakel verouderde content notificaties/weergave in',
+  'static:settings:out_of_date_days' => 'Aantal dagen voordat content verouderd is',
+  'static:settings:out_of_date_days:days' => 'dagen',
+  'static:menu:filter:out_of_date' => 'Alle verouderde content',
+  'static:menu:filter:out_of_date:mine' => 'Mijn verouderde content',
+  'static:menu:filter:out_of_date:group' => 'Groep verouderde content',
+  'static:out_of_date:title' => 'Verouderde content',
+  'static:out_of_date:owner:title' => 'Verouderde content van: %s',
+  'static:out_of_date:none' => 'Geen verouderde content gevonden',
+  'static:out_of_date:notification:subject' => 'Je statische content is verouderd',
+  'static:out_of_date:notification:message' => 'Hallo %s,
+
+Een aantal van je statische pagina\'s zijn verouderd. Controleer of de informatie nog actueel en/of nuttig is.
+
+Klik hier voor een complete lijst van de verouderde content
+%s',
+  'static:group_tool_option:description' => 'Dit onderdeel is bedoeld voor zogenaamde ‘statische’ content. Dat wil zeggen informatie over jouw groep die je wilt delen met collega’s,  die relatief weinig verandert en die door de beheerders van de groep bewerkt kan worden.',
   'static:new:thumbnail' => 'Upload afbeelding',
   'static:new:remove_thumbnail' => 'Verwijder afbeelding',
   'static:widgets:static_groups:title' => 'Statische pagina\'s',
@@ -12,7 +29,6 @@ $language = array (
   'static:groups:title' => 'Beheer groep statische pagina\'s',
   'static:groups:owner_block' => 'Groep statische pagina\'s',
   'static:groups:tool_option' => 'Schakel statische pagina\'s in',
-  'static:group_tool_option:description' => 'Maak statische pagina\'s voor deze groep. Deze pagina\'s kunnen alleen beheerd worden door de eigenaar/beheerders',
   'static:action:edit:error:title_description' => 'Geen een Titel en Omschrijving op',
   'static:action:edit:error:friendly_title' => 'De permalink is al in gebruik, kies een andere',
   'static:action:edit:success' => 'Succesvol opgeslagen',
@@ -29,4 +45,3 @@ $language = array (
   'static:new:permalink' => 'Permalink',
   'static:add' => 'Maak een statische pagina',
 );
-add_translation("nl", $language);
