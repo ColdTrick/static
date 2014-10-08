@@ -130,7 +130,11 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 					}
 				}
 				
-				$result += static_get_parent_moderators($parent, $guid_only);
+				// did we reach the top page
+				if (elgg_instanceof($parent, "object", "static")) {
+					// not yet, so check further
+					$result += static_get_parent_moderators($parent, $guid_only);
+				}
 			}
 		}
 		
