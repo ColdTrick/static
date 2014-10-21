@@ -58,8 +58,8 @@ $title = $entity->title;
 
 $body = elgg_view_entity($entity, array("full_view" => true));
 
-if ($entity->enable_comments == "yes") {
-	$body .= elgg_view_comments($entity);
+if ($entity->canComment()) {
+	$body .= elgg_view_comments($entity, true, array("id" => "static-comments-" . $entity->getGUID()));
 }
 
 static_setup_page_menu($entity);

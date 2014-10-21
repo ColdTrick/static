@@ -509,3 +509,67 @@ function static_daily_cron_handler($hook, $type, $return_value, $params) {
 		notify_user($user->getGUID(), $site->getGUID(), $subject, $message, array(), "email");
 	}
 }
+
+/**
+ * Add some menu items
+ *
+ * @param string         $hook         the name of the hook
+ * @param string         $type         the type of the hook
+ * @param ElggMenuItem[] $return_value current menu items
+ * @param array          $params       supplied params
+ *
+ * @return ElggMenuItem[]
+ */
+function static_register_entity_menu_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return $return_value;
+	}
+	
+	if (!$entity->canComment()) {
+		return $return_value;
+	}
+	
+	$return_value[] = ElggMenuItem::factory(array(
+		"name" => "comment",
+		"text" => elgg_view_icon("speech-bubble"),
+		"href" => $entity->getURL() . "#static-comments-" . $entity->getGUID(),
+		"title" => elgg_echo("comment:this"),
+		"priority" => 50
+	));
+	
+	return $return_value;
+}
+
+/**
+ * check if commenting is allowed in the page
+ *
+ * @param string $hook         the name of the hook
+ * @param string $type         the type of the hook
+ * @param bool   $return_value current menu items
+ * @param array  $params       supplied params
+ *
+ * @return bool
+ */
+function static_permissions_comment_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return $return_value;
+	}
+	
+	if ($entity->enable_comments == "yes") {
+		$return_value = true;
+	}
+	
+	return $return_value;
+}

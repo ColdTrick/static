@@ -43,9 +43,11 @@ function static_init() {
 	
 	elgg_register_plugin_hook_handler("permissions_check", "object", "static_permissions_check_hook_handler");
 	elgg_register_plugin_hook_handler("container_permissions_check", "all", "static_container_permissions_check_hook_handler");
+	elgg_register_plugin_hook_handler("permissions_check:comment", "object", "static_permissions_comment_hook_handler");
 	
 	elgg_register_plugin_hook_handler("register", "menu:owner_block", "static_register_owner_block_menu_hook_handler");
 	elgg_register_plugin_hook_handler("register", "menu:filter", "static_register_filter_menu_hook_handler");
+	elgg_register_plugin_hook_handler("register", "menu:entity", "static_register_entity_menu_hook_handler");
 	elgg_register_plugin_hook_handler("prepare", "menu:page", "static_prepare_page_menu_hook_handler");
 	
 	elgg_register_plugin_hook_handler("entity_types", "content_subscriptions", "static_content_subscriptions_entity_types_handler");
