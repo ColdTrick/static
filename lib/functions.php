@@ -343,3 +343,52 @@ function static_out_of_date_enabled() {
 	
 	return $result;
 }
+
+/**
+ * Make sure all the children are in the correct tree
+ *
+ * @param ElggObject $entity    the entity to check the children from
+ * @param int        $tree_guid the correct tree guid (will default to the given entity)
+ *
+ * @return bool
+ */
+function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
+	
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return false;
+	}
+	
+	$tree_guid = sanitise_int($tree_guid, false);
+	if (empty($tree_guid)) {
+		$tree_guid = $entity->getGUID();
+	}
+	
+	$options = array(
+		"type" => "object",
+		"subtype" => "static",
+		"owner_guid" => $entity->getOwnerGUID(),
+		"container_guid" => $entity->getGUID(),
+		"limit" => false
+	);
+	
+	// ignore access for this part
+	$ia = elgg_set_ignore_access(true);
+	
+	$batch = new ElggBatch("elgg_get_entities", $options);
+	foreach ($batch as $static) {
+		
+		// remove old tree
+		remove_entity_relationships($static->getGUID(), "subpage_of");
+		
+		// add new tree
+		add_entity_relationship($static->getGUID(), "subpage_of", $tree_guid);
+		
+		// check children
+		static_check_children_tree($static, $tree_guid);
+	}
+	
+	// restore access
+	elgg_set_ignore_access($ia);
+	
+	return true;
+}
