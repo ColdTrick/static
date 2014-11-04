@@ -567,6 +567,7 @@ function static_permissions_comment_hook_handler($hook, $type, $return_value, $p
 		return $return_value;
 	}
 	
+	$return_value = false;
 	if ($entity->enable_comments == "yes") {
 		$return_value = true;
 	}
