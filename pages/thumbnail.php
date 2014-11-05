@@ -3,39 +3,80 @@
  * Show the icon of a blog
  */
 
-$guid = (int) get_input("guid");
-$size = strtolower(get_input("size"));
-
-$icon_sizes = elgg_get_config("icon_sizes");
-if (!array_key_exists($size, $icon_sizes)) {
-	$size = "medium";
+// won't be able to serve anything if no joindate or guid
+if (!isset($_GET['guid'])) {
+	header("HTTP/1.1 404 Not Found");
+	exit;
 }
 
-$success = false;
-$contents = "";
+$icontime = (int) $_GET['icontime'];
+$size = strtolower($_GET['size']);
+$guid = (int) $_GET['guid'];
 
-$entity = get_entity($guid);
-if (!empty($entity) && elgg_instanceof($entity, "object", "static")) {
+// If is the same ETag, content didn't changed.
+$etag = $icontime . $guid;
+if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == "\"$etag\"") {
+	header("HTTP/1.1 304 Not Modified");
+	exit;
+}
+
+$engine_dir = dirname(dirname(dirname(dirname(__FILE__)))) . '/engine/';
+
+// Get DB settings
+require_once $engine_dir . 'settings.php';
+
+global $CONFIG;
+
+$data_root = $CONFIG->dataroot;
+if (empty($data_root)) {
+	$mysql_dblink = @mysql_connect($CONFIG->dbhost, $CONFIG->dbuser, $CONFIG->dbpass, true);
+	if ($mysql_dblink) {
+		if (@mysql_select_db($CONFIG->dbname, $mysql_dblink)) {
+			$q = "SELECT name, value FROM {$CONFIG->dbprefix}datalists WHERE name = 'dataroot'";
+			$result = mysql_query($q, $mysql_dblink);
+			if ($result) {
+				$row = mysql_fetch_object($result);
+				while ($row) {
+					if ($row->name == 'dataroot') {
+						$data_root = $row->value;
+					}
 	
-	$filehandler = new ElggFile();
-	$filehandler->owner_guid = $entity->getGUID();
-	$filehandler->setFilename("thumb" . $size . ".jpg");
+					$row = mysql_fetch_object($result);
+				}
+			}
 	
-	if ($filehandler->exists()) {
-		if ($contents = $filehandler->grabFile()) {
-			$success = true;
+			@mysql_close($mysql_dblink);
 		}
 	}
 }
 
-if (!$success) {
-	$contents = @file_get_contents(elgg_get_root_path() . "_graphics/icons/default/" . $size . ".png");
+if (!empty($data_root)) {
+	require_once $engine_dir . "classes/Elgg/EntityDirLocator.php";
+
+	$locator = new Elgg_EntityDirLocator($guid);
+	$user_path = $data_root . $locator->getPath();
+
+	$filename = $user_path . "thumb{$size}.jpg";
+	$filesize = @filesize($filename);
+
+	// try fallback size
+	if (!$filesize && $size !== "medium") {
+		$filename = $user_path . "thumbmedium.jpg";
+		$filesize = @filesize($filename);
+	}
+	
+	if ($filesize) {
+		header("Content-type: image/jpeg");
+		header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', strtotime("+6 months")), true);
+		header("Pragma: public");
+		header("Cache-Control: public");
+		header("Content-Length: $filesize");
+		header("ETag: \"$etag\"");
+		readfile($filename);
+		exit;
+	}
 }
 
-header("Content-type: image/jpeg");
-header("Expires: " . date("r", time() + 864000));
-header("Pragma: public");
-header("Cache-Control: public");
-header("Content-Length: " . strlen($contents));
-
-echo $contents;
+// something went wrong so 404
+header("HTTP/1.1 404 Not Found");
+exit;
