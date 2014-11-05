@@ -27,8 +27,11 @@ require_once $engine_dir . 'settings.php';
 
 global $CONFIG;
 
-$data_root = $CONFIG->dataroot;
-if (empty($data_root)) {
+if (isset($CONFIG->dataroot)) {
+	$data_root = $CONFIG->dataroot;
+}
+
+if (!isset($data_root)) {
 	$mysql_dblink = @mysql_connect($CONFIG->dbhost, $CONFIG->dbuser, $CONFIG->dbpass, true);
 	if ($mysql_dblink) {
 		if (@mysql_select_db($CONFIG->dbname, $mysql_dblink)) {
@@ -50,7 +53,7 @@ if (empty($data_root)) {
 	}
 }
 
-if (!empty($data_root)) {
+if (isset($data_root)) {
 	require_once $engine_dir . "classes/Elgg/EntityDirLocator.php";
 
 	$locator = new Elgg_EntityDirLocator($guid);
