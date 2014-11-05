@@ -118,7 +118,7 @@ function static_entity_icon_url_hook_handler($hook, $type, $return_value, $param
 		$size = elgg_extract("size", $params);
 		
 		if ($entity->icontime) {
-			$return_value = "static/thumbnail.php?guid=" . $entity->getGUID() . "&size=" . $size . "&icontime=" . $entity->icontime;
+			$return_value = "mod/static/pages/thumbnail.php?guid=" . $entity->getGUID() . "&size=" . $size . "&icontime=" . $entity->icontime;
 		}
 	}
 	

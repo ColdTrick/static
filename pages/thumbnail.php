@@ -14,7 +14,7 @@ $size = strtolower($_GET['size']);
 $guid = (int) $_GET['guid'];
 
 // If is the same ETag, content didn't changed.
-$etag = $icontime . $guid;
+$etag = $icontime . $size . $guid;
 if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) == "\"$etag\"") {
 	header("HTTP/1.1 304 Not Modified");
 	exit;
@@ -57,22 +57,25 @@ if (!empty($data_root)) {
 	$user_path = $data_root . $locator->getPath();
 
 	$filename = $user_path . "thumb{$size}.jpg";
-	$filesize = @filesize($filename);
+	$filecontents = @file_get_contents($filename);
 
 	// try fallback size
-	if (!$filesize && $size !== "medium") {
+	if (!$filecontents && $size !== "medium") {
 		$filename = $user_path . "thumbmedium.jpg";
-		$filesize = @filesize($filename);
+		$filecontents = @file_get_contents($filename);
 	}
 	
-	if ($filesize) {
+	if ($filecontents) {
+		$filesize = strlen($filecontents);
+		
 		header("Content-type: image/jpeg");
 		header('Expires: ' . gmdate('D, d M Y H:i:s \G\M\T', strtotime("+6 months")), true);
 		header("Pragma: public");
 		header("Cache-Control: public");
 		header("Content-Length: $filesize");
 		header("ETag: \"$etag\"");
-		readfile($filename);
+		
+		echo $filecontents;
 		exit;
 	}
 }
