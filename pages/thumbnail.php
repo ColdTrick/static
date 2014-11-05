@@ -1,6 +1,6 @@
 <?php
 /**
- * Show the icon of a blog
+ * Show the thumbnail
  */
 
 // won't be able to serve anything if no joindate or guid
