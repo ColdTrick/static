@@ -57,14 +57,14 @@ if (isset($data_root)) {
 	require_once $engine_dir . "classes/Elgg/EntityDirLocator.php";
 
 	$locator = new Elgg_EntityDirLocator($guid);
-	$user_path = $data_root . $locator->getPath();
+	$entity_path = $data_root . $locator->getPath();
 
-	$filename = $user_path . "thumb{$size}.jpg";
+	$filename = $entity_path . "thumb{$size}.jpg";
 	$filecontents = @file_get_contents($filename);
 
 	// try fallback size
 	if (!$filecontents && $size !== "medium") {
-		$filename = $user_path . "thumbmedium.jpg";
+		$filename = $entity_path . "thumbmedium.jpg";
 		$filecontents = @file_get_contents($filename);
 	}
 	
