@@ -50,6 +50,7 @@ if ($guid) {
 	}
 }
 
+$new_entity = false;
 if (!$entity) {
 	$entity = new ElggObject();
 	$entity->subtype = "static";
@@ -61,30 +62,55 @@ if (!$entity) {
 		register_error(elgg_echo("actionunauthorized"));
 		forward(REFERER);
 	}
+	
+	$new_entity = true;
 }
 
-if ($parent_guid !== $entity->container_guid) {
+if ($parent_guid !== $entity->getContainerGUID()) {
 	// reset order if moved to another parent
 	unset($entity->order);
 }
 
+// place in the correct tree
+$subpage_relationship_guid = false;
 if ($parent_guid !== $owner->getGUID()) {
+	
 	$parent = get_entity($parent_guid);
 	if (elgg_instanceof($parent, "object", "static")) {
+		
 		if ($parent->container_guid == $owner->getGUID()) {
+			// parent is a top page
 			$subpage_relationship_guid = $parent_guid;
 		} else {
-			$relations = $parent->getEntitiesFromRelationship(array("relation" => "subpage_of", "limit" => 1));
+			// further in the tree, so find out which tree
+			$relations = $parent->getEntitiesFromRelationship(array(
+				"type" => "object",
+				"subtype" => "static",
+				"relationship" => "subpage_of",
+				"limit" => 1
+			));
+			
 			if ($relations) {
 				$subpage_relationship_guid = $relations[0]->getGUID();
 			}
 		}
+		
 		if ($subpage_relationship_guid) {
+			// remove old tree relationships
+			remove_entity_relationships($entity->getGUID(), "subpage_of");
+			
+			// add new tree relationship
 			$entity->addRelationship($subpage_relationship_guid, "subpage_of");
 		}
 	}
 }
 
+// check the children for the correct tree
+if (!$new_entity) {
+	static_check_children_tree($entity, $subpage_relationship_guid);
+}
+
+// save all the content
 $entity->title = $title;
 $entity->description = $description;
 $entity->access_id = $access_id;

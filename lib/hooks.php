@@ -366,3 +366,211 @@ function static_search_advanced_autocomplete_handler($hook, $type, $return_value
 	
 	return $return_value;
 }
+
+/**
+ * Add menu items to the filter menu
+ *
+ * @param string         $hook         'register'
+ * @param string         $type         'menu:filter'
+ * @param ElggMenuItem[] $return_value the menu items
+ * @param array          $params       supplied params
+ *
+ * @return ElggMenuItem[]
+ */
+function static_register_filter_menu_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (!static_out_of_date_enabled()) {
+		return $return_value;
+	}
+	
+	if (!elgg_in_context("static")) {
+		return $return_value;
+	}
+	
+	$page_owner = elgg_get_page_owner_entity();
+	if (elgg_instanceof($page_owner, "group")) {
+		$return_value[] = ElggMenuItem::factory(array(
+			"name" => "all",
+			"text" => elgg_echo("all"),
+			"href" => "static/group/" . $page_owner->getGUID(),
+			"is_trusted" => true,
+			"priority" => 100
+		));
+		
+		if ($page_owner->canEdit()) {
+			$return_value[] = ElggMenuItem::factory(array(
+				"name" => "out_of_date_group",
+				"text" => elgg_echo("static:menu:filter:out_of_date:group"),
+				"href" => "static/group/" . $page_owner->getGUID() . "/out_of_date",
+				"is_trusted" => true,
+				"priority" => 250
+			));
+		}
+	} else {
+		$return_value[] = ElggMenuItem::factory(array(
+			"name" => "all",
+			"text" => elgg_echo("all"),
+			"href" => "static/all",
+			"is_trusted" => true,
+			"priority" => 100
+		));
+	}
+	
+	if (elgg_is_admin_logged_in()) {
+		$return_value[] = ElggMenuItem::factory(array(
+			"name" => "out_of_date",
+			"text" => elgg_echo("static:menu:filter:out_of_date"),
+			"href" => "static/out_of_date",
+			"is_trusted" => true,
+			"priority" => 200
+		));
+	}
+	
+	$user = elgg_get_logged_in_user_entity();
+	if (!empty($user)) {
+		$return_value[] = ElggMenuItem::factory(array(
+			"name" => "out_of_date_mine",
+			"text" => elgg_echo("static:menu:filter:out_of_date:mine"),
+			"href" => "static/out_of_date/" . $user->username,
+			"is_trusted" => true,
+			"priority" => 300
+		));
+	}
+	
+	return $return_value;
+}
+
+/**
+ * Add menu items to the filter menu
+ *
+ * @param string $hook         'cron'
+ * @param string $type         'daily'
+ * @param string $return_value optional output
+ * @param array  $params       supplied params
+ *
+ * @return void
+ */
+function static_daily_cron_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return;
+	}
+	
+	if (!static_out_of_date_enabled()) {
+		return;
+	}
+	
+	$time = elgg_extract("time", $params, time());
+	$days = (int) elgg_get_plugin_setting("out_of_date_days", "static");
+	$site = elgg_get_site_entity();
+	
+	$options = array(
+		"type" => "object",
+		"subtype" => "static",
+		"limit" => false,
+		"modified_time_upper" => $time - ($days * 24 * 60 * 60),
+		"modified_time_lower" => $time - (($days + 1) * 24 * 60 * 60),
+		"order_by" => "e.time_updated DESC"
+	);
+	
+	// ignore access
+	$ia = elgg_set_ignore_access(true);
+	
+	$batch = new ElggBatch("elgg_get_entities", $options);
+	$users = array();
+	foreach ($batch as $entity) {
+		$last_editors = $entity->getAnnotations(array(
+			"annotation_name" => "static_revision",
+			"limit" => 1,
+			"order_by" => "n_table.time_created DESC"
+		));
+		
+		if (empty($last_editors)) {
+			continue;
+		}
+		
+		$users[$last_editors[0]->getOwnerGUID()] = $last_editors[0]->getOwnerEntity();
+	}
+
+	// restore access
+	elgg_set_ignore_access($ia);
+	
+	if (empty($users)) {
+		return;
+	}
+	
+	foreach ($users as $user) {
+		$subject = elgg_echo("static:out_of_date:notification:subject");
+		$message = elgg_echo("static:out_of_date:notification:message", array(
+			$user->name,
+			elgg_normalize_url("static/out_of_date/" . $user->username)
+		));
+		
+		notify_user($user->getGUID(), $site->getGUID(), $subject, $message, array(), "email");
+	}
+}
+
+/**
+ * Add some menu items
+ *
+ * @param string         $hook         the name of the hook
+ * @param string         $type         the type of the hook
+ * @param ElggMenuItem[] $return_value current menu items
+ * @param array          $params       supplied params
+ *
+ * @return ElggMenuItem[]
+ */
+function static_register_entity_menu_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return $return_value;
+	}
+	
+	if (!$entity->canComment()) {
+		return $return_value;
+	}
+	
+	$return_value[] = ElggMenuItem::factory(array(
+		"name" => "comments",
+		"text" => elgg_view_icon("speech-bubble"),
+		"href" => $entity->getURL() . "#static-comments-" . $entity->getGUID(),
+		"title" => elgg_echo("comment:this"),
+		"priority" => 50
+	));
+	
+	return $return_value;
+}
+
+/**
+ * check if commenting is allowed in the page
+ *
+ * @param string $hook         the name of the hook
+ * @param string $type         the type of the hook
+ * @param bool   $return_value current menu items
+ * @param array  $params       supplied params
+ *
+ * @return bool
+ */
+function static_permissions_comment_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return $return_value;
+	}
+	
+	$return_value = false;
+	if ($entity->enable_comments == "yes") {
+		$return_value = true;
+	}
+	
+	return $return_value;
+}

@@ -23,7 +23,26 @@ function static_page_handler($page) {
 			break;
 		case "group":
 			set_input("guid", $page[1]);
-			include(dirname(dirname(__FILE__)) . "/pages/group.php");
+			
+			if (!empty($page[2]) && ($page[2] == "out_of_date")) {
+				include(dirname(dirname(__FILE__)) . "/pages/out_of_date_group.php");
+			} else {
+				include(dirname(dirname(__FILE__)) . "/pages/group.php");
+			}
+			break;
+		case "out_of_date":
+			$user = false;
+			if (!empty($page[1])) {
+				$user = get_user_by_username($page[1]);
+			}
+			
+			if ($user) {
+				elgg_set_page_owner_guid($user->getGUID());
+				
+				include(dirname(dirname(__FILE__)) . "/pages/out_of_date_owner.php");
+			} else {
+				include(dirname(dirname(__FILE__)) . "/pages/out_of_date.php");
+			}
 			break;
 		case "all":
 		default:
