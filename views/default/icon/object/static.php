@@ -40,7 +40,7 @@ if (!isset($vars['width'])) {
 	$vars['width'] = $size != 'master' ? $icon_sizes[$size]['w'] : null;
 }
 if (!isset($vars['height'])) {
-	$vars['height'] = "auto";
+	$vars['height'] = $size != 'master' ? $icon_sizes[$size]['h'] : null;
 }
 
 $img_params = array(
