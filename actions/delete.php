@@ -2,7 +2,10 @@
 
 $guid = get_input("guid");
 if ($guid) {
+	
+	$ia = elgg_set_ignore_access(true);
 	$entity = get_entity($guid);
+	elgg_set_ignore_access($ia);
 	
 	$container = $entity->getContainerEntity();
 	

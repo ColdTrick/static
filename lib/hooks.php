@@ -137,30 +137,60 @@ function static_entity_icon_url_hook_handler($hook, $type, $return_value, $param
  */
 function static_permissions_check_hook_handler($hook, $type, $return_value, $params) {
 	
-	if (!$return_value && !empty($params) && is_array($params)) {
-		$entity = elgg_extract("entity", $params);
-		$user = elgg_extract("user", $params);
+	if ($return_value) {
+		// already have access, no need to add
+		return $return_value;
+	}
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract("entity", $params);
+	$user = elgg_extract("user", $params);
+	
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return $return_value;
+	}
+	
+	if (empty($user) || !elgg_instanceof($user, "user")) {
+		return $return_value;
+	}
+	
+	// check if the owner is a group
+	$owner = $entity->getOwnerEntity();
+	if (!empty($owner) && elgg_instanceof($owner, "group")) {
+		// if you can edit the group, you can edit the static page
+		if ($owner->canEdit($user->getGUID())) {
+			return true;
+		}
+	}
+	
+	// check if the user is a moderator of this static page
+	$ia = elgg_set_ignore_access(true);
+	$moderators = $entity->moderators;
+	
+	if (!empty($moderators)) {
+		if (!is_array($moderators)) {
+			$moderators = array($moderators);
+		}
 		
-		if (!empty($entity) && elgg_instanceof($entity, "object", "static")) {
-			$ia = elgg_set_ignore_access(true);
-			// check if the user is a moderator of this static page
-			$moderators = $entity->moderators;
-			if (!empty($moderators)) {
-				if (!is_array($moderators)) {
-					$moderators = array($moderators);
-				}
-				
-				$return_value = in_array($user->getGUID(), $moderators);
-			}
-			
+		if (in_array($user->getGUID(), $moderators)) {
 			elgg_set_ignore_access($ia);
 			
-			// if not moderator, check higher pages (if any)
-			if (!$return_value && ($entity->getContainerGUID() != $entity->site_guid)) {
-				$moderators = static_get_parent_moderators($entity, true);
-				if (!empty($moderators)) {
-					$return_value = in_array($user->getGUID(), $moderators);
-				}
+			return true;
+		}
+	}
+	
+	elgg_set_ignore_access($ia);
+	
+	// if not moderator, check higher pages (if any)
+	if ($entity->getContainerGUID() != $entity->site_guid) {
+		$moderators = static_get_parent_moderators($entity, true);
+		
+		if (!empty($moderators)) {
+			if (in_array($user->getGUID(), $moderators)) {
+				return true;
 			}
 		}
 	}

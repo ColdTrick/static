@@ -43,9 +43,11 @@ if ($parent_guid) {
 }
 
 if ($guid) {
+	$ia = elgg_set_ignore_access(true);
 	$entity = get_entity($guid);
+	elgg_set_ignore_access($ia);
 
-	if (!elgg_instanceof($entity, "object", "static") || !($entity->canEdit())) {
+	if (!elgg_instanceof($entity, "object", "static") || !$entity->canEdit()) {
 		forward(REFERER);
 	}
 }
@@ -58,11 +60,15 @@ if (!$entity) {
 	$entity->container_guid = $parent_guid;
 	$entity->access_id = $access_id;
 	
+	$ia = elgg_set_ignore_access(true);
 	if (!$entity->save()) {
+		elgg_set_ignore_access($ia);
+		
 		register_error(elgg_echo("actionunauthorized"));
 		forward(REFERER);
 	}
 	
+	elgg_set_ignore_access($ia);
 	$new_entity = true;
 }
 
@@ -75,7 +81,10 @@ if ($parent_guid !== $entity->getContainerGUID()) {
 $subpage_relationship_guid = false;
 if ($parent_guid !== $owner->getGUID()) {
 	
+	$ia = elgg_set_ignore_access(true);
 	$parent = get_entity($parent_guid);
+	elgg_set_ignore_access($ia);
+	
 	if (elgg_instanceof($parent, "object", "static")) {
 		
 		if ($parent->container_guid == $owner->getGUID()) {
@@ -109,6 +118,8 @@ if ($parent_guid !== $owner->getGUID()) {
 if (!$new_entity) {
 	static_check_children_tree($entity, $subpage_relationship_guid);
 }
+
+$ia = elgg_set_ignore_access(true);
 
 // save all the content
 $entity->title = $title;
@@ -150,6 +161,7 @@ if ($remove_icon) {
 
 $entity->annotate("static_revision", $description);
 
+elgg_set_ignore_access($ia);
 elgg_clear_sticky_form("static");
 system_message(elgg_echo("static:action:edit:success"));
 
