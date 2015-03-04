@@ -14,7 +14,7 @@ $description = get_input("description");
 $access_id = (int) get_input("access_id", ACCESS_PUBLIC);
 
 $enable_comments = get_input("enable_comments");
-$moderators = get_input("moderators");
+$moderators = get_input("members");
 
 $remove_icon = (int) get_input("remove_thumbnail");
 

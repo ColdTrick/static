@@ -1,6 +1,6 @@
 <?php
 
-elgg_gatekeeper();
+gatekeeper();
 
 $site = elgg_get_site_entity();
 

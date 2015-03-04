@@ -11,7 +11,7 @@ if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
 }
 
 if (!has_access_to_entity($entity) && !$entity->canEdit()) {
-	register_error(elgg_echo("limited_access"));
+	register_error(elgg_echo("noaccess"));
 	forward(REFERER);
 }
 

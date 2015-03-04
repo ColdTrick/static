@@ -1,6 +1,6 @@
 <?php
 
-elgg_gatekeeper();
+gatekeeper();
 
 $guid = (int) get_input("guid");
 $body_vars = array();
@@ -19,9 +19,10 @@ elgg_push_breadcrumb(elgg_echo("static:all"), "static/all");
 if ($guid) {
 	$ia = elgg_set_ignore_access(true);
 	
-	elgg_entity_gatekeeper($guid, "object", "static");
-	
 	$entity = get_entity($guid);
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		forward(REFERER);
+	}
 	
 	elgg_set_ignore_access($ia);
 	if (!$entity->canEdit()) {

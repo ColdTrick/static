@@ -1,10 +1,6 @@
 <?php
-/**
- * This file was created by Translation Editor v2.0
- * On 2014-10-08 17:29
- */
-
-return array (
+$language = array (
+  'static:settings:enable_groups' => 'Schakel statisch pagina\'s voor groepen in',
   'static:settings:enable_out_of_date' => 'Schakel verouderde content notificaties/weergave in',
   'static:settings:out_of_date_days' => 'Aantal dagen voordat content verouderd is',
   'static:settings:out_of_date_days:days' => 'dagen',
@@ -45,3 +41,4 @@ Klik hier voor een complete lijst van de verouderde content
   'static:new:permalink' => 'Permalink',
   'static:add' => 'Maak een statische pagina',
 );
+add_translation("nl", $language);

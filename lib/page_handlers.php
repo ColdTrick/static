@@ -44,6 +44,18 @@ function static_page_handler($page) {
 				include(dirname(dirname(__FILE__)) . "/pages/out_of_date.php");
 			}
 			break;
+		case "thumbnail":
+			set_input("guid", $page[1]);
+			
+			if (empty($page[2])) {
+				set_input("size", $page[2]);
+			}
+			
+			if (empty($page[3])) {
+				set_input("icontime", $page[3]);
+			}
+			
+			include(dirname(dirname(__FILE__)) . "/pages/thumbnail.php");
 		case "all":
 		default:
 			include(dirname(dirname(__FILE__)) . "/pages/all.php");

@@ -3,11 +3,15 @@
  * List the top statics of this group
  */
 
-elgg_gatekeeper();
-elgg_group_gatekeeper();
+gatekeeper();
+group_gatekeeper();
 
 $group = elgg_get_page_owner_entity();
 if (empty($group) || !elgg_instanceof($group, "group")) {
+	forward(REFERER);
+}
+
+if (!static_group_enabled($group)) {
 	forward(REFERER);
 }
 

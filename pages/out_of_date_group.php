@@ -1,7 +1,7 @@
 <?php
 
-elgg_gatekeeper();
-elgg_group_gatekeeper();
+gatekeeper();
+group_gatekeeper();
 
 if (!static_out_of_date_enabled()) {
 	forward(REFERER);
@@ -13,8 +13,12 @@ if (empty($page_owner) || !elgg_instanceof($page_owner, "group")) {
 	forward(REFERER);
 }
 
+if (!static_group_enabled($page_owner)) {
+	forward(REFERER);
+}
+
 if (!$page_owner->canEdit()) {
-	register_error(elgg_echo("limited_access"));
+	register_error(elgg_echo("noaccess"));
 	forward(REFERER);
 }
 

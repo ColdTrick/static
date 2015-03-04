@@ -21,7 +21,8 @@ function static_init() {
 
 	// register page handler for nice URL's
 	elgg_register_page_handler("static", "static_page_handler");
-
+	elgg_register_entity_url_handler("object", "static", "static_entity_url_hook_handler");
+	
 	elgg_extend_view("js/elgg", "js/static/site");
 	elgg_extend_view("css/elgg", "css/static/site");
 
@@ -29,16 +30,18 @@ function static_init() {
 	elgg_register_entity_type('object', 'static');
 	
 	// groups
-	add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
-	elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), array("groups"));
+	if (static_group_enabled()) {
+		add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
+		elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), "groups");
+	}
 	
 	// events
-	elgg_register_event_handler("create", "object", "static_create_comment_handler");;
-	elgg_register_event_handler("delete", "object", "static_delete_object_handler");;
+	elgg_register_event_handler("create", "annotation", "static_create_comment_handler");
+	elgg_register_event_handler("delete", "object", "static_delete_object_handler");
+	elgg_register_event_handler("upgrade", "system", "static_upgrade_system_handler");
 	
 	// plugin hooks
 	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");
-	elgg_register_plugin_hook_handler("entity:url", "object", "static_entity_url_hook_handler");
 	elgg_register_plugin_hook_handler("entity:icon:url", "object", "static_entity_icon_url_hook_handler");
 	
 	elgg_register_plugin_hook_handler("permissions_check", "object", "static_permissions_check_hook_handler");
@@ -51,8 +54,6 @@ function static_init() {
 	elgg_register_plugin_hook_handler("prepare", "menu:page", "static_prepare_page_menu_hook_handler");
 	
 	elgg_register_plugin_hook_handler("entity_types", "content_subscriptions", "static_content_subscriptions_entity_types_handler");
-	elgg_register_plugin_hook_handler("group_tool_widgets", "widget_manager", "static_group_tool_widgets_handler");
-	elgg_register_plugin_hook_handler("autocomplete", "search_advanced", "static_search_advanced_autocomplete_handler");
 	
 	elgg_register_plugin_hook_handler("cron", "daily", "static_daily_cron_handler");
 	

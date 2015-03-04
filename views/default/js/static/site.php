@@ -35,13 +35,13 @@ elgg.static.init = function() {
    		}
 	});
 
-	$(".elgg-menu-page-static li a").on("click", function(event) {
+	$(".elgg-menu-page-static li a").live("click", function(event) {
 		if ($(this).hasClass("dragged")) {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			$(this).removeClass("dragged");
 		}
-	});	
+	});
 };
 
 elgg.register_hook_handler('init', 'system', elgg.static.init);

@@ -18,12 +18,12 @@ function static_setup_page_menu($entity) {
 	} elseif(!empty($page_owner) && ($entity->getContainerGUID() == $page_owner->getGUID())) {
 		$root_entity = $entity;
 	} else {
-		$relations = $entity->getEntitiesFromRelationship(array("relationship" => "subpage_of", "limit" => 1));
+		$relations = $entity->getEntitiesFromRelationship("subpage_of", false, 1);
 		if ($relations) {
 			$root_entity = $relations[0];
 		}
 	}
-
+	
 	if ($root_entity) {
 		$priority = (int) $root_entity->order;
 		if (empty($priority)) {
@@ -44,7 +44,7 @@ function static_setup_page_menu($entity) {
 		}
 		// add main menu items
 		elgg_register_menu_item("page", $root_menu_options);
-
+		
 		// add sub menu items
 		$ia = elgg_set_ignore_access(true);
 		$submenu_options = array(
@@ -391,4 +391,97 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 	elgg_set_ignore_access($ia);
 	
 	return true;
+}
+
+/**
+ * Returns a url for a static content page or a static widget
+ *
+ * @param string $hook         name of the hook
+ * @param string $type         type of the hook
+ * @param array  $return_value return value
+ * @param array  $params       hook parameters
+ *
+ * @return string
+ */
+function static_entity_url_hook_handler(ElggObject $entity) {
+	
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return;
+	}
+	
+	// static pages
+	$friendly_title = $entity->friendly_title;
+	if ($friendly_title) {
+		return elgg_get_site_url() . $friendly_title;
+	} else {
+			
+		$friendly_title = static_make_friendly_title($entity->title, $entity->getGUID());
+		$entity->friendly_title = $friendly_title;
+
+		return elgg_get_site_url() . $friendly_title;
+	}
+	
+	return;
+}
+
+/**
+ * Find the root page based on the old tree structure
+ *
+ * @param ElggObject $entity the static page to find the root for
+ *
+ * @return false|ElggObject
+ */
+function static_find_old_root_page(ElggObject $entity) {
+	
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return false;
+	}
+	
+	$parent_guid = (int) $entity->parent_guid;
+	if (empty($parent_guid)) {
+		return $entity;
+	}
+	
+	$ia = elgg_set_ignore_access(true);
+	$parent = get_entity($parent_guid);
+	elgg_set_ignore_access($ia);
+	
+	if (empty($parent) || !elgg_instanceof($parent, "object", "static")) {
+		return $entity;
+	}
+	
+	$root = static_find_old_root_page($parent);
+	if (empty($root)) {
+		return $parent;
+	}
+	
+	return $root;
+}
+
+function static_group_enabled(ElggGroup $group) {
+	static $plugin_setting;
+	
+	if (!isset($plugin_setting)) {
+		$plugin_setting = false;
+		
+		$setting = elgg_get_plugin_setting("enable_groups", "static");
+		if ($setting === "yes") {
+			$plugin_setting = true;
+		}
+	}
+	
+	// shortcut
+	if (!$plugin_setting) {
+		return false;
+	}
+	
+	if (empty($group) || !elgg_instanceof($group, "group")) {
+		return $plugin_setting;
+	}
+	
+	if ($group->static_enable !== "no") {
+		return true;
+	}
+	
+	return false;
 }

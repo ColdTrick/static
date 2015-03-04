@@ -1,6 +1,6 @@
 <?php
 
-elgg_gatekeeper();
+gatekeeper();
 
 if (!static_out_of_date_enabled()) {
 	forward(REFERER);
@@ -13,12 +13,12 @@ if (empty($page_owner) || !elgg_instanceof($page_owner, "user")) {
 }
 
 if (!$page_owner->canEdit()) {
-	register_error(elgg_echo("limited_access"));
+	register_error(elgg_echo("noaccess"));
 	forward(REFERER);
 }
 
 $dbprefix = elgg_get_config("dbprefix");
-$static_revision_id = elgg_get_metastring_id("static_revision");
+$static_revision_id = get_metastring_id("static_revision");
 $days = (int) elgg_get_plugin_setting("out_of_date_days", "static");
 
 $options = array(

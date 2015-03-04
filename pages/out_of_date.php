@@ -1,6 +1,6 @@
 <?php
 
-elgg_admin_gatekeeper();
+admin_gatekeeper();
 
 if (!static_out_of_date_enabled()) {
 	forward(REFERER);
