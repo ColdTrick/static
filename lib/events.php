@@ -18,7 +18,12 @@ function static_create_comment_handler($event, $type, ElggAnnotation $comment) {
 	if (empty($comment) || !($comment instanceof ElggAnnotation)) {
 		return;
 	}
-
+	
+	// only act on comments
+	if ($comment->name !== "generic_comment") {
+		return;
+	}
+	
 	// is it a comment on a static page
 	$entity = $comment->getEntity();
 	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
@@ -31,6 +36,11 @@ function static_create_comment_handler($event, $type, ElggAnnotation $comment) {
 	$ia = elgg_set_ignore_access(true);
 	$revisions = $entity->getAnnotations("static_revision", 1, 0, "desc");
 
+	if (empty($revisions)) {
+		elgg_set_ignore_access($ia);
+		return;
+	}
+	
 	$static_owner = $revisions[0]->getOwnerEntity();
 
 	elgg_set_ignore_access($ia);
@@ -83,6 +93,10 @@ function static_delete_object_handler($event, $type, ElggObject $entity) {
  */
 function static_upgrade_system_handler($event, $type, $entity) {
 	
+	// this process could take a while
+	set_time_limit(0);
+	
+	// set entity options
 	$options = array(
 		"type" => "object",
 		"subtype" => "static",
@@ -91,14 +105,17 @@ function static_upgrade_system_handler($event, $type, $entity) {
 		"limit" => false
 	);
 	
+	// set default metadata options
 	$metadata_options = array(
 		"metadata_name" => "parent_guid",
 		"site_guids" => false,
 		"limit" => false
 	);
 	
+	// make sure we can get all entities
 	$ia = elgg_set_ignore_access(true);
 	
+	// create a batch for processing
 	$batch = new ElggBatch("elgg_get_entities_from_metadata", $options);
 	$batch->setIncrementOffset(false);
 	foreach ($batch as $entity) {
@@ -143,6 +160,6 @@ function static_upgrade_system_handler($event, $type, $entity) {
 		elgg_delete_metadata($metadata_options);
 	}
 	
+	// restore access
 	elgg_set_ignore_access($ia);
-	
 }
