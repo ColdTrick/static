@@ -200,7 +200,21 @@ function static_prepare_page_menu_hook_handler($hook, $type, $return_value, $par
 	$static = elgg_extract("static", $return_value);
 	
 	if (is_array($static)) {
-		$return_value["static"] = static_order_menu($static);
+		$ordered_menu = static_order_menu($static);
+		$has_children = false;
+		
+		foreach ($ordered_menu as $menu_item) {
+			if ($menu_item->getChildren()) {
+				$has_children = true;
+				break;
+			}
+		}
+		
+		if ($has_children) {
+			$return_value["static"] = $ordered_menu;
+		} else {
+			unset($return_value["static"]);
+		}
 	}
 	
 	return $return_value;
