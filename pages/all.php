@@ -3,6 +3,7 @@
 gatekeeper();
 
 $site = elgg_get_site_entity();
+elgg_set_page_owner_guid($site->getGUID());
 
 $options = array(
 	"type" => "object",
@@ -51,9 +52,10 @@ if (can_write_to_container(elgg_get_logged_in_user_guid(), $site->getGUID(), "ob
 }
 
 $title_text = elgg_echo("static:all");
-$body = elgg_view_layout("one_column", array(
+$body = elgg_view_layout("content", array(
 	"title" => $title_text,
-	"content" => $filter . $body
+	"content" => $body,
+	"filter" => $filter
 ));
 
 echo elgg_view_page($title_text, $body);
