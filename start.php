@@ -37,6 +37,7 @@ function static_init() {
 	// events
 	elgg_register_event_handler("create", "object", "static_create_comment_handler");;
 	elgg_register_event_handler("delete", "object", "static_delete_object_handler");;
+	elgg_register_event_handler("upgrade", "system", "static_upgrade_system_handler");
 	
 	// plugin hooks
 	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");

@@ -394,6 +394,40 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 }
 
 /**
+ * Find the root page based on the old tree structure
+ *
+ * @param ElggObject $entity the static page to find the root for
+ *
+ * @return false|ElggObject
+ */
+function static_find_old_root_page(ElggObject $entity) {
+
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return false;
+	}
+
+	$parent_guid = (int) $entity->parent_guid;
+	if (empty($parent_guid)) {
+		return $entity;
+	}
+
+	$ia = elgg_set_ignore_access(true);
+	$parent = get_entity($parent_guid);
+	elgg_set_ignore_access($ia);
+
+	if (empty($parent) || !elgg_instanceof($parent, "object", "static")) {
+		return $entity;
+	}
+
+	$root = static_find_old_root_page($parent);
+	if (empty($root)) {
+		return $parent;
+	}
+
+	return $root;
+}
+
+/**
  * Check if group support is enabled
  *
  * @param ElggGroup $group (optional) check if the group has this enabled
