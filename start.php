@@ -29,8 +29,10 @@ function static_init() {
 	elgg_register_entity_type('object', 'static');
 	
 	// groups
-	add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
-	elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), array("groups"));
+	if (static_group_enabled()) {
+		add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
+		elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), array("groups"));
+	}
 	
 	// events
 	elgg_register_event_handler("create", "object", "static_create_comment_handler");;

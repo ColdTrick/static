@@ -7,6 +7,7 @@ return array(
 	'static:settings:enable_out_of_date' => "Enable out-of-date notifications/listing",
 	'static:settings:out_of_date_days' => "Number of days before content is out-of-date",
 	'static:settings:out_of_date_days:days' => "days",
+	'static:settings:enable_groups' => "Enable static pages in groups",
 	
 	'static:admin:empty' => "No static pages created",
 	'static:all' => "Manage static pages",

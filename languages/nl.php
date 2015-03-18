@@ -5,6 +5,7 @@
  */
 
 return array (
+  'static:settings:enable_groups' => 'Schakel statisch pagina\'s voor groepen in',
   'static:settings:enable_out_of_date' => 'Schakel verouderde content notificaties/weergave in',
   'static:settings:out_of_date_days' => 'Aantal dagen voordat content verouderd is',
   'static:settings:out_of_date_days:days' => 'dagen',

@@ -11,6 +11,10 @@ if (empty($group) || !elgg_instanceof($group, "group")) {
 	forward(REFERER);
 }
 
+if (!static_group_enabled($group)) {
+	forward(REFERER);
+}
+
 $can_write = $group->canWriteToContainer(0, "object", "static");
 
 $options = array(

@@ -13,6 +13,10 @@ if (empty($page_owner) || !elgg_instanceof($page_owner, "group")) {
 	forward(REFERER);
 }
 
+if (!static_group_enabled($page_owner)) {
+	forward(REFERER);
+}
+
 if (!$page_owner->canEdit()) {
 	register_error(elgg_echo("limited_access"));
 	forward(REFERER);

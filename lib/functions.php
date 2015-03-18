@@ -392,3 +392,39 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 	
 	return true;
 }
+
+/**
+ * Check if group support is enabled
+ *
+ * @param ElggGroup $group (optional) check if the group has this enabled
+ *
+ * @return bool
+ */
+function static_group_enabled(ElggGroup $group = null) {
+	static $plugin_setting;
+
+	if (!isset($plugin_setting)) {
+		$plugin_setting = false;
+
+		$setting = elgg_get_plugin_setting("enable_groups", "static");
+		if ($setting === "yes") {
+			$plugin_setting = true;
+		}
+	}
+
+	// shortcut
+	if (!$plugin_setting) {
+		return false;
+	}
+
+	if (empty($group) || !elgg_instanceof($group, "group")) {
+		return $plugin_setting;
+	}
+
+	if ($group->static_enable !== "no") {
+		return true;
+	}
+
+	return false;
+}
+

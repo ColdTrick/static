@@ -259,18 +259,21 @@ function static_prepare_page_menu_hook_handler($hook, $type, $return_value, $par
  */
 function static_register_owner_block_menu_hook_handler($hook, $type, $return_value, $params) {
 	
-	if (!empty($params) && is_array($params)) {
-		$owner = elgg_extract("entity", $params);
-		
-		if (!empty($owner) && elgg_instanceof($owner, "group")) {
-			if ($owner->static_enable != "no") {
-				$return_value[] = ElggMenuItem::factory(array(
-					"name" => "static",
-					"text" => elgg_echo("static:groups:owner_block"),
-					"href" => "static/group/" . $owner->getGUID()
-				));
-			}
-		}
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$owner = elgg_extract("entity", $params);
+	if (empty($owner) || !elgg_instanceof($owner, "group")) {
+		return $return_value;
+	}
+	
+	if (static_group_enabled($owner)) {
+		$return_value[] = ElggMenuItem::factory(array(
+			"name" => "static",
+			"text" => elgg_echo("static:groups:owner_block"),
+			"href" => "static/group/" . $owner->getGUID()
+		));
 	}
 	
 	return $return_value;

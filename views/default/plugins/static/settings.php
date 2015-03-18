@@ -28,3 +28,13 @@ echo elgg_view("input/text", array(
 ));
 echo elgg_echo("static:settings:out_of_date_days:days");
 echo "</div>";
+
+echo "<div>";
+echo elgg_echo("static:settings:enable_groups");
+echo elgg_view("input/dropdown", array(
+	"name" => "params[enable_groups]",
+	"options_values" => $noyes_options,
+	"value" => $plugin->enable_groups,
+	"class" => "mls"
+));
+echo "</div>";
