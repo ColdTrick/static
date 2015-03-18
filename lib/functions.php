@@ -458,7 +458,7 @@ function static_find_old_root_page(ElggObject $entity) {
 	return $root;
 }
 
-function static_group_enabled(ElggGroup $group) {
+function static_group_enabled(ElggGroup $group = null) {
 	static $plugin_setting;
 	
 	if (!isset($plugin_setting)) {
