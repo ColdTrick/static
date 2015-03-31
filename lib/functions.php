@@ -34,7 +34,7 @@ function static_setup_page_menu($entity) {
 			"name" => $root_entity->getGUID(),
 			"rel" => $root_entity->getGUID(),
 			"href" => $root_entity->getURL(),
-			"text" => $root_entity->title,
+			"text" => '<span>' . $root_entity->title . '</span>',
 			"priority" => $priority,
 			"section" => "static"
 		);
@@ -76,7 +76,7 @@ function static_setup_page_menu($entity) {
 					"name" => $submenu_item->getGUID(),
 					"rel" => $submenu_item->getGUID(),
 					"href" => $submenu_item->getURL(),
-					"text" => $submenu_item->title,
+					"text" => '<span>' . $submenu_item->title . '</span>',
 					"priority" => $priority,
 					"parent_name" => $submenu_item->getContainerGUID(),
 					"section" => "static"

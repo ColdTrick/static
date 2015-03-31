@@ -42,6 +42,14 @@ elgg.static.init = function() {
 			$(this).removeClass("dragged");
 		}
 	});	
+
+	$(".elgg-menu-page-static li a span").on("click", function(event) {
+		var href = $(this).parent().attr('href');
+		document.location = href;
+
+		event.preventDefault();
+		event.stopImmediatePropagation();
+	});
 };
 
 elgg.register_hook_handler('init', 'system', elgg.static.init);
