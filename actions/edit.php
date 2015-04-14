@@ -87,14 +87,15 @@ if ($parent_guid !== $owner->getGUID()) {
 	
 	if (elgg_instanceof($parent, "object", "static")) {
 		
-		if ($parent->container_guid == $owner->getGUID()) {
+		if ($parent->getContainerGUID() == $owner->getGUID()) {
 			// parent is a top page
 			$subpage_relationship_guid = $parent_guid;
 		} else {
 			// further in the tree, so find out which tree
-			$relations = $parent->getEntitiesFromRelationship(array(
+			$relations = elgg_get_entities_from_relationship(array(
 				"type" => "object",
 				"subtype" => "static",
+				"relationship_guid" => $parent->getGUID(),
 				"relationship" => "subpage_of",
 				"limit" => 1
 			));
