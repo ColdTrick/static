@@ -564,6 +564,17 @@ function static_register_entity_menu_hook_handler($hook, $type, $return_value, $
 		return $return_value;
 	}
 	
+	// remove menu items
+	$remove_menu_items = array(
+		'edit'
+	);
+	foreach ($return_value as $index => $menu_item) {
+		if (in_array($menu_item->getName(), $remove_menu_items)) {
+			unset($return_value[$index]);
+		}
+	}
+	
+	// add comment link
 	if (!$entity->canComment()) {
 		return $return_value;
 	}
@@ -573,7 +584,7 @@ function static_register_entity_menu_hook_handler($hook, $type, $return_value, $
 		"text" => elgg_view_icon("speech-bubble"),
 		"href" => $entity->getURL() . "#static-comments-" . $entity->getGUID(),
 		"title" => elgg_echo("comment:this"),
-		"priority" => 50
+		"priority" => 300
 	));
 	
 	return $return_value;
