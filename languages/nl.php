@@ -1,5 +1,7 @@
 <?php
 $language = array (
+  'static:widgets:static_groups:edit:main_page' => 'Selecteer een hoofdpagina voor lijstweergave',
+  'static:widgets:static_groups:edit:main_page:select' => 'Alleen hoofdpagina\'s',
   'static:settings:enable_groups' => 'Schakel statisch pagina\'s voor groepen in',
   'static:settings:enable_out_of_date' => 'Schakel verouderde content notificaties/weergave in',
   'static:settings:out_of_date_days' => 'Aantal dagen voordat content verouderd is',

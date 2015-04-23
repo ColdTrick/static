@@ -10,26 +10,49 @@ if (!static_group_enabled($group)) {
 	return;
 }
 
-$can_write = $group->canWriteToContainer(0, "object", "static");
+$container = false;
+$main_page = (int) $widget->main_page;
+if (!empty($main_page)) {
+	$container = get_entity($main_page);
+	if (empty($container) || !elgg_instanceof($container, 'object', 'static')) {
+		unset($container);
+	}
+}
+
+if (empty($container)) {
+	$container = $group;
+}
 
 $options = array(
 	"type" => "object",
 	"subtype" => "static",
 	"limit" => false,
-	"container_guid" => $group->getGUID(),
-	"joins" => array("JOIN " . elgg_get_config("dbprefix") . "objects_entity oe ON e.guid = oe.guid"),
-	"order_by" => "oe.title asc",
+	"container_guid" => $container->getGUID(),
 	"full_view" => false,
+	"pagination" => false
 );
 
-if ($can_write) {
-	$ia = elgg_set_ignore_access(true);
+$pages = new ElggBatch('elgg_get_entities', $options);
+$entities = array();
+foreach ($pages as $page) {
+	$order = (int) $page->order;
+	if (empty($order)) {
+		$order = (int) $page->time_created;
+	}
+	
+	while(isset($entities[$order])) {
+		$order++;
+	}
+	
+	$entities[$order] = $page;
 }
-$list = elgg_list_entities($options);
-if (empty($list)) {
+
+if (!empty($entities)) {
+	ksort($entities);
+	$list = elgg_view_entity_list($entities, $options);
+	
+	unset($entities);
+} else {
 	$list = elgg_echo("static:admin:empty");
 }
 echo $list;
-if ($can_write) {
-	elgg_set_ignore_access($ia);
-}

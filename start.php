@@ -32,7 +32,7 @@ function static_init() {
 	// groups
 	if (static_group_enabled()) {
 		add_group_tool_option("static", elgg_echo("static:groups:tool_option"), true);
-		elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), "groups");
+		elgg_register_widget_type("static_groups", elgg_echo("static:widgets:static_groups:title"), elgg_echo("static:widgets:static_groups:description"), "groups", true);
 	}
 	
 	// events

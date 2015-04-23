@@ -50,6 +50,8 @@ Click here for a complete list:
 	// widgets
 	'static:widgets:static_groups:title' => "Static pages",
 	'static:widgets:static_groups:description' => "Show the group static pages",
+	'static:widgets:static_groups:edit:main_page' => "Select main page for listing",
+	'static:widgets:static_groups:edit:main_page:select' => "Only show main pages",
 	
 	// actions
 	'static:action:edit:error:title_description' => "Please enter a Title and Description",

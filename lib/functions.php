@@ -459,6 +459,13 @@ function static_find_old_root_page(ElggObject $entity) {
 	return $root;
 }
 
+/**
+ * Is static enable for group
+ *
+ * @param ElggGroup $group (optional) check if enabled in this group
+ *
+ * @return bool
+ */
 function static_group_enabled(ElggGroup $group = null) {
 	static $plugin_setting;
 	
@@ -485,4 +492,73 @@ function static_group_enabled(ElggGroup $group = null) {
 	}
 	
 	return false;
+}
+
+/**
+ * Get a page selector for in widgets
+ *
+ * @param ElggEntity $container the container to get the static pages for
+ * @param int        $depth     used for indentation
+ *
+ * @return array|false
+ */
+function static_get_widget_selector(ElggEntity $container, $depth = 0) {
+	
+	if (empty($container) || !elgg_instanceof($container)) {
+		return false;
+	}
+	
+	$result = array();
+	$ordered = array();
+	
+	$options = array(
+		'type'=> 'object',
+		'subtype' => 'static',
+		'container_guid' => $container->getGUID(),
+		'limit' => false
+	);
+	$batch = new ElggBatch('elgg_get_entities', $options);
+	foreach ($batch as $page) {
+		$order = (int) $page->order;
+		if (empty($order)) {
+			$order = (int) $page->time_created;
+		}
+		
+		while (isset($ordered[$order])) {
+			$order++;
+		}
+		
+		$ordered[$order] = array(
+			'entity' => $page,
+			'children' => static_get_widget_selector($page, $depth + 1),
+		);
+	}
+	
+	if (empty($ordered)) {
+		return false;
+	}
+	
+	ksort($ordered);
+	foreach ($ordered as $items) {
+		$page = elgg_extract('entity', $items);
+		
+		// add this page
+		$result[$page->getGUID()] = trim(str_repeat('-', $depth) . ' ' . $page->title);
+		// invalidate cache for OOM
+		// @todo find a better way for this
+		_elgg_invalidate_cache_for_entity($page->getGUID());
+		
+		// append children
+		$children = elgg_extract('children', $items);
+		if (!empty($children)) {
+			// need to preserve numberic keys
+			foreach ($children as $guid => $text) {
+				$result[$guid] = $text;
+			}
+		}
+	}
+	
+	unset($ordered);
+	
+	return $result;
 }
