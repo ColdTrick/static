@@ -23,19 +23,13 @@ if (empty($container)) {
 	$container = $group;
 }
 
-$options = array(
-	"limit" => false,
-	"full_view" => false,
-	"pagination" => false,
-	"show_children" => elgg_instanceof($container, 'object', 'static'),
-);
-$entities = static_get_ordered_children($container);
-
-if (!empty($entities)) {
-	$list = elgg_view_entity_list($entities, $options);
-	
-	unset($entities);
-} else {
+$list = elgg_view_menu('static_group_widget', array(
+	'entity' => $container,
+	'show_children' => elgg_instanceof($container, 'object', 'static'),
+	'sort_by' => 'priority',
+	'class' => 'elgg-menu-page elgg-menu-page-static'
+));
+if (empty($list)) {
 	$list = elgg_echo("static:admin:empty");
 }
 echo $list;

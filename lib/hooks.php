@@ -494,3 +494,61 @@ function static_permissions_comment_hook_handler($hook, $type, $return_value, $p
 	
 	return $return_value;
 }
+
+/**
+ * make a menu structure
+ *
+ * @param string         $hook
+ * @param string         $type
+ * @param ElggMenuItem[] $return_value
+ * @param array          $params
+ *
+ * @return ElggMenuItem[]
+ */
+function static_register_static_group_widget_hook_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$entity = elgg_extract('entity', $params);
+	if (empty($entity) || !elgg_instanceof($entity)) {
+		return $return_value;
+	}
+	
+	$children = static_get_ordered_children($entity);
+	if (empty($children)) {
+		return $return_value;
+	}
+	
+	$show_children = (bool) elgg_extract('show_children', $params, false);
+	$depth = (int) elgg_extract('depth', $params, 0);
+	foreach ($children as $order => $child) {
+		
+		$item = ElggMenuItem::factory(array(
+			'name' => $child->getGUID(),
+			'text' => "<span>{$child->title}</span>",
+			'href' => $child->getURL(),
+			'priority' => $order,
+		));
+		
+		if (!empty($depth)) {
+			$item->setParentName($entity->getGUID());
+		}
+		
+		$return_value[] = $item;
+		
+		if ($show_children) {
+			$new_params = $params;
+			$new_params['entity'] = $child;
+			$new_params['depth'] = $depth + 1;
+			
+			$items = static_register_static_group_widget_hook_handler($hook, $type, array(), $new_params);
+			if (!empty($items)) {
+				$return_value = array_merge($return_value, $items);
+			}
+		}
+	}
+	
+	return $return_value;
+}
