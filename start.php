@@ -58,6 +58,8 @@ function static_init() {
 	
 	elgg_register_plugin_hook_handler("cron", "daily", "static_daily_cron_handler");
 	
+	elgg_register_plugin_hook_handler("search", "object:static", "static_search_handler");
+	
 	// actions
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");
 	elgg_register_action("static/delete", dirname(__FILE__) . "/actions/delete.php");

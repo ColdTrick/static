@@ -552,3 +552,159 @@ function static_register_static_group_widget_hook_handler($hook, $type, $return_
 	
 	return $return_value;
 }
+
+/**
+ * Handle a specific search case
+ *
+ * @param string $hook         the name of the hook
+ * @param string $type         the type of the hook
+ * @param mixed  $return_value current return value
+ * @param array  $params       supplied params
+ *
+ * @return null|array
+ */
+function static_search_handler($hook, $type, $return_value, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return $return_value;
+	}
+	
+	$container_guid = (int) elgg_extract('container_guid', $params);
+	if (empty($container_guid)) {
+		return $return_value;
+	}
+	
+	static $tag_name_ids;
+	static $valid_tag_names;
+	
+	$db_prefix = elgg_get_config('dbprefix');
+	
+	$query = sanitise_string($params['query']);
+	
+	if (!isset($tag_name_ids)) {
+		if ($valid_tag_names = elgg_get_registered_tag_metadata_names()) {
+			$tag_name_ids = array();
+			foreach ($valid_tag_names as $tag_name) {
+				$tag_name_ids[] = add_metastring($tag_name);
+			}
+		} else {
+			$tag_name_ids = false;
+		}
+	}
+	
+	if ($tag_name_ids) {
+		$params['joins'] = array(
+			"JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid",
+			"JOIN {$db_prefix}metadata md on e.guid = md.entity_guid"
+		);
+	} else {
+		$join = "JOIN {$db_prefix}objects_entity oe ON e.guid = oe.guid";
+		$params['joins'] = array($join);
+	}
+	
+	$fields = array('title', 'description');
+	
+	if (elgg_is_active_plugin('search_advanced')) {
+		$where = search_advanced_get_where_sql('oe', $fields, $params, FALSE);
+	} else {
+		$where = search_get_where_sql('oe', $fields, $params, FALSE);
+	}
+	
+	if ($tag_name_ids) {
+		// look up value ids to save a join
+		$value_ids = array();
+		$query_parts = array();
+	
+		if (elgg_is_active_plugin('search_advanced') && elgg_get_plugin_setting("enable_multi_tag", "search_advanced") == "yes") {
+			$query_array = explode(",", $query);
+			foreach ($query_array as $query_value) {
+				$query_value = trim($query_value);
+				if (!empty($query_value)) {
+					$query_parts[] = $query_value;
+				}
+			}
+		} else {
+			$query_parts[] = $query;
+		}
+	
+		foreach ($query_parts as $query_part) {
+			$value_ids[] = add_metastring($query_part);
+		}
+	
+		$md_where = "((md.name_id IN (" . implode(",", $tag_name_ids) . ")) AND md.value_id IN (" . implode(",", $value_ids) . "))";
+	
+		$params['wheres'] = array("(($where) OR ($md_where))");
+	} else {
+		$params['wheres'] = array($where);
+	}
+	
+	// container limits
+	unset($params['container_guid']);
+	$subtype_id = get_subtype_id('object', 'static');
+	$container_where = "(e.container_guid = {$container_guid} OR e.container_guid IN (
+		SELECT m.guid
+		FROM {$db_prefix}entities m
+		JOIN {$db_prefix}entity_relationships mr ON m.guid = mr.guid_two
+		WHERE m.container_guid = {$container_guid}
+		AND (m.type = 'object' AND m.subtype = {$subtype_id})
+		AND mr.relationship = 'subpage_of'
+	))";
+	
+	$params['wheres'][] = $container_where;
+	
+	// get count
+	$params['count'] = TRUE;
+	$count = elgg_get_entities($params);
+	
+	// no need to continue if nothing here.
+	if (!$count) {
+		return array('entities' => array(), 'count' => $count);
+	}
+	
+	$params['count'] = FALSE;
+	$entities = elgg_get_entities($params);
+	
+	// add the volatile data for why these entities have been returned.
+	foreach ($entities as $entity) {
+		if ($valid_tag_names) {
+			$matched_tags_strs = array();
+	
+			// get tags for each tag name requested to find which ones matched.
+			foreach ($valid_tag_names as $tag_name) {
+				$tags = $entity->getTags($tag_name);
+	
+				// @todo make one long tag string and run this through the highlight
+				// function.  This might be confusing as it could chop off
+				// the tag labels.
+				if ($query_parts) {
+					foreach ($query_parts as $part) {
+						if (in_array(strtolower($part), array_map('strtolower', $tags))) {
+							if (is_array($tags)) {
+								$tag_name_str = elgg_echo("tag_names:$tag_name");
+								$matched_tags_strs[] = "$tag_name_str: " . implode(', ', $tags);
+								// only need it once for each tag
+								break;
+							}
+						}
+					}
+				}
+			}
+				
+			$tags_str = implode('. ', $matched_tags_strs);
+			$tags_str = search_get_highlighted_relevant_substrings($tags_str, $params['query']);
+	
+			$entity->setVolatileData('search_matched_extra', $tags_str);
+		}
+	
+		$title = search_get_highlighted_relevant_substrings($entity->title, $params['query']);
+		$entity->setVolatileData('search_matched_title', $title);
+	
+		$desc = search_get_highlighted_relevant_substrings($entity->description, $params['query']);
+		$entity->setVolatileData('search_matched_description', $desc);
+	}
+	
+	return array(
+		'entities' => $entities,
+		'count' => $count,
+	);
+}
