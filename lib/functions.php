@@ -508,13 +508,53 @@ function static_get_widget_selector(ElggEntity $container, $depth = 0) {
 		return false;
 	}
 	
+	$ordered = static_get_ordered_children($container);
+	if (empty($ordered)) {
+		return false;
+	}
+	
 	$result = array();
-	$ordered = array();
+	
+	foreach ($ordered as $order => $page) {
+		// add this page
+		$result[$page->getGUID()] = trim(str_repeat('-', $depth) . ' ' . $page->title);
+		// invalidate cache for OOM
+		// @todo find a better way for this
+		_elgg_invalidate_cache_for_entity($page->getGUID());
+		
+		// append children
+		$children = static_get_widget_selector($page, $depth + 1);
+		if (!empty($children)) {
+			$result += $children;
+			
+			unset($children);
+		}
+	}
+	
+	unset($ordered);
+	
+	return $result;
+}
+
+/**
+ * Get the child ordered pages for a container
+ *
+ * @param ElggEntity $entity the container to get children for
+ *
+ * @return false|ElggObject[]
+ */
+function static_get_ordered_children(ElggEntity $entity) {
+	
+	if (empty($entity) || !elgg_instanceof($entity)) {
+		return false;
+	}
+	
+	$result = array();
 	
 	$options = array(
 		'type'=> 'object',
 		'subtype' => 'static',
-		'container_guid' => $container->getGUID(),
+		'container_guid' => $entity->getGUID(),
 		'limit' => false
 	);
 	$batch = new ElggBatch('elgg_get_entities', $options);
@@ -523,42 +563,19 @@ function static_get_widget_selector(ElggEntity $container, $depth = 0) {
 		if (empty($order)) {
 			$order = (int) $page->time_created;
 		}
-		
-		while (isset($ordered[$order])) {
+	
+		while (isset($result[$order])) {
 			$order++;
 		}
 		
-		$ordered[$order] = array(
-			'entity' => $page,
-			'children' => static_get_widget_selector($page, $depth + 1),
-		);
+		$result[$order] = $page;
 	}
 	
-	if (empty($ordered)) {
+	if (empty($result)) {
 		return false;
 	}
 	
-	ksort($ordered);
-	foreach ($ordered as $items) {
-		$page = elgg_extract('entity', $items);
-		
-		// add this page
-		$result[$page->getGUID()] = trim(str_repeat('-', $depth) . ' ' . $page->title);
-		// invalidate cache for OOM
-		// @todo find a better way for this
-		_elgg_invalidate_cache_for_entity($page->getGUID());
-		
-		// append children
-		$children = elgg_extract('children', $items);
-		if (!empty($children)) {
-			// need to preserve numberic keys
-			foreach ($children as $guid => $text) {
-				$result[$guid] = $text;
-			}
-		}
-	}
-	
-	unset($ordered);
+	ksort($result);
 	
 	return $result;
 }

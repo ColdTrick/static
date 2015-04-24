@@ -8,7 +8,7 @@ if (elgg_extract('full_view', $vars)) {
 		'entity' => $vars['entity'],
 		'handler' => 'static',
 		'sort_by' => 'priority',
-		'class' => 'elgg-menu-hz alliander-theme-menu-static',
+		'class' => 'elgg-menu-hz',
 	));
 	
 	$params = array(
@@ -49,12 +49,25 @@ if (elgg_extract('full_view', $vars)) {
 	echo elgg_view_image_block("", $body);
 	
 } elseif (elgg_in_context("widgets")) {
-	$body = elgg_view("output/url", array(
+	echo elgg_view("output/url", array(
 		"text" => $entity->title,
-		"href" => $entity->getURL()
+		"href" => $entity->getURL(),
+		"is_trusted" => true
 	));
-	echo elgg_view_image_block("", $body);
 	
+	$show_children = (bool) elgg_extract('show_children', $vars, false);
+	if ($show_children) {
+		$children = static_get_ordered_children($entity);
+		
+		if (!empty($children)) {
+			$params = $vars;
+			// unset some stuff to preven deadloops
+			unset($params['entity']);
+			unset($params['items']);
+			
+			echo elgg_view_entity_list($children, $params);
+		}
+	}
 } else {
 
 	$show_edit = elgg_extract("show_edit", $vars, true);

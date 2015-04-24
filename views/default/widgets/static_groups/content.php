@@ -24,31 +24,14 @@ if (empty($container)) {
 }
 
 $options = array(
-	"type" => "object",
-	"subtype" => "static",
 	"limit" => false,
-	"container_guid" => $container->getGUID(),
 	"full_view" => false,
-	"pagination" => false
+	"pagination" => false,
+	"show_children" => elgg_instanceof($container, 'object', 'static'),
 );
-
-$pages = new ElggBatch('elgg_get_entities', $options);
-$entities = array();
-foreach ($pages as $page) {
-	$order = (int) $page->order;
-	if (empty($order)) {
-		$order = (int) $page->time_created;
-	}
-	
-	while(isset($entities[$order])) {
-		$order++;
-	}
-	
-	$entities[$order] = $page;
-}
+$entities = static_get_ordered_children($container);
 
 if (!empty($entities)) {
-	ksort($entities);
 	$list = elgg_view_entity_list($entities, $options);
 	
 	unset($entities);
