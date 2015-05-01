@@ -26,7 +26,7 @@ if (empty($container)) {
 $list = elgg_view_menu('static_group_widget', array(
 	'entity' => $container,
 	'show_children' => elgg_instanceof($container, 'object', 'static'),
-	'sort_by' => 'priority',
+	'sort_by' => elgg_instanceof($container, 'object', 'static') ? 'priority' : 'text',
 	'class' => 'elgg-menu-page elgg-menu-page-static'
 ));
 if (empty($list)) {
