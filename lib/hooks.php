@@ -641,11 +641,12 @@ function static_search_handler($hook, $type, $return_value, $params) {
 	// container limits
 	unset($params['container_guid']);
 	$subtype_id = get_subtype_id('object', 'static');
-	$container_where = "(e.container_guid = {$container_guid} OR e.container_guid IN (
+	$container_where = "(e.container_guid = {$container_guid} OR e.guid IN (
 		SELECT m.guid
 		FROM {$db_prefix}entities m
-		JOIN {$db_prefix}entity_relationships mr ON m.guid = mr.guid_two
-		WHERE m.container_guid = {$container_guid}
+		JOIN {$db_prefix}entity_relationships mr ON m.guid = mr.guid_one
+		JOIN {$db_prefix}entities m2 ON m2.guid = mr.guid_two
+		WHERE m2.container_guid = {$container_guid}
 		AND (m.type = 'object' AND m.subtype = {$subtype_id})
 		AND mr.relationship = 'subpage_of'
 	))";
