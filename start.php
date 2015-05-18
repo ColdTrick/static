@@ -73,7 +73,7 @@ function static_init() {
 function static_page_setup() {
 	
 	elgg_register_menu_item('page', array(
-		'name' => "static",
+		'name' => "static_all",
 		'href' => "static/all",
 		'text' => elgg_echo("static:all"),
 		'context' => 'admin',
