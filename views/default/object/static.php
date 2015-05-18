@@ -70,9 +70,10 @@ if (elgg_extract('full_view', $vars)) {
 			"href" => "static/edit/" . $entity->getGUID(),
 			"text" => elgg_view_icon("settings-alt")
 		));
-		$delete_link = elgg_view("output/confirmlink", array(
+		$delete_link = elgg_view("output/url", array(
 			"href" => "action/static/delete?guid=" . $entity->getGUID(),
-			"text" => elgg_view_icon("delete")
+			"text" => elgg_view_icon("delete"),
+			"confirm" => true
 		));
 	
 		$body .= "<td width='1%' class='center'>" . $edit_link . "</td>";

@@ -80,7 +80,7 @@ $form_body .= "<div class='elgg-foot mtm'>";
 $form_body .= elgg_view("input/hidden", array("name" => "guid", "value" => $content_guid));
 $form_body .= elgg_view("input/hidden", array("name" => "owner_guid", "value" => $content_owner_guid));
 if ($entity) {
-	$form_body .= elgg_view("output/confirmlink", array("href" => "action/static/delete?guid=" . $entity->getGUID(), "text" => elgg_echo("delete"), "class" => "elgg-button elgg-button-delete float-alt"));
+	$form_body .= elgg_view("output/url", array("href" => "action/static/delete?guid=" . $entity->getGUID(), "text" => elgg_echo("delete"), "class" => "elgg-button elgg-button-delete float-alt", "confirm" => true));
 }
 $form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
 $form_body .= "</div>";
