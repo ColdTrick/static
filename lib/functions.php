@@ -208,6 +208,39 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 	
 	$friendly_title = elgg_get_friendly_title($friendly_title);
 	
+	$available = static_is_friendly_title_available($friendly_title, $entity_guid);
+	
+	if (!empty($entity_guid) && !$available) {
+		// when editing an existing entity we will not generate a new name
+		return false;
+	}
+	
+	if (!$available) {
+		// generate a new name	
+		$counter = 1;
+		while (!static_is_friendly_title_available($friendly_title . $counter, $entity_guid)) {
+			$counter++;
+		}
+		
+		$friendly_title = $friendly_title . $counter;
+	}
+		
+	return $friendly_title;
+}
+
+/**
+ * Checks if a friendly title/permalink is available for use
+ *
+ * @param string $friendly_title the input friendly title
+ * @param int    $entity_guid    when provided it validates for uniques
+ *
+ * @return bool true if available, false otherwise
+ */
+function static_is_friendly_title_available($friendly_title, $entity_guid) {
+	if (empty($friendly_title)) {
+		return false;
+	}
+	
 	// check for duplicates
 	$options = array(
 		"type" => "object",
@@ -226,26 +259,17 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 	
 	$ia = elgg_set_ignore_access(true);
 	$entities = elgg_get_entities_from_metadata($options);
-	if (!empty($entities)) {
-		
-		if (!empty($entity_guid)) {
-			elgg_set_ignore_access($ia);
-			return false;
-		}
-		
-		$counter = 1;
-		$options["metadata_name_value_pairs"]["value"] = $friendly_title . $counter;
-		while (elgg_get_entities_from_metadata($options)) {
-			$counter++;
-			$options["metadata_name_value_pairs"]["value"] = $friendly_title . $counter;
-		}
-		
-		$friendly_title = $friendly_title . $counter;
-	}
+	
+	$router = _elgg_services()->router;
+	$handlers = $router->getPageHandlers();
 	
 	elgg_set_ignore_access($ia);
 	
-	return $friendly_title;
+	if (!empty($entities) || elgg_extract($friendly_title, $handlers)) {
+		return false;
+	}
+	
+	return true;	
 }
 
 /**
