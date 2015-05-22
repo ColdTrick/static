@@ -59,7 +59,7 @@ if ($entity && $entity->icontime) {
 }
 $form_body .= "</div>";
 
-$form_body .= "<div><label>" . elgg_echo("description") . "</label><br />";
+$form_body .= "<div><label>" . elgg_echo("description") . "</label>";
 $form_body .= elgg_view("input/longtext", array("name" => "description", "value" => elgg_get_sticky_value("static", "description", $content_description))) . "</div>";
 
 if (!empty($parent_options)) {
