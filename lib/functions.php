@@ -11,80 +11,63 @@
  * @return void
  */
 function static_setup_page_menu($entity) {
-	$page_owner = elgg_get_page_owner_entity();
+	$static_items = array();
 	
-	if ($entity->getContainerGUID() == $entity->site_guid) {
-		$root_entity = $entity;
-	} elseif(!empty($page_owner) && ($entity->getContainerGUID() == $page_owner->getGUID())) {
-		$root_entity = $entity;
-	} else {
-		$relations = $entity->getEntitiesFromRelationship(array("relationship" => "subpage_of", "limit" => 1));
-		if ($relations) {
-			$root_entity = $relations[0];
-		}
-	}
-
+	$page_owner = elgg_get_page_owner_entity();
+	$root_entity = static_get_root_entity($entity);
+	
 	if ($root_entity) {
-		$priority = (int) $root_entity->order;
-		if (empty($priority)) {
-			$priority = (int) $root_entity->time_created;
+		// check for availability in cache
+		$static_items = static_get_menu_items_from_cache($root_entity);
+		if (empty($static_items)) {
+			// no items in cache so generate menu + add them to the cache
+			$static_items = static_cache_menu_items($root_entity);
 		}
-		
-		$root_menu_options = array(
-			"name" => $root_entity->getGUID(),
-			"rel" => $root_entity->getGUID(),
-			"href" => $root_entity->getURL(),
-			"text" => '<span>' . $root_entity->title . '</span>',
-			"priority" => $priority,
-			"section" => "static"
-		);
-		
-		if ($root_entity->canEdit()) {
-			$root_menu_options["itemClass"] = array("static-sortable");
-		}
-		// add main menu items
-		elgg_register_menu_item("page", $root_menu_options);
-
-		// add sub menu items
-		$ia = elgg_set_ignore_access(true);
-		$submenu_options = array(
-			"type" => "object",
-			"subtype" => "static",
-			"relationship_guid" => $root_entity->getGUID(),
-			"relationship" => "subpage_of",
-			"limit" => false,
-			"inverse_relationship" => true
-		);
-		$submenu_entities = elgg_get_entities_from_relationship($submenu_options);
-		elgg_set_ignore_access($ia);
-		
-		if ($submenu_entities) {
-			foreach ($submenu_entities as $submenu_item) {
-				
-				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
-					continue;
+	
+		if (!empty($static_items)) {
+			global $CONFIG;
+			
+			// fetch all menu items the user has access to
+			$menu_options = array(
+				"type" => "object",
+				"subtype" => "static",
+				"relationship_guid" => $root_entity->getGUID(),
+				"relationship" => "subpage_of",
+				"limit" => false,
+				"inverse_relationship" => true,
+				"callback" => function($row) {
+					return (int) $row->guid;
 				}
-				
-				$ia = elgg_set_ignore_access(true);
-				$priority = (int) $submenu_item->order;
-				if (empty($priority)) {
-					$priority = (int) $submenu_item->time_created;
+			);
+			$allowed_guids = elgg_get_entities_from_relationship($menu_options);
+			$allowed_guids[] = $root_entity->guid;
+			
+			$manages_guids = null;
+			foreach($static_items as $item) {
+				if (in_array($item->rel, $allowed_guids)) {
+					// if you have access to the guid, then add menu item
+					$CONFIG->menus['page'][] = $item;
+				} else {
+					// is the manager of any of the pages? If so do a canEdit check to determine if we can add it to the
+					if (!isset($manages_guids)) {
+						$manages_guids = static_check_moderator_in_list($root_entity, array_keys($static_items));
+					}
+					
+					if ($manages_guids) {
+						$ia = elgg_get_ignore_access(true);
+						// need to get without access otherwise we can not check for canEdit()
+						$entity = get_entity($guid);
+						elgg_get_ignore_access($ia);
+						
+						if ($entity->canEdit()) {
+							$CONFIG->menus['page'][] = $item;
+						}
+					}
 				}
-				elgg_set_ignore_access($ia);
-				
-				elgg_register_menu_item("page", array(
-					"name" => $submenu_item->getGUID(),
-					"rel" => $submenu_item->getGUID(),
-					"href" => $submenu_item->getURL(),
-					"text" => '<span>' . $submenu_item->title . '</span>',
-					"priority" => $priority,
-					"parent_name" => $submenu_item->getContainerGUID(),
-					"section" => "static"
-				));
 			}
 		}
 	}
-
+	
 	if ($entity->canEdit() && !elgg_instanceof($page_owner, "group")) {
 		elgg_register_menu_item("page", array(
 			"name" => "manage",
@@ -93,6 +76,178 @@ function static_setup_page_menu($entity) {
 			"section" => "static_admin"
 		));
 	}
+}
+
+/**
+ * Checks if the user is a moderator of any item in the given list of guids
+ * 
+ * @param array $guids
+ * 
+ * @return bool
+ */
+function static_check_moderator_in_list(array $guids) {
+	if (empty($guids)) {
+		return false;
+	}
+	
+	$user_guid = elgg_get_logged_in_user_guid();
+	if (!$user_guid) {
+		return false;
+	}
+	
+	$dbprefix = elgg_get_config('dbprefix');
+	
+	$ia = elgg_set_ignore_access(true);
+	$md = elgg_get_metadata([
+		'selects' => ['msv.string as value'],
+		'guids' => $guids,
+		'metadata_names' => array('moderators'),
+		'limit' => false,
+		'joins' => [
+			"JOIN {$dbprefix}metastrings msv ON n_table.value_id = msv.id"
+		],
+		'wheres' => [
+			'msv.string <> ""'
+		],
+		'callback' => function($row) {
+			$value = $row->value;
+			if (!empty($value)) {
+				return $value;
+			}
+		}
+	]);
+	elgg_set_ignore_access($ia);
+	
+	return in_array($user_guid, $md);	
+}
+
+/**
+ * Returns the root entity for a given entity
+ * 
+ * @param ElggEntity $entity the entity to look up the root entity of
+ * 
+ * @return array|false
+ */
+function static_get_root_entity(ElggEntity $entity) {
+	$root_entity = false;
+	$page_owner = elgg_get_page_owner_entity();
+	
+	if ($entity->getContainerGUID() == $entity->site_guid) {
+		// top page on site
+		$root_entity = $entity;
+	} elseif(!empty($page_owner) && ($entity->getContainerGUID() == $page_owner->getGUID())) {
+		// top page in group
+		$root_entity = $entity;
+	} else {
+		// subpage
+		$relations = $entity->getEntitiesFromRelationship(array("relationship" => "subpage_of", "limit" => 1));
+		if ($relations) {
+			$root_entity = $relations[0];
+		}
+	}
+	
+	return $root_entity;
+}
+
+/**
+ * Reads cached menu items from file for give root entity
+ * 
+ * @param ElggEntity $root_entity root entity to fetch the cache from
+ * 
+ * @return array
+ */
+function static_get_menu_items_from_cache(ElggEntity $root_entity) {
+	$static_items = array();
+	
+	$file = new ElggFile();
+	$file->owner_guid = $root_entity->guid;
+	$file->setFilename('static_menu_item_cache');
+	if ($file->exists()) {
+		$static_items = unserialize($file->grabFile());
+		$file->close();
+	}	
+	return $static_items;
+}
+
+/**
+ * Caches menu items for a given entity and returns an array of the menu items
+ * 
+ * @param ElggEntity $root_entity Root entity to fetch the menu items for
+ * 
+ * @return array
+ */
+function static_cache_menu_items(ElggEntity $root_entity) {
+	$static_items = array();
+	
+	if ($root_entity) {
+		$priority = (int) $root_entity->order;
+		if (empty($priority)) {
+			$priority = (int) $root_entity->time_created;
+		}
+			
+		$root_menu_options = array(
+			"name" => $root_entity->guid,
+			"rel" => $root_entity->guid,
+			"href" => $root_entity->getURL(),
+			"text" => '<span>' . $root_entity->title . '</span>',
+			"priority" => $priority,
+			"section" => "static"
+		);
+			
+		if ($root_entity->canEdit()) {
+			$root_menu_options["itemClass"] = array("static-sortable");
+		}
+		// add main menu items
+		$static_items[$root_entity->guid] = \ElggMenuItem::factory($root_menu_options);
+			
+		// add all sub menu items so they are cacheable
+		$ia = elgg_set_ignore_access(true);
+		$submenu_options = array(
+			"type" => "object",
+			"subtype" => "static",
+			"relationship_guid" => $root_entity->guid,
+			"relationship" => "subpage_of",
+			"limit" => false,
+			"inverse_relationship" => true
+		);
+		$submenu_entities = elgg_get_entities_from_relationship($submenu_options);
+			
+		if ($submenu_entities) {
+			foreach ($submenu_entities as $submenu_item) {
+					
+				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
+					continue;
+				}
+					
+				$priority = (int) $submenu_item->order;
+				if (empty($priority)) {
+					$priority = (int) $submenu_item->time_created;
+				}
+					
+				$options = array(
+					"name" => $submenu_item->guid,
+					"rel" => $submenu_item->guid,
+					"href" => $submenu_item->getURL(),
+					"text" => '<span>' . $submenu_item->title . '</span>',
+					"priority" => $priority,
+					"parent_name" => $submenu_item->getContainerGUID(),
+					"section" => "static"
+				);
+				$static_items[$submenu_item->guid] = \ElggMenuItem::factory($options);
+			}
+		}
+			
+		elgg_set_ignore_access($ia);
+	}
+	
+	$file = new ElggFile();
+	$file->owner_guid = $root_entity->guid;
+	$file->setFilename('static_menu_item_cache');
+	$file->open('write');
+	$file->write(serialize($static_items));
+	$file->close();
+
+	return $static_items;
 }
 
 /**

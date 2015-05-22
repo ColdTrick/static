@@ -35,8 +35,11 @@ function static_init() {
 	}
 	
 	// events
-	elgg_register_event_handler("create", "object", "static_create_comment_handler");;
-	elgg_register_event_handler("delete", "object", "static_delete_object_handler");;
+	elgg_register_event_handler("create", "object", "static_create_comment_handler");
+	elgg_register_event_handler("delete", "object", "static_delete_object_handler");
+	elgg_register_event_handler("create", "object", "static_reset_menu_cache_handler");
+	elgg_register_event_handler("update", "object", "static_reset_menu_cache_handler");
+	elgg_register_event_handler("delete", "object", "static_reset_menu_cache_handler");
 	elgg_register_event_handler("upgrade", "system", "static_upgrade_system_handler");
 	
 	// plugin hooks

@@ -82,6 +82,32 @@ function static_delete_object_handler($event, $type, ElggObject $entity) {
 }
 
 /**
+ * Resets the menu cache for static pages on update and create of an entity
+ *
+ * @param string     $event  'create|delete|update'
+ * @param string     $type   'object'
+ * @param ElggObject $entity the entity about to be removed
+ *
+ * @return void
+ */
+function static_reset_menu_cache_handler($event, $type, ElggObject $entity) {
+	
+	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		return;
+	}
+	
+	$root_entity = static_get_root_entity($entity);
+	if ($root_entity) {
+		$file = new ElggFile();
+		$file->owner_guid = $root_entity->guid;
+		$file->setFilename('static_menu_item_cache');
+		if ($file->exists()) {
+			$file->delete();
+		}
+	}
+}
+
+/**
  * Migrate old tree structure to new structure
  *
  * @param string $event  the name of the event
