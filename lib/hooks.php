@@ -582,7 +582,7 @@ function static_register_entity_menu_hook_handler($hook, $type, $return_value, $
 	$return_value[] = ElggMenuItem::factory(array(
 		"name" => "comments",
 		"text" => elgg_view_icon("speech-bubble"),
-		"href" => $entity->getURL() . "#static-comments-" . $entity->getGUID(),
+		"href" => "{$entity->getURL()}#comments",
 		"title" => elgg_echo("comment:this"),
 		"priority" => 300
 	));

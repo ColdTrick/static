@@ -59,7 +59,7 @@ $title = $entity->title;
 $body = elgg_view_entity($entity, array("full_view" => true));
 
 if ($entity->canComment()) {
-	$body .= elgg_view_comments($entity, true, array("id" => "static-comments-" . $entity->getGUID()));
+	$body .= elgg_view_comments($entity);
 }
 
 static_setup_page_menu($entity);
