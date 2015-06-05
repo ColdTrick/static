@@ -72,7 +72,7 @@ if (!$entity) {
 	$new_entity = true;
 }
 
-if ($parent_guid !== $entity->getContainerGUID()) {
+if ($parent_guid !== (int) $entity->getContainerGUID()) {
 	// reset order if moved to another parent
 	unset($entity->order);
 }
