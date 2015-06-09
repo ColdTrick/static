@@ -38,6 +38,7 @@ return array(
 	'static:out_of_date:title' => "Out-of-date content",
 	'static:out_of_date:owner:title' => "Out-of-date content for: %s",
 	'static:out_of_date:none' => "No outdated content was found",
+	'static:out_of_date:include_groups' => "Include group content",
 	
 	'static:out_of_date:notification:subject' => "Your static content is out-of-date",
 	'static:out_of_date:notification:message' => "Hi %s,

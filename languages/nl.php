@@ -1,10 +1,11 @@
 <?php
 /**
- * This file was created by Translation Editor v2.0
- * On 2014-10-08 17:29
+ * This file was created by Translation Editor v4.0
+ * On 2015-06-09 15:08
  */
 
 return array (
+  'static:out_of_date:include_groups' => 'Inclusief groep content',
   'static:settings:enable_groups' => 'Schakel statisch pagina\'s voor groepen in',
   'static:settings:enable_out_of_date' => 'Schakel verouderde content notificaties/weergave in',
   'static:settings:out_of_date_days' => 'Aantal dagen voordat content verouderd is',
