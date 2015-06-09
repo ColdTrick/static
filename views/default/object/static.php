@@ -78,6 +78,9 @@ if (elgg_extract('full_view', $vars)) {
 	
 		$body .= "<td width='1%' class='center'>" . $edit_link . "</td>";
 		$body .= "<td width='1%' class='center'>" . $delete_link . "</td>";
+	} else {
+		// add blank cells if you can not edit
+		$body .= "<td width='1%'>&nbsp;</td><td width='1%'>&nbsp;</td>";
 	}
 	$body .= "</tr>";
 
