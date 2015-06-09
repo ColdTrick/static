@@ -43,21 +43,21 @@ function static_setup_page_menu($entity) {
 			$allowed_guids[] = $root_entity->guid;
 			
 			$manages_guids = null;
-			foreach($static_items as $item) {
+			foreach ($static_items as $item) {
 				if (in_array($item->rel, $allowed_guids)) {
 					// if you have access to the guid, then add menu item
 					$CONFIG->menus['page'][] = $item;
 				} else {
 					// is the manager of any of the pages? If so do a canEdit check to determine if we can add it to the
 					if (!isset($manages_guids)) {
-						$manages_guids = static_check_moderator_in_list($root_entity, array_keys($static_items));
+						$manages_guids = static_check_moderator_in_list(array_keys($static_items));
 					}
 					
 					if ($manages_guids) {
-						$ia = elgg_get_ignore_access(true);
+						$ia = elgg_set_ignore_access(true);
 						// need to get without access otherwise we can not check for canEdit()
-						$entity = get_entity($guid);
-						elgg_get_ignore_access($ia);
+						$entity = get_entity($item->rel);
+						elgg_set_ignore_access($ia);
 						
 						if ($entity->canEdit()) {
 							$CONFIG->menus['page'][] = $item;
