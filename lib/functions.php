@@ -80,9 +80,9 @@ function static_setup_page_menu($entity) {
 
 /**
  * Checks if the user is a moderator of any item in the given list of guids
- * 
+ *
  * @param array $guids
- * 
+ *
  * @return bool
  */
 function static_check_moderator_in_list(array $guids) {
@@ -118,14 +118,14 @@ function static_check_moderator_in_list(array $guids) {
 	]);
 	elgg_set_ignore_access($ia);
 	
-	return in_array($user_guid, $md);	
+	return in_array($user_guid, $md);
 }
 
 /**
  * Returns the root entity for a given entity
- * 
+ *
  * @param ElggEntity $entity the entity to look up the root entity of
- * 
+ *
  * @return array|false
  */
 function static_get_root_entity(ElggEntity $entity) {
@@ -151,9 +151,9 @@ function static_get_root_entity(ElggEntity $entity) {
 
 /**
  * Reads cached menu items from file for give root entity
- * 
+ *
  * @param ElggEntity $root_entity root entity to fetch the cache from
- * 
+ *
  * @return array
  */
 function static_get_menu_items_from_cache(ElggEntity $root_entity) {
@@ -164,16 +164,16 @@ function static_get_menu_items_from_cache(ElggEntity $root_entity) {
 	$file->setFilename('static_menu_item_cache');
 	if ($file->exists()) {
 		$static_items = unserialize($file->grabFile());
-		$file->close();
-	}	
+	}
+	
 	return $static_items;
 }
 
 /**
  * Caches menu items for a given entity and returns an array of the menu items
- * 
+ *
  * @param ElggEntity $root_entity Root entity to fetch the menu items for
- * 
+ *
  * @return array
  */
 function static_cache_menu_items(ElggEntity $root_entity) {
@@ -371,7 +371,7 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 	}
 	
 	if (!$available) {
-		// generate a new name	
+		// generate a new name
 		$counter = 1;
 		while (!static_is_friendly_title_available($friendly_title . $counter, $entity_guid)) {
 			$counter++;
@@ -424,7 +424,7 @@ function static_is_friendly_title_available($friendly_title, $entity_guid) {
 		return false;
 	}
 	
-	return true;	
+	return true;
 }
 
 /**
