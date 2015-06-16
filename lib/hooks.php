@@ -76,13 +76,10 @@ function static_entity_url_hook_handler($hook, $type, $return_value, $params) {
 		// static pages
 		$friendly_title = $entity->friendly_title;
 		if ($friendly_title) {
-			$return_value = elgg_get_site_url() . $friendly_title;
+			$return_value = elgg_normalize_url($friendly_title);
 		} else {
-			
-			$friendly_title = static_make_friendly_title($entity->title, $entity->getGUID());
-			$entity->friendly_title = $friendly_title;
-
-			$return_value = elgg_get_site_url() . $friendly_title;
+			// fallback
+			$return_value = elgg_normalize_url("static/view/{$entity->getGUID()}");
 		}
 	} elseif (!$return_value && elgg_instanceof($entity, "object", "widget")) {
 		// widgets
