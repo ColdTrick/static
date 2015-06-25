@@ -326,8 +326,8 @@ function static_group_tool_widgets_handler($hook, $type, $return_value, $params)
 			if (!isset($return_value["disable"])) {
 				$return_value["disable"] = array();
 			}
-			
-			if ($entity->static_enable == "yes") {
+
+			if (static_group_enabled($entity)) {
 				$return_value["enable"][] = "static_groups";
 			} else {
 				$return_value["disable"][] = "static_groups";
