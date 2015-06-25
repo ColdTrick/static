@@ -59,7 +59,7 @@ if (elgg_extract('full_view', $vars)) {
 
 	$show_edit = elgg_extract("show_edit", $vars, true);
 	
-	$body = "<tr>";
+	$body = "<tr data-guid='" . $entity->getGUID() . "'>";
 	$body .= "<td>" . elgg_view("output/url", array(
 		"text" => $entity->title,
 		"href" => $entity->getURL(),

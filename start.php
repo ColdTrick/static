@@ -66,6 +66,7 @@ function static_init() {
 	elgg_register_action("static/edit", dirname(__FILE__) . "/actions/edit.php");
 	elgg_register_action("static/delete", dirname(__FILE__) . "/actions/delete.php");
 	elgg_register_action("static/reorder", dirname(__FILE__) . "/actions/reorder.php");
+	elgg_register_action("static/reorder_root_pages", dirname(__FILE__) . "/actions/reorder_root_pages.php");
 }
 
 /**

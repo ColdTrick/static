@@ -31,7 +31,16 @@ $entities = elgg_get_entities($options);
 elgg_set_ignore_access($ia);
 
 if ($entities) {
-	$body = "<table class='elgg-table-alt' id='static-pages-list'>";
+	$attributes = [
+		'id' => 'static-pages-list',
+		'class' => ['elgg-table-alt'],
+		'data-container-guid' => $group->getGUID()
+	];
+	if ($group->canEdit()) {
+		$attributes['class'][] = 'static-reorder';
+	}
+
+	$body = "<table " . elgg_format_attributes($attributes) . ">";
 	$body .= "<thead><tr>";
 	$body .= "<th>" . elgg_echo("title") . "</th>";
 	
@@ -41,11 +50,18 @@ if ($entities) {
 	}
 	$body .= "</tr></thead>";
 
-	foreach ($entities as $entity) {
-
-		$body .= elgg_view_entity($entity, array("full_view" => false));
-
+	$ordered_entities = [];
+	foreach ($entities as $index => $entity) {
+		$order = $entity->order;
+		if (empty($order)) {
+			$order = (1000000 + $index);
+		}
+		
+		$ordered_entities[$order] = elgg_view_entity($entity, array("full_view" => false));
 	}
+	ksort($ordered_entities);
+	$body .= implode($ordered_entities);
+	
 	$body .= "</table>";
 }
 
