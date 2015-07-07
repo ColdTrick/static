@@ -56,8 +56,6 @@ elgg.static.init = function() {
 	$("#static-pages-list.static-reorder").sortable({
 		items: "tr",
 		revert: true,
-		tolerance: "pointer",
-		containment: "table",
 		update: function(event, ui) {
 			elgg.static.reorder_root_pages(ui.item);
    		}
