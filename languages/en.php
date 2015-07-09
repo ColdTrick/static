@@ -10,6 +10,7 @@ return array(
 	'static:settings:enable_groups' => "Enable static pages in groups",
 	
 	'static:admin:empty' => "No static pages created",
+	'static:list:info' => "Manage your static pages here. You can reorder them by dragging the pages to their new location.",
 	'static:all' => "Manage static pages",
 	'static:edit' => "Create/Edit a static page",
 	'static:new:permalink' => "Permalink",

@@ -46,4 +46,5 @@ Klik hier voor een complete lijst van de verouderde content
   'static:all' => 'Beheer statische pagina\'s',
   'static:new:permalink' => 'Permalink',
   'static:add' => 'Maak een statische pagina',
+  'static:list:info' => 'Beheer hier de statische pagina\'s. Je kunt ze sorteren door ze te verslepen naar de correct positie.',
 );

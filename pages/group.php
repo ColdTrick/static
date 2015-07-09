@@ -36,11 +36,14 @@ if ($entities) {
 		'class' => ['elgg-table-alt'],
 		'data-container-guid' => $group->getGUID()
 	];
+	
+	$body = '';
 	if ($group->canEdit()) {
+		$body .= elgg_format_element('div', ['class' => 'mbm'], elgg_echo('static:list:info'));
 		$attributes['class'][] = 'static-reorder';
 	}
-
-	$body = "<table " . elgg_format_attributes($attributes) . ">";
+	
+	$body .= "<table " . elgg_format_attributes($attributes) . ">";
 	$body .= "<thead><tr>";
 	$body .= "<th>" . elgg_echo("title") . "</th>";
 	
