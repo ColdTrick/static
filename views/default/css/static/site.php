@@ -12,6 +12,6 @@
 .elgg-menu-page-static .elgg-menu-closed:before {
 	content: "▸";
 }
-.static-reorder  tr {
+.static-reorder tbody tr {
 	cursor: move;
 }

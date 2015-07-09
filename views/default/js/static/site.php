@@ -54,7 +54,7 @@ elgg.static.init = function() {
 	});
 
 	$("#static-pages-list.static-reorder").sortable({
-		items: "tr",
+		items: "tbody tr",
 		revert: true,
 		update: function(event, ui) {
 			elgg.static.reorder_root_pages(ui.item);
