@@ -26,9 +26,15 @@ $options = array(
 	"order_by" => "oe.title asc"
 );
 
-$ia = elgg_set_ignore_access(true);
+if ($can_write) {
+	$ia = elgg_set_ignore_access(true);
+}
+
 $entities = elgg_get_entities($options);
-elgg_set_ignore_access($ia);
+
+if ($can_write) {
+	elgg_set_ignore_access($ia);
+}
 
 if ($entities) {
 	$attributes = [
@@ -62,6 +68,7 @@ if ($entities) {
 		
 		$ordered_entities[$order] = elgg_view_entity($entity, array("full_view" => false));
 	}
+
 	ksort($ordered_entities);
 	$body .= implode($ordered_entities);
 	

@@ -33,6 +33,11 @@ if (!elgg_instanceof($owner, "group")) {
 	$owner = elgg_get_site_entity();
 }
 
+$can_write = $owner->canWriteToContainer(0, "object", "static");
+if ($can_write) {
+	$ia = elgg_set_ignore_access(true);
+}
+
 if ($parent_guid) {
 	$parent = get_entity($parent_guid);
 	if (!elgg_instanceof($parent, "object", "static")) {
@@ -40,6 +45,10 @@ if ($parent_guid) {
 	}
 } else {
 	$parent_guid = $owner->getGUID();
+}
+
+if ($can_write) {
+	elgg_set_ignore_access($ia);
 }
 
 if ($guid) {

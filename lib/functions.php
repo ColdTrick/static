@@ -14,7 +14,17 @@ function static_setup_page_menu($entity) {
 	$static_items = array();
 	
 	$page_owner = elgg_get_page_owner_entity();
+	
+	$can_write = $page_owner->canWriteToContainer(0, "object", "static");
+	if ($can_write) {
+		$ia = elgg_set_ignore_access(true);
+	}
+	
 	$root_entity = static_get_root_entity($entity);
+	
+	if ($can_write) {
+		elgg_set_ignore_access($ia);
+	}
 	
 	if ($root_entity) {
 		// check for availability in cache
@@ -23,7 +33,7 @@ function static_setup_page_menu($entity) {
 			// no items in cache so generate menu + add them to the cache
 			$static_items = static_cache_menu_items($root_entity);
 		}
-	
+		
 		if (!empty($static_items)) {
 			global $CONFIG;
 			
@@ -39,7 +49,13 @@ function static_setup_page_menu($entity) {
 					return (int) $row->guid;
 				}
 			);
+			if ($can_write) {
+				$ia = elgg_set_ignore_access(true);
+			}
 			$allowed_guids = elgg_get_entities_from_relationship($menu_options);
+			if ($can_write) {
+				elgg_set_ignore_access($ia);
+			}
 			$allowed_guids[] = $root_entity->guid;
 			
 			$manages_guids = null;
@@ -318,6 +334,11 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 	if (elgg_instanceof($parent, "site") || elgg_instanceof($parent, "group")) {
 		$result[0] = elgg_echo("static:new:parent:top_level");
 	}
+
+	$can_write = $parent->canWriteToContainer(0, "object", "static");
+	if ($can_write) {
+		$ia = elgg_set_ignore_access(true);
+	}
 	
 	$options = array(
 		"type" => "object",
@@ -332,6 +353,10 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 		$result[$parent->getGUID()] = trim(str_repeat("-", $depth) . " " . $parent->title);
 		
 		$result += static_get_parent_options($parent->getGUID(), $depth + 1);
+	}
+
+	if ($can_write) {
+		elgg_set_ignore_access($ia);
 	}
 	
 	return $result;
