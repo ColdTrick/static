@@ -18,26 +18,29 @@ $options = array(
 	"limit" => false,
 	"container_guid" => $group->getGUID(),
 	"joins" => array("JOIN " . elgg_get_config("dbprefix") . "objects_entity oe ON e.guid = oe.guid"),
-	"order_by" => "oe.title asc",
-	"no_results" => elgg_echo("static:admin:empty")
+	"order_by" => "oe.title asc"
 );
 
 if ($can_write) {
 	$ia = elgg_set_ignore_access(true);
 }
+
 $entities = elgg_get_entities($options);
-
-$ordered_entities = [];
-foreach ($entities as $index => $entity) {
-	$order = $entity->order;
-	if (empty($order)) {
-		$order = (1000000 + $index);
+if ($entities) {
+	$ordered_entities = [];
+	foreach ($entities as $index => $entity) {
+		$order = $entity->order;
+		if (empty($order)) {
+			$order = (1000000 + $index);
+		}
+	
+		$ordered_entities[$order] = elgg_view_entity($entity, array("full_view" => false));
 	}
-
-	$ordered_entities[$order] = elgg_view_entity($entity, array("full_view" => false));
+	ksort($ordered_entities);
+	echo implode($ordered_entities);
+} else {
+	echo elgg_echo('static:admin:empty');
 }
-ksort($ordered_entities);
-echo implode($ordered_entities);
 
 if ($can_write) {
 	elgg_set_ignore_access($ia);
