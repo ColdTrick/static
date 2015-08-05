@@ -14,8 +14,11 @@ function static_setup_page_menu($entity) {
 	$static_items = array();
 	
 	$page_owner = elgg_get_page_owner_entity();
+	$can_write = false;
+	if ($page_owner) {
+		$can_write = $page_owner->canWriteToContainer(0, "object", "static");
+	}
 	
-	$can_write = $page_owner->canWriteToContainer(0, "object", "static");
 	if ($can_write) {
 		$ia = elgg_set_ignore_access(true);
 	}
