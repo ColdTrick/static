@@ -16,15 +16,15 @@ $body_vars["owner"] = $page_owner;
 
 elgg_push_breadcrumb(elgg_echo("static:all"), "static/all");
 
+$ia = elgg_set_ignore_access(true);
 if ($guid) {
-	$ia = elgg_set_ignore_access(true);
 	
 	elgg_entity_gatekeeper($guid, "object", "static");
 	
 	$entity = get_entity($guid);
 	
-	elgg_set_ignore_access($ia);
 	if (!$entity->canEdit()) {
+		elgg_set_ignore_access($ia);
 		forward(REFERER);
 	}
 	
@@ -45,11 +45,12 @@ if (!empty($entity)) {
 	elgg_push_breadcrumb($entity->title, $entity->getURL());
 }
 
-
 $body = elgg_view_form("static/edit", array("class" => "elgg-form-alt", "enctype" => "multipart/form-data"), $body_vars);
 
 $title_text = elgg_echo("static:edit");
 
 $body = elgg_view_layout('one_sidebar', array('content' => $body, "title" => $title_text, "sidebar" => $sidebar));
+
+elgg_set_ignore_access($ia);
 
 echo elgg_view_page($title_text, $body);

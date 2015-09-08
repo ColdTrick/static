@@ -212,11 +212,15 @@ function static_container_permissions_check_hook_handler($hook, $type, $return_v
 		if (!empty($params) && is_array($params)) {
 			$container = elgg_extract("container", $params);
 			$subtype = elgg_extract("subtype", $params);
+			$user = elgg_extract("user", $params);
 			
 			if ($subtype == "static" && elgg_instanceof($container, "site")) {
 				$return_value = true;
 			} elseif ($subtype == "static" && elgg_instanceof($container, "group") && !$container->canEdit()) {
 				$return_value = false;
+				if ($user) {
+					$return_value = static_is_moderator_in_container($container, $user);
+				}
 			}
 		}
 	}

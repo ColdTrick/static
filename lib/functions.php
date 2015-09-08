@@ -141,6 +141,48 @@ function static_check_moderator_in_list(array $guids) {
 }
 
 /**
+ * Checks if the user is a moderator of any item in the given container
+ *
+ * @param ElggEntity $container_entity container entity to check in
+ * @param ElggUser   $user             user to check
+ *
+ * @return boolean
+ */
+function static_is_moderator_in_container(ElggEntity $container_entity, ElggUser $user) {
+	if (empty($container_entity) || empty($user)) {
+		return false;
+	}
+	
+	$dbprefix = elgg_get_config('dbprefix');
+	
+	$ia = elgg_set_ignore_access(true);
+	$md = elgg_get_metadata([
+		'selects' => ['msv.string as value'],
+		'guids' => $guids,
+		'metadata_names' => array('moderators'),
+		'limit' => false,
+		'joins' => [
+			"JOIN {$dbprefix}metastrings msv ON n_table.value_id = msv.id",
+			"JOIN {$dbprefix}entities e ON n_table.entity_guid = e.guid"
+		],
+		'wheres' => [
+			'msv.string <> ""',
+			'e.type = "object" AND e.subtype = ' . get_subtype_id('object', 'static'),
+			'e.container_guid = ' . $container_entity->getGUID()
+		],
+		'callback' => function($row) {
+			$value = $row->value;
+			if (!empty($value)) {
+				return $value;
+			}
+		}
+	]);
+	elgg_set_ignore_access($ia);
+	
+	return in_array($user->getGUID(), $md);
+}
+
+/**
  * Returns the root entity for a given entity
  *
  * @param ElggEntity $entity the entity to look up the root entity of
