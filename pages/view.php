@@ -53,6 +53,8 @@ if (elgg_instanceof($container_entity, "object", "static")) {
 }
 elgg_set_ignore_access($ia);
 
+$ia = elgg_set_ignore_access($entity->canEdit());
+
 // build content
 $title = $entity->title;
 
@@ -69,5 +71,7 @@ $page = elgg_view_layout("content", array(
 	"content" => $body,
 	"title" => $title
 ));
+
+elgg_set_ignore_access($ia);
 
 echo elgg_view_page($title, $page);
