@@ -41,6 +41,8 @@ function static_init() {
 	elgg_register_event_handler("update", "object", "static_reset_menu_cache_handler");
 	elgg_register_event_handler("delete", "object", "static_reset_menu_cache_handler");
 	elgg_register_event_handler("upgrade", "system", "static_upgrade_system_handler");
+
+	elgg_register_event_handler('cache:flush', 'system', 'static_reset_cache');;
 	
 	// plugin hooks
 	elgg_register_plugin_hook_handler("route", "all", "static_route_hook_handler");

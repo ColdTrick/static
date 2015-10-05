@@ -188,3 +188,40 @@ function static_upgrade_system_handler($event, $type, $entity) {
 	// restore access
 	elgg_set_ignore_access($ia);
 }
+
+
+/**
+ * Resets all cache on the static pages
+ *
+ * @param string     $event  'cache:flush'
+ * @param string     $type   'system'
+ * @param ElggObject $entity the entity about to be removed
+ * @return void
+ */
+function static_reset_cache($event, $type, ElggObject $entity) {
+
+	// fetch all top pages
+
+	$options = [
+		'type' => 'object',
+		'subtype' => 'static',
+		'limit' => false,
+		'relationship' => 'subpage_of',
+	];
+
+	// ignore access
+	$ia = elgg_set_ignore_access(true);
+
+	$batch = new ElggBatch('elgg_get_entities_from_relationship', $options);
+	foreach ($batch as $entity) {
+		// reset cache for the pages
+		$file = new ElggFile();
+		$file->owner_guid = $entity->guid;
+		$file->setFilename('static_menu_item_cache');
+		if ($file->exists()) {
+			$file->delete();
+		}
+	}
+	
+	elgg_set_ignore_access($ia);
+}
