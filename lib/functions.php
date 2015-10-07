@@ -75,10 +75,14 @@ function static_setup_page_menu($entity) {
 					if ($manages_guids) {
 						$ia = elgg_set_ignore_access(true);
 						// need to get without access otherwise we can not check for canEdit()
-						$entity = get_entity($item->rel);
+						$tmp_entity = get_entity($item->rel);
 						elgg_set_ignore_access($ia);
 						
-						if ($entity->canEdit()) {
+						if (!($tmp_entity instanceof ElggObject)) {
+							continue;
+						}
+						
+						if ($tmp_entity->canEdit()) {
 							$CONFIG->menus['page'][] = $item;
 						}
 					}
