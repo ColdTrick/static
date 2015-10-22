@@ -191,22 +191,32 @@ function static_is_moderator_in_container(ElggEntity $container_entity, ElggUser
  *
  * @param ElggEntity $entity the entity to look up the root entity of
  *
- * @return array|false
+ * @return false|ElggObject
  */
 function static_get_root_entity(ElggEntity $entity) {
-	$root_entity = false;
-	$page_owner = elgg_get_page_owner_entity();
 	
-	if ($entity->getContainerGUID() == $entity->site_guid) {
+	if (!elgg_instanceof($entity, 'object', 'static')) {
+		return false;
+	}
+	
+	$root_entity = false;
+	$container = $entity->getContainerEntity();
+	
+	if ($container instanceof ElggSite) {
 		// top page on site
 		$root_entity = $entity;
-	} elseif(!empty($page_owner) && ($entity->getContainerGUID() == $page_owner->getGUID())) {
+	} elseif($container instanceof ElggGroup) {
 		// top page in group
 		$root_entity = $entity;
 	} else {
 		// subpage
-		$relations = $entity->getEntitiesFromRelationship(array("relationship" => "subpage_of", "limit" => 1));
-		if ($relations) {
+		$relations = $entity->getEntitiesFromRelationship([
+			'type' => 'object',
+			'subtype' => 'static',
+			'relationship' => 'subpage_of',
+			'limit' => 1,
+		]);
+		if (!empty($relations)) {
 			$root_entity = $relations[0];
 		}
 	}
