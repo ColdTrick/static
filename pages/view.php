@@ -42,28 +42,20 @@ if (elgg_instanceof($owner, "group")) {
 }
 
 // show breadcrumb
-$visited = array();
-$append_breadcrumb = function($entity) use (&$visited, &$append_breadcrumb) {
-	if (!elgg_instanceof($entity, "object", "static")) {
-		return true;
-	}
-
-	// skip already visited containers to prevent loops with containers referring to each-other
-	if (in_array($entity->guid, $visited)) {
-		return true;
-	}
-	$visited[] = $entity->guid;
-
-	elgg_push_breadcrumb($entity->title, $entity->getURL());
-	$append_breadcrumb($entity->getContainerEntity());
-};
-
 $ia = elgg_set_ignore_access(true);
-$append_breadcrumb($entity->getContainerEntity());
-elgg_set_ignore_access($ia);
 
-elgg_set_config("breadcrumbs", array_reverse(elgg_get_config("breadcrumbs")));
-elgg_push_breadcrumb($entity->title);
+$container_entity = $entity->getContainerEntity();
+if (elgg_instanceof($container_entity, "object", "static")) {
+	while(elgg_instanceof($container_entity, "object", "static")) {
+		elgg_push_breadcrumb($container_entity->title, $container_entity->getURL());
+		$container_entity = $container_entity->getContainerEntity();
+	}
+	
+	elgg_set_config("breadcrumbs", array_reverse(elgg_get_config("breadcrumbs")));
+	
+	elgg_push_breadcrumb($entity->title);
+}
+elgg_set_ignore_access($ia);
 
 // build content
 $title = $entity->title;
