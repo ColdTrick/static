@@ -44,7 +44,7 @@ function static_route_hook_handler($hook, $type, $return_value, $params) {
 		}
 		
 		$entity = $entities[0];
-		if (has_access_to_entity($entity) || $entity->canEdit()) {
+		if (has_access_to_entity($entity) || $entity->canEdit() || can_write_to_container(0, $entity->getOwnerGUID(), 'object', 'static')) {
 			
 			$entity_guid = $entities[0]->getGUID();
 

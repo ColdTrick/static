@@ -21,13 +21,19 @@ if ($guid) {
 	
 	$entity = get_entity($guid);
 	if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
+		elgg_set_ignore_access($ia);
 		forward(REFERER);
 	}
-	
 	elgg_set_ignore_access($ia);
+	
+	// workaround for can_edit_entity() in 1.8
+	$ia = elgg_set_ignore_access(can_write_to_container(0, $entity->getOwnerGUID(), 'object', 'static'));
+	
 	if (!$entity->canEdit()) {
+		elgg_set_ignore_access($ia);
 		forward(REFERER);
 	}
+	elgg_set_ignore_access($ia);
 	
 	$body_vars["entity"] = $entity;
 	

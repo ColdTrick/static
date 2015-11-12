@@ -69,9 +69,11 @@ if (elgg_extract('full_view', $vars)) {
 		}
 	}
 } else {
-
-	$show_edit = elgg_extract("show_edit", $vars, true);
+	// workaround for can_edit_entity() in 1.8
+	$ia = elgg_set_ignore_access(can_write_to_container(0, $entity->getOwnerGUID(), 'object', 'static'));
 	
+	$show_edit = elgg_extract("show_edit", $vars, true);
+
 	$body = "<tr>";
 	$body .= "<td>" . elgg_view("output/url", array(
 		"text" => $entity->title,
@@ -92,6 +94,8 @@ if (elgg_extract('full_view', $vars)) {
 		$body .= "<td width='1%' class='center'>" . $delete_link . "</td>";
 	}
 	$body .= "</tr>";
-
+	
+	elgg_set_ignore_access($ia);
+	
 	echo $body;
 }

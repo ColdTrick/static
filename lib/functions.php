@@ -18,13 +18,20 @@ function static_setup_page_menu($entity) {
 	} elseif(!empty($page_owner) && ($entity->getContainerGUID() == $page_owner->getGUID())) {
 		$root_entity = $entity;
 	} else {
+		$ia = elgg_set_ignore_access(true);
+		
 		$relations = $entity->getEntitiesFromRelationship("subpage_of", false, 1);
 		if ($relations) {
 			$root_entity = $relations[0];
 		}
+		
+		elgg_set_ignore_access($ia);
 	}
 	
 	if ($root_entity) {
+		
+		$ia = elgg_set_ignore_access(true);
+		
 		$priority = (int) $root_entity->order;
 		if (empty($priority)) {
 			$priority = (int) $root_entity->time_created;
@@ -34,11 +41,12 @@ function static_setup_page_menu($entity) {
 			"name" => $root_entity->getGUID(),
 			"rel" => $root_entity->getGUID(),
 			"href" => $root_entity->getURL(),
-			"text" => $root_entity->title,
 			"text" => '<span>' . $root_entity->title . '</span>',
 			"priority" => $priority,
 			"section" => "static"
 		);
+		
+		elgg_set_ignore_access($ia);
 		
 		if ($root_entity->canEdit()) {
 			$root_menu_options["itemClass"] = array("static-sortable");
@@ -60,9 +68,11 @@ function static_setup_page_menu($entity) {
 		elgg_set_ignore_access($ia);
 		
 		if ($submenu_entities) {
+			$can_write_to_container = can_write_to_container(0, $root_entity->getOwnerGUID(), 'object', 'static');
+			
 			foreach ($submenu_entities as $submenu_item) {
 				
-				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
+				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit() && !$can_write_to_container) {
 					continue;
 				}
 				
@@ -71,7 +81,6 @@ function static_setup_page_menu($entity) {
 				if (empty($priority)) {
 					$priority = (int) $submenu_item->time_created;
 				}
-				elgg_set_ignore_access($ia);
 				
 				elgg_register_menu_item("page", array(
 					"name" => $submenu_item->getGUID(),
@@ -82,11 +91,13 @@ function static_setup_page_menu($entity) {
 					"parent_name" => $submenu_item->getContainerGUID(),
 					"section" => "static"
 				));
+				
+				elgg_set_ignore_access($ia);
 			}
 		}
 	}
 
-	if ($entity->canEdit() && !elgg_instanceof($page_owner, "group")) {
+	if ($can_write_to_container && !elgg_instanceof($page_owner, "group")) {
 		elgg_register_menu_item("page", array(
 			"name" => "manage",
 			"href" => "static/all",
@@ -172,6 +183,8 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 		"limit" => false,
 	);
 	
+	$ia = elgg_set_ignore_access(can_write_to_container(0, $parent->getGUID(), 'object', 'static'));
+	
 	// more memory friendly
 	$parent_entities = new ElggBatch("elgg_get_entities", $options);
 	foreach ($parent_entities as $parent) {
@@ -179,6 +192,8 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 		
 		$result += static_get_parent_options($parent->getGUID(), $depth + 1);
 	}
+	
+	elgg_set_ignore_access($ia);
 	
 	return $result;
 }

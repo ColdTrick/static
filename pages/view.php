@@ -10,11 +10,14 @@ if (empty($entity) || !elgg_instanceof($entity, "object", "static")) {
 	forward(REFERER);
 }
 
-if (!has_access_to_entity($entity) && !$entity->canEdit()) {
+$can_write_to_container = can_write_to_container(0, $entity->getOwnerGUID(), 'object', 'static');
+
+if (!has_access_to_entity($entity) && !$entity->canEdit() && !$can_write_to_container) {
 	register_error(elgg_echo("noaccess"));
 	forward(REFERER);
 }
 
+$ia = elgg_set_ignore_access($can_write_to_container);
 if ($entity->canEdit()) {
 	elgg_register_menu_item("title", array(
 		"name" => "edit",
@@ -30,6 +33,7 @@ if ($entity->canEdit()) {
 		"link_class" => "elgg-button elgg-button-action",
 	));
 }
+elgg_set_ignore_access($ia);
 
 // page owner (for groups)
 $owner = $entity->getOwnerEntity();

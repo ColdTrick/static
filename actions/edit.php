@@ -34,10 +34,14 @@ if (!elgg_instanceof($owner, "group")) {
 }
 
 if ($parent_guid) {
+	$ia = elgg_set_ignore_access(true);
+	
 	$parent = get_entity($parent_guid);
 	if (!elgg_instanceof($parent, "object", "static")) {
 		$parent_guid = $owner->getGUID();
 	}
+	
+	elgg_set_ignore_access($ia);
 } else {
 	$parent_guid = $owner->getGUID();
 }
@@ -47,9 +51,14 @@ if ($guid) {
 	$entity = get_entity($guid);
 	elgg_set_ignore_access($ia);
 
+	// workaround for can_edit_entity() in 1.8
+	$ia = elgg_set_ignore_access(can_write_to_container(0, $entity->getOwnerGUID(), 'object', 'static'));
+	
 	if (!elgg_instanceof($entity, "object", "static") || !$entity->canEdit()) {
+		elgg_set_ignore_access($ia);
 		forward(REFERER);
 	}
+	elgg_set_ignore_access($ia);
 }
 
 $new_entity = false;
@@ -162,7 +171,7 @@ if ($remove_icon) {
 
 $entity->annotate("static_revision", $description);
 
-elgg_set_ignore_access($ia);
+// elgg_set_ignore_access($ia);
 elgg_clear_sticky_form("static");
 system_message(elgg_echo("static:action:edit:success"));
 
