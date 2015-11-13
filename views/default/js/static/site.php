@@ -39,8 +39,9 @@ elgg.static.reorder_root_pages = function(elem) {
 };
 
 elgg.static.init = function() {
-	$(".elgg-menu-page-static > li.static-sortable").sortable({
-		items: "li",
+	$(".elgg-menu-page-static > li.static-sortable ul").sortable({
+		items: "> li",
+		connectWith: ".elgg-menu-page-static > li.static-sortable ul",
 		forcePlaceholderSize: true,
 		revert: true,
 		tolerance: "pointer",
