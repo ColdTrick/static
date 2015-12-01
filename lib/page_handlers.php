@@ -47,11 +47,11 @@ function static_page_handler($page) {
 		case "thumbnail":
 			set_input("guid", $page[1]);
 			
-			if (empty($page[2])) {
+			if (!empty($page[2])) {
 				set_input("size", $page[2]);
 			}
 			
-			if (empty($page[3])) {
+			if (!empty($page[3])) {
 				set_input("icontime", $page[3]);
 			}
 			
