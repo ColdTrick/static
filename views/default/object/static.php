@@ -23,7 +23,7 @@ if (elgg_extract('full_view', $vars)) {
 	if ($entity->icontime) {
 		$body .= elgg_view_entity_icon($entity, "large", array(
 			"href" => false,
-			"class" => "float-alt"
+			"class" => "float-alt mlm"
 		));
 	}
 	$body .= elgg_view("output/longtext", array("value" => $entity->description));
