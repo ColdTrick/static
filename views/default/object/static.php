@@ -36,7 +36,7 @@ if (elgg_extract('full_view', $vars)) {
 } elseif (elgg_in_context("search")) {
 	// probably search
 
-	$title = $entity->getVolatileData("search_matched_title");
+	$title = $entity->getVolatileData("search_matched_title") ?: $entity->title;
 	$description = $entity->getVolatileData("search_matched_description");
 	
 	$title = elgg_view("output/url", array(
