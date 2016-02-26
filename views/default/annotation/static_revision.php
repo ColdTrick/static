@@ -1,14 +1,17 @@
 <?php
 
-$annotation = $vars['annotation'];
+$annotation = elgg_extract('annotation', $vars);
 
 $owner = get_entity($annotation->owner_guid);
 if (!$owner) {
 	return true;
 }
 
-$owner_link = "<a href=\"{$owner->getURL()}\">$owner->name</a>";
+$output = elgg_view('output/url', [
+	'href' => $owner->getURL(),
+	'text' => $owner->name,
+]);
 
-$friendlytime = elgg_view_friendly_time($annotation->time_created);
+$output .= elgg_format_element('span', ['class' => 'elgg-subtext'], elgg_view_friendly_time($annotation->time_created));
 
-echo "<div>" . $owner_link . "<span class='elgg-subtext'>" . $friendlytime . "</span></div>";
+echo elgg_format_element('div', [], $output);

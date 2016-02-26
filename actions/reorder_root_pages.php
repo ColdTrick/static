@@ -1,6 +1,6 @@
 <?php
-$container_guid = (int) get_input("container_guid");
-$guids = get_input("ordered_guids");
+$container_guid = (int) get_input('container_guid');
+$guids = get_input('ordered_guids');
 
 if (empty($container_guid) || empty($guids)) {
 	return;
