@@ -16,8 +16,6 @@ function static_setup_page_menu(\StaticPage $entity) {
 		return;
 	}
 	
-	$static_items = [];
-	
 	elgg_require_js('static/sidebar_menu');
 	
 	$page_owner = elgg_get_page_owner_entity();
@@ -165,7 +163,6 @@ function static_is_moderator_in_container(ElggEntity $container_entity, ElggUser
 	$ia = elgg_set_ignore_access(true);
 	$md = elgg_get_metadata([
 		'selects' => ['msv.string as value'],
-		'guids' => $guids,
 		'metadata_names' => ['moderators'],
 		'limit' => false,
 		'joins' => [

@@ -19,7 +19,7 @@ class Widgets {
 	 */
 	public static function widgetURL($hook, $type, $return_value, $params) {
 	
-		if ($return_value) {
+		if (!empty($return_value)) {
 			return;
 		}
 		

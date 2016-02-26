@@ -16,7 +16,7 @@ define(function(require) {
 			update: function(event, ui) {
 				var $parent = $(ui.item).parent().parent();
 				var parent_guid = $parent.find(' > a').attr('rel');
-				var new_order = new Array();
+				var new_order = [];
 
 				$parent.find('> ul > li > a').each(function(index, child) {
 					new_order[index] = $(child).attr('rel');
@@ -24,11 +24,11 @@ define(function(require) {
 
 				elgg.action('static/reorder', {
 					data: {
-			 			guid: parent_guid,
-			 			order: new_order
+						guid: parent_guid,
+						order: new_order
 					}
 				});
-	   		}
+			}
 		});
 
 		$('.elgg-menu-page-static li a').on('click', function(event) {
