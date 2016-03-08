@@ -6,10 +6,12 @@ $site = elgg_get_site_entity();
 
 $options = [
 	'type' => 'object',
-	'subtype' => 'static',
+	'subtype' => StaticPage::SUBTYPE,
 	'limit' => false,
 	'container_guid' => $site->getGUID(),
-	'joins' => ['JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid'],
+	'joins' => [
+		'JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid',
+	],
 	'order_by' => 'oe.title asc',
 ];
 
@@ -40,7 +42,7 @@ if ($entities) {
 	$table_params = [
 		'id' => 'static-pages-list',
 		'class' => ['elgg-table-alt'],
-		'data-container-guid' => $site->getGUID()
+		'data-container-guid' => $site->getGUID(),
 	];
 	
 	$header_row = elgg_format_element('th', [], elgg_echo('title'));
@@ -70,9 +72,12 @@ if (can_write_to_container(elgg_get_logged_in_user_guid(), $site->getGUID(), 'ob
 }
 
 $title_text = elgg_echo('static:all');
+
+// build page
 $body = elgg_view_layout('one_column', [
 	'title' => $title_text,
 	'content' => $filter . $body,
 ]);
 
+// draw page
 echo elgg_view_page($title_text, $body);

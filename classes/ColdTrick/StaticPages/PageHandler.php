@@ -15,47 +15,67 @@ class PageHandler {
 	 * @return boolean
 	 */
 	public static function staticHandler($page) {
-		$root = elgg_get_plugins_path() . 'static';
+		
+		$resource_loaded = false;
+		$vars = [];
+		
 		switch ($page[0]) {
 			case 'view':
-				set_input('guid', $page[1]);
-				include($root . '/pages/view.php');
+				$resource_loaded = true;
+				
+				$vars['guid'] = (int) elgg_extract('1', $page);
+				
+				echo elgg_view_resource('static/view', $vars);
 				break;
 			case 'edit':
-				set_input('guid', $page[1]);
+				$vars['guid'] = (int) elgg_extract('1', $page);
 			case 'add':
-				include($root . '/pages/edit.php');
+				$resource_loaded = true;
+				
+				echo elgg_view_resource('static/edit', $vars);
 				break;
 			case 'group':
-				set_input('guid', $page[1]);
+				$resource_loaded = true;
 				
-				if (!empty($page[2]) && ($page[2] == 'out_of_date')) {
-					include($root . '/pages/out_of_date_group.php');
+				$vars['guid'] = (int) elgg_extract('1', $page);
+				
+				if (elgg_extract('2', $page) === 'out_of_date') {
+					echo elgg_view_resource('static/out_of_date_group', $vars);
 				} else {
-					include($root . '/pages/group.php');
+					echo elgg_view_resource('static/group', $vars);
 				}
 				break;
 			case 'out_of_date':
+				$resource_loaded = true;
+				
 				$user = false;
 				if (!empty($page[1])) {
 					$user = get_user_by_username($page[1]);
 				}
 				
-				if ($user) {
+				if ($user instanceof \ElggUser) {
+					$vars['user'] = $user;
 					elgg_set_page_owner_guid($user->getGUID());
 					
-					include($root . '/pages/out_of_date_owner.php');
+					echo elgg_view_resource('static/out_of_date_owner', $vars);
 				} else {
-					include($root . '/pages/out_of_date.php');
+					echo elgg_view_resource('static/out_of_date', $vars);
 				}
 				break;
 			case 'all':
 			default:
-				include($root . '/pages/all.php');
+				$resource_loaded = true;
+				
+				echo elgg_view_resource('static/all', $vars);
 				break;
 		}
 		
-		return true;
+		// did we handle the page
+		if ($resource_loaded) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**

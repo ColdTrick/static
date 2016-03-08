@@ -7,7 +7,7 @@ elgg_gatekeeper();
 elgg_group_gatekeeper();
 
 $group = elgg_get_page_owner_entity();
-if (empty($group) || !elgg_instanceof($group, 'group')) {
+if (!($group instanceof ElggGroup)) {
 	forward(REFERER);
 }
 
@@ -15,14 +15,16 @@ if (!static_group_enabled($group)) {
 	forward(REFERER);
 }
 
-$can_write = $group->canWriteToContainer(0, 'object', 'static');
+$can_write = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
 
 $options = [
 	'type' => 'object',
-	'subtype' => 'static',
+	'subtype' => StaticPage::SUBTYPE,
 	'limit' => false,
 	'container_guid' => $group->getGUID(),
-	'joins' => ['JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid'],
+	'joins' => [
+		'JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid',
+	],
 	'order_by' => 'oe.title asc',
 ];
 
@@ -47,7 +49,9 @@ if ($entities) {
 			$order = (1000000 + $index);
 		}
 	
-		$ordered_entities[$order] = elgg_view_entity($entity, array('full_view' => false));
+		$ordered_entities[$order] = elgg_view_entity($entity, [
+			'full_view' => false,
+		]);
 	}
 	
 	ksort($ordered_entities);
@@ -87,10 +91,13 @@ if (static_out_of_date_enabled()) {
 }
 
 $title_text = elgg_echo('static:groups:title');
+
+// build page
 $body = elgg_view_layout('content', [
-	'content' => $body,
 	'title' => $title_text,
+	'content' => $body,
 	'filter' => $filter,
 ]);
 
+// draw page
 echo elgg_view_page($title_text, $body);

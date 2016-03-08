@@ -2,13 +2,13 @@
 
 elgg_gatekeeper();
 
-$guid = (int) get_input('guid');
+$guid = (int) elgg_extract('guid', $vars);
 $body_vars = [];
 $sidebar = '';
 $page_owner = elgg_get_page_owner_entity();
 $site = elgg_get_site_entity();
 
-if (!elgg_instanceof($page_owner, 'group')) {
+if (!($page_owner instanceof ElggGroup)) {
 	elgg_set_page_owner_guid($site->getGUID());
 	$page_owner = $site;
 }
@@ -34,11 +34,13 @@ if ($guid) {
 	$page_owner = elgg_get_page_owner_entity();
 	$body_vars['owner'] = $page_owner;
 	
-	$sidebar = elgg_view('static/sidebar/revisions', ['entity' => $entity]);
+	$sidebar = elgg_view('static/sidebar/revisions', [
+		'entity' => $entity,
+	]);
 }
 
-if (elgg_instanceof($page_owner, 'group')) {
-	elgg_push_breadcrumb(elgg_echo('static:groups:title'), 'static/group/' . $page_owner->getGUID());
+if ($page_owner instanceof ElggGroup) {
+	elgg_push_breadcrumb(elgg_echo('static:groups:title'), "static/group/{$page_owner->getGUID()}");
 }
 
 if (!empty($entity)) {
@@ -52,12 +54,14 @@ $body = elgg_view_form('static/edit', [
 
 $title_text = elgg_echo('static:edit');
 
+// build page
 $body = elgg_view_layout('one_sidebar', [
-	'content' => $body,
 	'title' => $title_text,
+	'content' => $body,
 	'sidebar' => $sidebar,
 ]);
 
 elgg_set_ignore_access($ia);
 
+// draw page
 echo elgg_view_page($title_text, $body);
