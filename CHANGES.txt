@@ -1,9 +1,84 @@
 Version history
 ===============
 
-3.0:
+3.0 (2016-03-08):
 
-- changes for Elgg 1.9
+- added: comment icon/hooks
+- added: option to list out-of-date static pages also sends notifications about out-of-date content
+- added: support for search_advanced autocomplete
+- added: thumbnail upload
+- added: composer support
+- added: entity menu in full view
+- added: event to flush top pages menu cache
+- added: filter option on out of date page to include group content
+- added: group static pages (WIP)
+- added: group static pages as plugin setting
+- added: group widget
+- added: information text above the table listing of the static pages
+- added: it is now possible to reorder the static root pages
+- added: moderators (WIP)
+- added: notifications to the last editor of a static page on comment
+- added: option to enable comments
+- added: sidebar menu items are now cached to increase performance on large pages
+- added: support for content subscriptions
+- added: support for newsletter embed layout
+- added: upgrade handling from old tree structure to new structure
+- added: html5 required attribute added
+- added: difference between clicking on link or toggle icon in sidebar menu
+- added: file comment and removed a misplaced space
+- added: sortable menu items
+- changed: always draw in content layout for consistent layouts
+- changed: fallback to title if searchdata is missing
+- changed: moved permissions hooks to class file
+- changed: permalinks to lowercase
+- changed: refactoring of a lot of code
+- changed: format to dm
+- changed: layout of widget listing
+- changed: notify the correct user about a comment
+- changed: order entities by title
+- changed: title and description are now required
+- changed: updated to Elgg coding standards
+- changed: upped requirement to elgg 1.9 release
+- fixed: better feedback to the user if page not found
+- fixed: limited recursive check for moderators to prevent errors
+- fixed: set correct height for thumbnails
+- fixed: #4 correct default access level for new pages
+- fixed: also check for existing pagehandlers when saving friendly title
+- fixed: call to member function on non-object for cached menu items in rare cases
+- fixed: call to unneeded function causes php warnings
+- fixed: changed sortable parameters for table sort
+- fixed: content moderator should be able to see all metadata
+- fixed: correctly check dir location of thumbnails
+- fixed: correctly check for widget availability
+- fixed: correctly check if a user manages guids in the menu tree
+- fixed: friendly title not always shows up on the edit form
+- fixed: getting root entity doesn't always work as expected
+- fixed: group access in widget for group owners
+- fixed: issues with access related to group owners and private pages
+- fixed: issue with duplicate permalinks, now gives a warning
+- fixed: moving lis between uls was a bit buggy
+- fixed: no text shown if no static pages are found
+- fixed: order of submenu items doesn't match admin side
+- fixed: prevent fatal error call to non object
+- fixed: problems with group (sub)pages
+- fixed: provide correct access to private entities for moderators
+- fixed: several access problems within groups
+- fixed: show empty cells for non editable static objects in list
+- fixed: static url fallback not always working
+- fixed: table headers are no longer sortable
+- fixed: unable to disable comments
+- fixed: widget root pages should be ordered the same as the page
+- fixed: correct redirect after removing a page in a group
+- fixed: etag compression postfix
+- fixed: issue with duplicate menu name conflict with plugin settings
+- fixed: moderator access should be fixed now
+- fixed: only show delete button if there is an entity
+- fixed: remove quotes from friendly title
+- fixed: replaced output/confirmlink deprecated notice
+- fixed: respect global icon configuration
+- fixed: updated header to correct md formating
+- fixed: wrong title in search
+- removed: custom comments id for consistency
 
 2.3 (2013-07-24):
 
