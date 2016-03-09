@@ -79,7 +79,7 @@ class Cache {
 	 */
 	public static function generateMenuItemsCache(\StaticPage $root_entity) {
 		
-		if (!($entity instanceof \StaticPage)) {
+		if (!($root_entity instanceof \StaticPage)) {
 			return false;
 		}
 		
@@ -91,8 +91,8 @@ class Cache {
 		}
 			
 		$root_menu_options = [
-			'name' => $root_entity->guid,
-			'rel' => $root_entity->guid,
+			'name' => $root_entity->getGUID(),
+			'rel' => $root_entity->getGUID(),
 			'href' => $root_entity->getURL(),
 			'text' => elgg_format_element('span', [], $root_entity->title),
 			'priority' => $priority,
@@ -103,14 +103,14 @@ class Cache {
 			$root_menu_options['itemClass'] = ['static-sortable'];
 		}
 		// add main menu items
-		$static_items[$root_entity->guid] = \ElggMenuItem::factory($root_menu_options);
+		$static_items[$root_entity->getGUID()] = \ElggMenuItem::factory($root_menu_options);
 			
 		// add all sub menu items so they are cacheable
 		$ia = elgg_set_ignore_access(true);
 		$submenu_entities = elgg_get_entities_from_relationship([
 			'type' => 'object',
-			'subtype' => 'static',
-			'relationship_guid' => $root_entity->guid,
+			'subtype' => \StaticPage::SUBTYPE,
+			'relationship_guid' => $root_entity->getGUID(),
 			'relationship' => 'subpage_of',
 			'limit' => false,
 			'inverse_relationship' => true,
@@ -128,9 +128,9 @@ class Cache {
 					$priority = (int) $submenu_item->time_created;
 				}
 				
-				$static_items[$submenu_item->guid] = \ElggMenuItem::factory([
-					'name' => $submenu_item->guid,
-					'rel' => $submenu_item->guid,
+				$static_items[$submenu_item->getGUID()] = \ElggMenuItem::factory([
+					'name' => $submenu_item->getGUID(),
+					'rel' => $submenu_item->getGUID(),
 					'href' => $submenu_item->getURL(),
 					'text' => elgg_format_element('span', [], $submenu_item->title),
 					'priority' => $priority,
@@ -143,7 +143,7 @@ class Cache {
 		elgg_set_ignore_access($ia);
 		
 		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->guid;
+		$file->owner_guid = $root_entity->getGUID();
 		$file->setFilename('static_menu_item_cache');
 		$file->open('write');
 		$file->write(serialize($static_items));
