@@ -24,7 +24,7 @@ class Upgrade {
 		// set entity options
 		$options = [
 			'type' => 'object',
-			'subtype' => 'static',
+			'subtype' => \StaticPage::SUBTYPE,
 			'metadata_name' => 'parent_guid',
 			'site_guids' => false,
 			'limit' => false,

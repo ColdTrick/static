@@ -28,7 +28,7 @@ class Search {
 	
 		$options = [
 			'type' => 'object',
-			'subtype' => 'static',
+			'subtype' => \StaticPage::SUBTYPE,
 			'limit' => $limit,
 			'joins' => ['JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid'],
 			'wheres' => ["(oe.title LIKE '%{$query}%' OR oe.description LIKE '%{$query}%')"],

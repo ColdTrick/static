@@ -48,7 +48,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 			// fetch all menu items the user has access to
 			$menu_options = [
 				'type' => 'object',
-				'subtype' => 'static',
+				'subtype' => StaticPage::SUBTYPE,
 				'relationship_guid' => $root_entity->getGUID(),
 				'relationship' => 'subpage_of',
 				'limit' => false,
@@ -267,7 +267,7 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 	// more memory friendly
 	$parent_entities = new ElggBatch('elgg_get_entities', [
 		'type' => 'object',
-		'subtype' => 'static',
+		'subtype' => StaticPage::SUBTYPE,
 		'container_guid' => $parent_guid,
 		'limit' => false,
 	]);
@@ -354,7 +354,7 @@ function static_is_friendly_title_available($friendly_title, $entity_guid) {
 	// check for duplicates
 	$options = [
 		'type' => 'object',
-		'subtype' => 'static',
+		'subtype' => StaticPage::SUBTYPE,
 		'metadata_name_value_pairs' => [
 			'name' => 'friendly_title',
 			'value' => $friendly_title,
@@ -426,7 +426,7 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 	
 	$batch = new ElggBatch('elgg_get_entities', [
 		'type' => 'object',
-		'subtype' => 'static',
+		'subtype' => StaticPage::SUBTYPE,
 		'owner_guid' => $entity->getOwnerGUID(),
 		'container_guid' => $entity->getGUID(),
 		'limit' => false,

@@ -29,7 +29,7 @@ class Cron {
 	
 		$options = [
 			'type' => 'object',
-			'subtype' => 'static',
+			'subtype' => \StaticPage::SUBTYPE,
 			'limit' => false,
 			'modified_time_upper' => $time - ($days * 24 * 60 * 60),
 			'modified_time_lower' => $time - (($days + 1) * 24 * 60 * 60),

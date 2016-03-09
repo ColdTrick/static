@@ -18,7 +18,7 @@ if ($can_write) {
 
 $entities = elgg_get_entities([
 	'type' => 'object',
-	'subtype' => 'static',
+	'subtype' => StaticPage::SUBTYPE,
 	'limit' => false,
 	'container_guid' => $group->getGUID(),
 	'joins' => ['JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid'],

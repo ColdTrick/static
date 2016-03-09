@@ -102,7 +102,7 @@ if ($parent_guid !== $owner->getGUID()) {
 			// further in the tree, so find out which tree
 			$relations = $parent->getEntitiesFromRelationship([
 				'type' => 'object',
-				'subtype' => 'static',
+				'subtype' => StaticPage::SUBTYPE,
 				'relationship' => 'subpage_of',
 				'limit' => 1,
 			]);

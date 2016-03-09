@@ -48,7 +48,7 @@ class Cache {
 		// fetch all top pages
 		$options = [
 			'type' => 'object',
-			'subtype' => 'static',
+			'subtype' => \StaticPage::SUBTYPE,
 			'limit' => false,
 			'relationship' => 'subpage_of',
 		];

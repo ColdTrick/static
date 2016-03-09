@@ -134,7 +134,7 @@ class StaticPage extends \ElggObject {
 			// first created relationship is the root entity
 			$relations = $this->getEntitiesFromRelationship([
 				'type' => 'object',
-				'subtype' => 'static',
+				'subtype' => StaticPage::SUBTYPE,
 				'relationship' => 'subpage_of',
 				'limit' => 1,
 			]);
