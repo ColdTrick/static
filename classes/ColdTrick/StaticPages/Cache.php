@@ -12,13 +12,13 @@ class Cache {
 	 *
 	 * @param string      $event  'create|delete|update'
 	 * @param string      $type   'object'
-	 * @param \StaticPage $entity the entity about to be removed
+	 * @param \ElggObject $entity the entity about to be removed
 	 *
 	 * @return void
 	 */
-	public static function resetMenuCache($event, $type, \StaticPage $entity) {
+	public static function resetMenuCache($event, $type, \ElggObject $entity) {
 	
-		if (!elgg_instanceof($entity, 'object', 'static')) {
+		if (!($entity instanceof \StaticPage)) {
 			return;
 		}
 	
@@ -38,12 +38,12 @@ class Cache {
 	/**
 	 * Resets all cache on the static pages
 	 *
-	 * @param string     $event  'cache:flush'
-	 * @param string     $type   'system'
-	 * @param ElggObject $entity the entity about to be removed
+	 * @param string      $event  'cache:flush'
+	 * @param string      $type   'system'
+	 * @param \ElggObject $entity the entity about to be removed
 	 * @return void
 	 */
-	public static function resetAllCache($event, $type, ElggObject $entity) {
+	public static function resetAllCache($event, $type, \ElggObject $entity) {
 	
 		// fetch all top pages
 		$options = [
@@ -78,7 +78,8 @@ class Cache {
 	 * @return array|false
 	 */
 	public static function generateMenuItemsCache(\StaticPage $root_entity) {
-		if (!elgg_instanceof($root_entity, 'object', 'static')) {
+		
+		if (!($entity instanceof \StaticPage)) {
 			return false;
 		}
 		
@@ -162,7 +163,7 @@ class Cache {
 		$static_items = [];
 	
 		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->guid;
+		$file->owner_guid = $root_entity->getGUID();
 		$file->setFilename('static_menu_item_cache');
 		if ($file->exists()) {
 			$static_items = unserialize($file->grabFile());
