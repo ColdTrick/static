@@ -19,13 +19,26 @@ class StaticPage extends \ElggObject {
 	 * @see ElggEntity::getURL()
 	 */
 	public function getURL() {
+		// basic url
+		$url = "static/view/{$this->getGUID()}";
+		
+		// custom url (eg. /my-static-page)
 		$friendly_title = $this->friendly_title;
 		if ($friendly_title) {
-			return elgg_normalize_url($friendly_title);
+			$url = $friendly_title;
 		}
 		
-		// fallback
-		return elgg_normalize_url("static/view/{$this->getGUID()}");
+		// normalize the url
+		$url = elgg_normalize_url($url);
+		
+		// allow other to change the url
+		$params = [
+			'entity' => $this,
+		];
+		$url = elgg_trigger_plugin_hook('entity:url', $this->getType(), $params, $url);
+		
+		// normalize the url
+		return elgg_normalize_url($url);
 	}
 	
 	/**
