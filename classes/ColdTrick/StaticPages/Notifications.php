@@ -12,11 +12,11 @@ class Notifications {
 	 *
 	 * @param string     $event  'create'
 	 * @param string     $type   'object'
-	 * @param ElggObject $object the object that was just created
+	 * @param \ElggObject $object the object that was just created
 	 *
 	 * @return void
 	 */
-	public static function notifyLastEditor($event, $type, ElggObject $object) {
+	public static function notifyLastEditor($event, $type, \ElggObject $object) {
 	
 		// check of this is a comment
 		if (empty($object) || !elgg_instanceof($object, 'object', 'comment')) {
