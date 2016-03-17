@@ -1,4 +1,5 @@
 <?php
+use Alliander\Theme\StaticPage;
 /**
  * Start file for the Static plugin
  */
@@ -57,6 +58,8 @@ function static_init() {
 	elgg_register_plugin_hook_handler('autocomplete', 'search_advanced', '\ColdTrick\StaticPages\Search::searchAdvancedAutocomplete');
 	
 	elgg_register_plugin_hook_handler('cron', 'daily', '\ColdTrick\StaticPages\Cron::daily');
+	
+	elgg_register_plugin_hook_handler('likes:is_likable', 'object:' . \StaticPage::SUBTYPE, '\Elgg\Values::getTrue');
 	
 	// actions
 	elgg_register_action('static/edit', dirname(__FILE__) . '/actions/edit.php');
