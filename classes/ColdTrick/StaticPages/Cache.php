@@ -38,12 +38,13 @@ class Cache {
 	/**
 	 * Resets all cache on the static pages
 	 *
-	 * @param string      $event  'cache:flush'
-	 * @param string      $type   'system'
-	 * @param \ElggObject $entity the entity about to be removed
+	 * @param string $event  'cache:flush'
+	 * @param string $type   'system'
+	 * @param mixed  $entity the entity about to be removed
+	 *
 	 * @return void
 	 */
-	public static function resetAllCache($event, $type, \ElggObject $entity) {
+	public static function resetAllCache($event, $type, $entity) {
 	
 		// fetch all top pages
 		$options = [
