@@ -45,7 +45,7 @@ class StaticPage extends \ElggObject {
 	 * (non-PHPdoc)
 	 * @see ElggEntity::getIconURL()
 	 */
-	public function getIconURL($params) {
+	public function getIconURL($params = array()) {
 		if (is_array($params)) {
 			$size = elgg_extract('size', $params, 'medium');
 		} else {
