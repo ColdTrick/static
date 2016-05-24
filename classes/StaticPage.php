@@ -98,7 +98,7 @@ class StaticPage extends \ElggObject {
 			}
 		}
 	
-		unset($entity->icontime);
+		unset($this->icontime);
 	}
 	
 	/**
