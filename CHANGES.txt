@@ -1,6 +1,10 @@
 Version history
 ===============
 
+4.0.1 (2016-05-26):
+
+- fixed: removing page icon didn't remove icontime
+
 4.0 (2016-04-14):
 
 - changed: moved pages to resource views
