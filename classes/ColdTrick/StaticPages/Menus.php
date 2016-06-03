@@ -57,6 +57,33 @@ class Menus {
 	}
 	
 	/**
+	 * Add menu items to the admin page menu
+	 *
+	 * @param string         $hook         'register'
+	 * @param string         $type         'menu:owner_block'
+	 * @param ElggMenuItem[] $return_value the menu items
+	 * @param array          $params       supplied params
+	 *
+	 * @return ElggMenuItem[]
+	 */
+	public static function registerAdminPageMenuItems($hook, $type, $return_value, $params) {
+		if (!elgg_in_context('admin') || !elgg_is_admin_logged_in()) {
+			return;
+		}
+		
+		$return_value[] = \ElggMenuItem::factory([
+			'name' => 'static_all',
+			'href' => 'static/all',
+			'text' => elgg_echo('static:all'),
+			'context' => 'admin',
+			'parent_name' => 'appearance',
+			'section' => 'configure',
+		]);
+	
+		return $return_value;
+	}
+	
+	/**
 	 * Add menu items to the owner block menu
 	 *
 	 * @param string         $hook         'register'

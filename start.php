@@ -8,7 +8,6 @@ require_once(dirname(__FILE__) . '/lib/functions.php');
 
 // register default Elgg events
 elgg_register_event_handler('init', 'system', 'static_init');
-elgg_register_event_handler('pagesetup', 'system', 'static_page_setup');
 
 /**
  * Initializes the static plugin
@@ -51,6 +50,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', '\ColdTrick\StaticPages\Menus::ownerBlockMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:filter', '\ColdTrick\StaticPages\Menus::filterMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', '\ColdTrick\StaticPages\Menus::entityMenuRegister');
+	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\StaticPages\Menus::registerAdminPageMenuItems');
 	elgg_register_plugin_hook_handler('prepare', 'menu:page', '\ColdTrick\StaticPages\Menus::pageMenuPrepare');
 	
 	elgg_register_plugin_hook_handler('entity_types', 'content_subscriptions', '\ColdTrick\StaticPages\ContentSubscriptions::entityTypes');
@@ -66,21 +66,4 @@ function static_init() {
 	elgg_register_action('static/delete', dirname(__FILE__) . '/actions/delete.php');
 	elgg_register_action('static/reorder', dirname(__FILE__) . '/actions/reorder.php');
 	elgg_register_action('static/reorder_root_pages', dirname(__FILE__) . '/actions/reorder_root_pages.php');
-}
-
-/**
- * Registers menu items during page setup
- *
- * @return void
- */
-function static_page_setup() {
-	
-	elgg_register_menu_item('page', [
-		'name' => 'static_all',
-		'href' => 'static/all',
-		'text' => elgg_echo('static:all'),
-		'context' => 'admin',
-		'parent_name' => 'appearance',
-		'section' => 'configure'
-	]);
 }
