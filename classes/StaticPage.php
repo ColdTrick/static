@@ -53,7 +53,11 @@ class StaticPage extends \ElggObject {
 		}
 	
 		if ($this->icontime) {
-			return elgg_normalize_url("mod/static/pages/thumbnail.php?guid={$this->getGUID()}&size={$size}&icontime={$this->icontime}");
+			$file = new \ElggFile();
+			$file->owner_guid = $this->guid;
+			$file->setFilename("thumb{$size}.jpg");
+			
+			return elgg_get_inline_url($file);
 		}
 	}
 	
