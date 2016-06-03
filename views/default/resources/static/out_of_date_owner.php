@@ -43,23 +43,16 @@ $options = [
 	'order_by' => 'e.time_updated DESC',
 ];
 
-$batch = new ElggBatch('elgg_get_entities', $options);
+$batch = new \ElggBatch('elgg_get_entities', $options);
 $rows = [];
 foreach ($batch as $entity) {
-	$rows[] = elgg_view_entity($entity, [
-		'full_view' => false,
-	]);
+	$rows[] = $entity;
 }
 
 if (!empty($rows)) {
-	$header_row = elgg_format_element('th', [], elgg_echo('title'));
-	$header_row .= elgg_format_element('th', ['class' => 'center'], elgg_echo('edit'));
-	$header_row .= elgg_format_element('th', ['class' => 'center'], elgg_echo('delete'));
-	
-	$table_data = elgg_format_element('thead', [], elgg_format_element('tr', [], $header_row));
-	$table_data .= elgg_format_element('tr', [], implode('</tr><tr>', $rows));
-	
-	$body .= elgg_format_element('table', ['class' => 'elgg-table-alt', 'id' => 'static-pages-list'], $table_data);
+	$body = elgg_view_entity_list($rows, [
+		'item_view' => 'object/static/simple',
+	]);
 } else {
 	$body = elgg_view('output/longtext', ['value' => elgg_echo('static:out_of_date:none')]);
 }

@@ -9,6 +9,3 @@
 .elgg-menu-page-static .elgg-menu-closed:before {
 	content: "▸";
 }
-.static-reorder tbody tr {
-	cursor: move;
-}

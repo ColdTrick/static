@@ -163,4 +163,45 @@ class StaticPage extends \ElggObject {
 		return $root_entity;
 	}
 	
+	/**
+	 * Returns the latest editor entity for this page, or false if there is none
+	 *
+	 * @return false|\ElggUser
+	 */
+	public function getLastEditor() {
+		$revision = $this->getLastRevision();
+		if (empty($revision)) {
+			return false;
+		}
+		
+		$user = $revision->getOwnerEntity();
+		if (empty($user)) {
+			return false;
+		}
+		
+		return $user;
+	}
+	
+	/**
+	 * Get the last revision of a static page
+	 *
+	 * @return false|\ElggAnnotation
+	 */
+	public function getLastRevision() {
+		
+		$ia = elgg_set_ignore_access(true);
+		$revisions = $this->getAnnotations([
+			'annotation_name' => 'static_revision',
+			'limit' => 1,
+			'reverse_order_by' => true,
+		]);
+		elgg_set_ignore_access($ia);
+		
+		if (empty($revisions)) {
+			return false;
+		}
+		
+		return $revisions[0];
+	}
+	
 }

@@ -2,15 +2,18 @@ define(function(require) {
 	var $ = require('jquery');
 	var elgg = require('elgg');
 	
-	$('#static-pages-list.static-reorder').sortable({
-		items: 'tbody tr',
+	$('.static-list-reorder').sortable({
+		items: '> ul > li',
 		revert: true,
 		update: function(event, ui) {
-			var container_guid = $('#static-pages-list').data('containerGuid');
+			var container_guid = $(this).data('containerGuid');
 			
 			var ordered_guids = [];
-			$('#static-pages-list.static-reorder tbody tr').each(function() {
-				ordered_guids.push($(this).data('guid'));
+			var guidString = '';
+			$(this).find('> ul > li').each(function(list_item) {
+				guidString = $(this).attr('id');
+				guidString = guidString.substr(guidString.indexOf('elgg-object-') + "elgg-object-".length);
+				ordered_guids.push(guidString);
 			});
 
 			if (container_guid && ordered_guids) {

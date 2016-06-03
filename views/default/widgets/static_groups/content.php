@@ -33,7 +33,7 @@ if ($entities) {
 			$order = (1000000 + $index);
 		}
 	
-		$ordered_entities[$order] = elgg_view_entity($entity, ['full_view' => false]);
+		$ordered_entities[$order] = elgg_view('object/static/widget', ['entity' => $entity]);
 	}
 	ksort($ordered_entities);
 	echo implode($ordered_entities);

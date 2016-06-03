@@ -49,34 +49,20 @@ if ($entities) {
 			$order = (1000000 + $index);
 		}
 	
-		$ordered_entities[$order] = elgg_view_entity($entity, [
-			'full_view' => false,
-		]);
+		$ordered_entities[$order] = $entity;
 	}
 	
 	ksort($ordered_entities);
 	
-	$table_params = [
-		'id' => 'static-pages-list',
-		'class' => ['elgg-table-alt'],
-		'data-container-guid' => $group->getGUID(),
-	];
-	
-	$header_row = elgg_format_element('th', [], elgg_echo('title'));
-	if ($can_write) {
-		$header_row .= elgg_format_element('th', ['class' => 'center'], elgg_echo('edit'));
-		$header_row .= elgg_format_element('th', ['class' => 'center'], elgg_echo('delete'));
-	}
-	
-	$table_data = elgg_format_element('thead', [], elgg_format_element('tr', [], $header_row));
-	$table_data .= implode($ordered_entities);
-	
 	$body = '';
 	if ($group->canEdit()) {
 		$body .= elgg_format_element('div', ['class' => 'mbm'], elgg_echo('static:list:info'));
-		$table_params['class'][] = 'static-reorder';
 	}
-	$body .= elgg_format_element('table', $table_params, $table_data);
+	
+	$body .= elgg_format_element('div', [
+		'class' => 'static-list-reorder',
+		'data-container-guid' => $group->guid,
+	], elgg_view_entity_list($ordered_entities, ['item_view' => 'object/static/simple']));
 } else {
 	$body = elgg_echo('static:admin:empty');
 }
