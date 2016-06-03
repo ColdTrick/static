@@ -203,13 +203,6 @@ class Menus {
 			return;
 		}
 	
-		// remove menu items
-		foreach ($return_value as $index => $menu_item) {
-			if (in_array($menu_item->getName(), ['edit'])) {
-				unset($return_value[$index]);
-			}
-		}
-	
 		if (!$entity->canComment()) {
 			return $return_value;
 		}
