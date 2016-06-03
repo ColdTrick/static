@@ -1,6 +1,22 @@
 Version history
 ===============
 
+4.0.1 (2016-05-26):
+
+- fixed: removing page icon didn't remove icontime
+
+4.0 (2016-04-14):
+
+- changed: moved pages to resource views
+- changed: StaticPage->getURL() triggers hook 'entity:url', 'object' again
+- fixed: correctly load dataroot for Elgg 2.0
+- fixed: incorrect type hint check
+- fixed: php notice about overruled function declaration
+- fixed: static pages can't be liked
+- fixed: typehint error
+- fixed: unable to generate static menu cache
+- fixed: validate correct usage of classes
+
 3.0 (2016-03-08):
 
 - added: comment icon/hooks
