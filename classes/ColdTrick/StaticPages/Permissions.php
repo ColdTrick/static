@@ -91,9 +91,9 @@ class Permissions {
 			return;
 		}
 		
-		if (elgg_instanceof($container, 'site')) {
-			return true;
-		}
+// 		if (elgg_instanceof($container, 'site')) {
+// 			return true;
+// 		}
 		
 		if (elgg_instanceof($container, 'group') && !$container->canEdit()) {
 			$return_value = false;
