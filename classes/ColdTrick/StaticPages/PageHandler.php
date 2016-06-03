@@ -19,7 +19,7 @@ class PageHandler {
 		$resource_loaded = false;
 		$vars = [];
 		
-		switch ($page[0]) {
+		switch (elgg_extract(0, $page)) {
 			case 'view':
 				$resource_loaded = true;
 				
