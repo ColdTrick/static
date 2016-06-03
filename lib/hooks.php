@@ -184,9 +184,7 @@ function static_container_permissions_check_hook_handler($hook, $type, $return_v
 	}
 	
 	$container = elgg_extract("container", $params);
-	if ($container instanceof ElggSite) {
-		$return_value = true;
-	} elseif (($container instanceof ElggGroup) && !$container->canEdit($user->getGUID())) {
+	if (($container instanceof ElggGroup) && !$container->canEdit($user->getGUID())) {
 		$return_value = false;
 	}
 	
