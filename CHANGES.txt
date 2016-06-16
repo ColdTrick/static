@@ -1,6 +1,15 @@
 Version history
 ===============
 
+4.1 (2016-06-16):
+
+- added: a normal list view is now available, special views are separated
+- changed: moved admin menu item registration to menu hook
+- changed: now using serve-file api for thumbnail
+- changed: static entity menu has an edit link again
+- changed: updated requirements to Elgg 2.1
+- fixed: regular users should not be able to create site static pages
+
 4.0.1 (2016-05-26):
 
 - fixed: removing page icon didn't remove icontime
