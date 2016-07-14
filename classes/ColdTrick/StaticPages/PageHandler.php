@@ -73,6 +73,12 @@ class PageHandler {
 	 * @return array
 	 */
 	public static function routeAll($hook, $type, $return_value, $params) {
+		
+		if (!is_array($return_value)) {
+			// someone else already routed this page
+			return;
+		}
+		
 		/**
 		 * $return_value contains:
 		 * $return_value['identifier'] => requested handler
