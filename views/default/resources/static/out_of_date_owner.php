@@ -24,7 +24,6 @@ $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 $options = [
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
-	'limit' => false,
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
 	'wheres' => [
 		"e.guid IN (
@@ -41,24 +40,14 @@ $options = [
 		",
 	],
 	'order_by' => 'e.time_updated DESC',
+	'no_results' => elgg_echo('static:out_of_date:none'),
+	'item_view' => 'object/static/simple',
 ];
-
-$batch = new \ElggBatch('elgg_get_entities', $options);
-$rows = [];
-foreach ($batch as $entity) {
-	$rows[] = $entity;
-}
-
-if (!empty($rows)) {
-	$body = elgg_view_entity_list($rows, [
-		'item_view' => 'object/static/simple',
-	]);
-} else {
-	$body = elgg_view('output/longtext', ['value' => elgg_echo('static:out_of_date:none')]);
-}
 
 $title_text = elgg_echo('static:out_of_date:owner:title', [$page_owner->name]);
 $filter = elgg_view('page/layouts/elements/filter');
+
+$body = elgg_list_entities($options);
 
 // build page
 $page_data = elgg_view_layout('one_column', [

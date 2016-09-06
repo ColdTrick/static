@@ -28,28 +28,16 @@ $options = [
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
 	'owner_guid' => $page_owner->getGUID(),
-	'limit' => false,
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
 	'order_by' => 'e.time_updated DESC',
+	'no_results' => elgg_echo('static:out_of_date:none'),
+	'item_view' => 'object/static/simple',
 ];
-
-$batch = new \ElggBatch('elgg_get_entities', $options);
-$rows = [];
-foreach ($batch as $entity) {
-	$rows[] = $entity;
-}
-
-if (!empty($rows)) {
-
-	$body = elgg_view_entity_list($rows, [
-		'item_view' => 'object/static/simple',
-	]);
-} else {
-	$body = elgg_view('output/longtext', ['value' => elgg_echo('static:out_of_date:none')]);
-}
 
 $title_text = elgg_echo('static:out_of_date:title');
 $filter = elgg_view('page/layouts/elements/filter');
+
+$body = elgg_list_entities($options);
 
 // build page
 $page_data = elgg_view_layout('content', [

@@ -124,15 +124,18 @@ class Menus {
 	 * @return ElggMenuItem[]
 	 */
 	public static function filterMenuRegister($hook, $type, $return_value, $params) {
-	
+		
 		if (!static_out_of_date_enabled()) {
 			return;
 		}
-	
+		
 		if (!elgg_in_context('static')) {
 			return;
 		}
-	
+		
+		$current_page = current_page_url();
+		$out_of_date_selected = false;
+		
 		$page_owner = elgg_get_page_owner_entity();
 		if (elgg_instanceof($page_owner, 'group')) {
 			$return_value[] = \ElggMenuItem::factory([
@@ -142,14 +145,21 @@ class Menus {
 				'is_trusted' => true,
 				'priority' => 100,
 			]);
-	
+			
 			if ($page_owner->canEdit()) {
+				
+				$url = "static/group/{$page_owner->getGUID()}/out_of_date";
+				if (strpos($current_page, elgg_normalize_url($url)) === 0) {
+					$out_of_date_selected = true;
+				}
+				
 				$return_value[] = \ElggMenuItem::factory([
 					'name' => 'out_of_date_group',
 					'text' => elgg_echo('static:menu:filter:out_of_date:group'),
-					'href' => "static/group/{$page_owner->getGUID()}/out_of_date",
+					'href' => $url,
 					'is_trusted' => true,
 					'priority' => 250,
+					'selected' => $out_of_date_selected,
 				]);
 			}
 		} else {
@@ -161,28 +171,43 @@ class Menus {
 				'priority' => 100,
 			]);
 		}
-	
-		if (elgg_is_admin_logged_in()) {
-			$return_value[] = \ElggMenuItem::factory([
-				'name' => 'out_of_date',
-				'text' => elgg_echo('static:menu:filter:out_of_date'),
-				'href' => 'static/out_of_date',
-				'is_trusted' => true,
-				'priority' => 200,
-			]);
-		}
-	
+		
 		$user = elgg_get_logged_in_user_entity();
 		if (!empty($user)) {
+			$url = "static/out_of_date/{$user->username}";
+			if (strpos($current_page, elgg_normalize_url($url)) === 0) {
+				$out_of_date_selected = true;
+			}
+			
 			$return_value[] = \ElggMenuItem::factory([
 				'name' => 'out_of_date_mine',
 				'text' => elgg_echo('static:menu:filter:out_of_date:mine'),
-				'href' => "static/out_of_date/{$user->username}",
+				'href' => $url,
 				'is_trusted' => true,
 				'priority' => 300,
+				'selected' => $out_of_date_selected,
 			]);
 		}
-	
+		
+		if (elgg_is_admin_logged_in()) {
+			
+			$url = 'static/out_of_date';
+			if (!$out_of_date_selected && strpos($current_page, elgg_normalize_url($url)) === 0) {
+				$out_of_date_selected = true;
+			} else {
+				$out_of_date_selected = false;
+			}
+			
+			$return_value[] = \ElggMenuItem::factory([
+				'name' => 'out_of_date',
+				'text' => elgg_echo('static:menu:filter:out_of_date'),
+				'href' => $url,
+				'is_trusted' => true,
+				'priority' => 200,
+				'selected' => $out_of_date_selected,
+			]);
+		}
+		
 		return $return_value;
 	}
 	

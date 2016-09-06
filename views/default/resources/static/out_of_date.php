@@ -13,16 +13,11 @@ $options = [
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
 	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->getGUID(),
-	'limit' => false,
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
 	'order_by' => 'e.time_updated DESC',
+	'no_results' => elgg_echo('static:out_of_date:none'),
+	'item_view' => 'object/static/simple',
 ];
-
-$batch = new ElggBatch('elgg_get_entities', $options);
-$rows = [];
-foreach ($batch as $entity) {
-	$rows[] = $entity;
-}
 
 // group filter
 $checkbox = elgg_view('input/checkbox', [
@@ -43,13 +38,7 @@ $body = elgg_view('input/form', [
 	'action' => 'static/out_of_date',
 ]);
 
-if (!empty($rows)) {
-	$body .= elgg_view_entity_list($rows, [
-		'item_view' => 'object/static/simple',
-	]);
-} else {
-	$body .= elgg_view('output/longtext', ['value' => elgg_echo('static:out_of_date:none')]);
-}
+$body .= elgg_list_entities($options);
 
 $title_text = elgg_echo('static:out_of_date:title');
 $filter = elgg_view('page/layouts/elements/filter');
