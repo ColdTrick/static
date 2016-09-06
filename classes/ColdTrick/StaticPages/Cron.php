@@ -39,7 +39,7 @@ class Cron {
 		// ignore access
 		$ia = elgg_set_ignore_access(true);
 	
-		$batch = new ElggBatch('elgg_get_entities', $options);
+		$batch = new \ElggBatch('elgg_get_entities', $options);
 		$users = [];
 		foreach ($batch as $entity) {
 			$last_editors = $entity->getAnnotations([
