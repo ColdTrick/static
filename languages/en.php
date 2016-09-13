@@ -16,6 +16,7 @@ return array(
 	'static:new:permalink' => "Permalink",
 	'static:new:parent' => "Select parent page",
 	'static:new:parent:top_level' => "No parent page / Top Level",
+	'static:edit:menu:parent:direct_child' => "Direct subpage of toppage",
 	'static:new:comment' => "Allow comments",
 	'static:new:moderators' => "Assign moderators",
 	'static:new:thumbnail' => "Upload thumbnail",

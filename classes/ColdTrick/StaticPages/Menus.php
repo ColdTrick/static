@@ -57,6 +57,30 @@ class Menus {
 	}
 	
 	/**
+	 * Registers the static menu items for use on th edit page
+	 *
+	 * @param string         $hook         'register'
+	 * @param string         $type         'menu:static_edit'
+	 * @param ElggMenuItem[] $return_value the menu items
+	 * @param array          $params       supplied params
+	 *
+	 * @return ElggMenuItem[]
+	 */
+	public static function registerStaticEditMenuItems($hook, $type, $return_value, $params) {
+		$root_entity = elgg_extract('root_entity', $params);
+		if (empty($root_entity)) {
+			return;
+		}
+		$return_value = Cache::getMenuItemsCache($root_entity);
+		if (empty($return_value)) {
+			// no items in cache so generate menu + add them to the cache
+			$return_value = Cache::generateMenuItemsCache($root_entity);
+		}
+			
+		return $return_value;
+	}
+	
+	/**
 	 * Add menu items to the admin page menu
 	 *
 	 * @param string         $hook         'register'

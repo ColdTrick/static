@@ -20,6 +20,8 @@ function static_init() {
 	elgg_register_page_handler('static', '\ColdTrick\StaticPages\PageHandler::staticHandler');
 
 	elgg_extend_view('css/elgg', 'css/static/site.css');
+	
+	elgg_register_ajax_view('static/ajax/menu_static_edit');
 
 	// Register for search
 	elgg_register_entity_type('object', 'static');
@@ -51,6 +53,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:filter', '\ColdTrick\StaticPages\Menus::filterMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', '\ColdTrick\StaticPages\Menus::entityMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\StaticPages\Menus::registerAdminPageMenuItems');
+	elgg_register_plugin_hook_handler('register', 'menu:static_edit', '\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems');
 	elgg_register_plugin_hook_handler('prepare', 'menu:page', '\ColdTrick\StaticPages\Menus::pageMenuPrepare');
 	
 	elgg_register_plugin_hook_handler('entity_types', 'content_subscriptions', '\ColdTrick\StaticPages\ContentSubscriptions::entityTypes');
