@@ -1,6 +1,12 @@
 Version history
 ===============
 
+4.1.1 (2016-09-15):
+
+- changed: out of date page now has pagination to prevent OOM/OOT
+- fixed: call to non namespaced class
+- fixed: php notice when page is already routed
+
 4.1 (2016-06-16):
 
 - added: a normal list view is now available, special views are separated
