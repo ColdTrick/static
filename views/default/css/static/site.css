@@ -9,3 +9,8 @@
 .elgg-menu-page-static .elgg-menu-closed:before {
 	content: "▸";
 }
+
+.static-edit-top-parent-select,
+.static-edit-sub-parent-select {
+	max-width: 200px;	
+}
