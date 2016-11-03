@@ -57,7 +57,7 @@ if (static_out_of_date_enabled()) {
 	$filter = elgg_view('page/layouts/elements/filter');
 }
 
-if (can_write_to_container(elgg_get_logged_in_user_guid(), $site->getGUID(), 'object', 'static')) {
+if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', 'static')) {
 	elgg_register_title_button();
 }
 
