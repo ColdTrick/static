@@ -73,7 +73,6 @@ class PageHandler {
 	 * @return array
 	 */
 	public static function routeAll($hook, $type, $return_value, $params) {
-		
 		if (!is_array($return_value)) {
 			// someone else already routed this page
 			return;
@@ -90,9 +89,7 @@ class PageHandler {
 			return;
 		}
 		
-		$router = _elgg_services()->router;
-		$handlers = $router->getPageHandlers();
-
+		$handlers = _elgg_services()->router->getPageHandlers();
 		if (elgg_extract($identifier, $handlers)) {
 			return;
 		}

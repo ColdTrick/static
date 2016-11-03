@@ -7,6 +7,7 @@ use Alliander\Theme\StaticPage;
 require_once(dirname(__FILE__) . '/lib/functions.php');
 
 // register default Elgg events
+elgg_register_plugin_hook_handler('route:rewrite', 'all', '\ColdTrick\StaticPages\PageHandler::routeAll');
 elgg_register_event_handler('init', 'system', 'static_init');
 
 /**
@@ -43,7 +44,6 @@ function static_init() {
 	elgg_register_event_handler('cache:flush', 'system', '\ColdTrick\StaticPages\Cache::resetAllCache');;
 	
 	// plugin hooks
-	elgg_register_plugin_hook_handler('route', 'all', '\ColdTrick\StaticPages\PageHandler::routeAll');
 	elgg_register_plugin_hook_handler('entity:url', 'object', '\ColdTrick\StaticPages\Widgets::widgetURL');
 	
 	elgg_register_plugin_hook_handler('permissions_check', 'object', '\ColdTrick\StaticPages\Permissions::objectPermissionsCheck');
