@@ -1,6 +1,10 @@
 Version history
 ===============
 
+4.3 (2016-11-18):
+
+- added: support for EntityTools migrate feature
+
 4.2 (2016-10-06):
 
 - changed: improved parent selector on static edit for big trees
