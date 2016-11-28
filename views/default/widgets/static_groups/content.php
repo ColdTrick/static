@@ -16,9 +16,12 @@ if ($can_write) {
 	$ia = elgg_set_ignore_access(true);
 }
 
-$entities = elgg_get_entities([
+$entities = elgg_get_entities_from_metadata([
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
+	'metadata_name_value_pairs' => [
+		'parent_guid' => 0,
+	],
 	'limit' => false,
 	'container_guid' => $group->getGUID(),
 	'joins' => ['JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid'],

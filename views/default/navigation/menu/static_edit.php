@@ -11,6 +11,7 @@ if (empty($items) || empty($items[0]->getChildren())) {
 }
 
 $options = '';
+
 foreach ($items as $menu_item) {
 	$options .= elgg_view('navigation/menu/static_edit/item', [
 		'item' => $menu_item,

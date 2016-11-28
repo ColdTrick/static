@@ -38,8 +38,8 @@ function static_init() {
 	elgg_register_event_handler('create', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 	elgg_register_event_handler('update', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 	elgg_register_event_handler('delete', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
-	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::migrateTreeStructure');
 	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::registerClass');
+	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::migrateContainers');
 
 	elgg_register_event_handler('cache:flush', 'system', '\ColdTrick\StaticPages\Cache::resetAllCache');;
 	
@@ -70,4 +70,5 @@ function static_init() {
 	elgg_register_action('static/delete', dirname(__FILE__) . '/actions/delete.php');
 	elgg_register_action('static/reorder', dirname(__FILE__) . '/actions/reorder.php');
 	elgg_register_action('static/reorder_root_pages', dirname(__FILE__) . '/actions/reorder_root_pages.php');
+	elgg_register_action('static/upgrades/migrate_containers', dirname(__FILE__) . '/actions/upgrades/migrate_containers.php', 'admin');
 }

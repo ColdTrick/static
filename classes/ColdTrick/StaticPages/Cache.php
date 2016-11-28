@@ -22,17 +22,7 @@ class Cache {
 			return;
 		}
 	
-		$root_entity = $entity->getRootPage();
-		if (empty($root_entity)) {
-			return;
-		}
-		
-		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->guid;
-		$file->setFilename('static_menu_item_cache');
-		if ($file->exists()) {
-			$file->delete();
-		}
+		$root_entity = $entity->getRootPage()->clearMenuCache();
 	}
 	
 	/**
@@ -135,7 +125,7 @@ class Cache {
 					'href' => $submenu_item->getURL(),
 					'text' => elgg_format_element('span', [], $submenu_item->title),
 					'priority' => $priority,
-					'parent_name' => $submenu_item->getContainerGUID(),
+					'parent_name' => $submenu_item->parent_guid,
 					'section' => 'static',
 				]);
 			}

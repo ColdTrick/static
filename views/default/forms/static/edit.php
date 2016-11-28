@@ -24,7 +24,7 @@ if ($entity) {
 	$content_description = $entity->description;
 	$content_access_id = $entity->access_id;
 	$friendly_title = $entity->getFriendlyTitle();
-	$parent_guid = $entity->getContainerGUID();
+	$parent_guid = $entity->parent_guid;
 	
 	$content_enable_comments = $entity->enable_comments;
 	$content_moderators = $entity->moderators;
@@ -40,16 +40,18 @@ if ($entity) {
 }
 
 // build the form
-$form_body = elgg_view_input('text', [
-	'label' => elgg_echo('title'),
+$form_body = elgg_view_field([
+	'#type' => 'text',
+	'#label' => elgg_echo('title'),
 	'name' => 'title',
 	'value' => elgg_get_sticky_value('static', 'title', $content_title),
 	'required' => true,
 ]);
 
 if (!empty($entity)) {
-	$form_body .= elgg_view_input('text', [
-		'label' => elgg_echo('static:new:permalink'),
+	$form_body .= elgg_view_field([
+		'#type' => 'text',
+		'#label' => elgg_echo('static:new:permalink'),
 		'name' => 'friendly_title',
 		'value' => elgg_get_sticky_value('static', 'friendly_title', $friendly_title),
 		'required' => true,
@@ -67,41 +69,45 @@ if ($entity && $entity->icontime) {
 }
 $form_body .= '</div>';
 
-$form_body .= elgg_view_input('longtext', [
-	'label' => elgg_echo('description'),
+$form_body .= elgg_view_field([
+	'#type' => 'longtext',
+	'#label' => elgg_echo('description'),
 	'name' => 'description',
 	'value' => elgg_get_sticky_value('static', 'description', $content_description),
 	'required' => true,
 ]);
 
-$form_body .= elgg_view_input('static/parent', [
-	'label' => elgg_echo('static:new:parent'),
+$form_body .= elgg_view_field([
+	'#type' => 'static/parent',
+	'#label' => elgg_echo('static:new:parent'),
 	'name' => 'parent_guid',
 	'value' => elgg_get_sticky_value('static', 'parent_guid', $parent_guid),
 	'owner' => $owner,
 	'entity' => $entity,
 ]);
 
-$form_body .= elgg_view_input('select', [
-	'label' => elgg_echo('static:new:comment'),
+$form_body .= elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('static:new:comment'),
 	'name' => 'enable_comments',
 	'value' => elgg_get_sticky_value('static', 'enable_comments', $content_enable_comments),
 	'options_values' => $comment_options,
 ]);
 
-$form_body .= elgg_view_input('userpicker', [
-	'label' => elgg_echo('static:new:moderators'),
+$form_body .= elgg_view_field([
+	'#type' => 'userpicker',
+	'#label' => elgg_echo('static:new:moderators'),
 	'name' => 'moderators',
 	'values' => elgg_get_sticky_value('static', 'moderators', $content_moderators),
 ]);
 
-$form_body .= elgg_view_input('access', [
-	'label' => elgg_echo('access'),
+$form_body .= elgg_view_field([
+	'#type' => 'access',
+	'#label' => elgg_echo('access'),
 	'name' => 'access_id',
-	'value' => elgg_get_sticky_value('static', 'access_id', $content_access_id)
+	'value' => elgg_get_sticky_value('static', 'access_id', $content_access_id),
 ]);
 
-$form_body .= '<div class="elgg-foot mtm">';
 $form_body .= elgg_view('input/hidden', [
 	'name' => 'guid',
 	'value' => $content_guid,
@@ -110,18 +116,21 @@ $form_body .= elgg_view('input/hidden', [
 	'name' => 'owner_guid',
 	'value' => $content_owner_guid,
 ]);
+
+echo $form_body;
+
+$footer = '';
 if ($entity) {
-	$form_body .= elgg_view('output/url', [
+	$footer .= elgg_view('output/url', [
 		'href' => 'action/static/delete?guid=' . $entity->getGUID(),
 		'text' => elgg_echo('delete'),
 		'class' => 'elgg-button elgg-button-delete float-alt',
 		'confirm' => true,
 	]);
 }
-$form_body .= elgg_view('input/submit', ['value' => elgg_echo('save')]);
-$form_body .= '</div>';
+$footer .= elgg_view('input/submit', ['value' => elgg_echo('save')]);
 
-echo $form_body;
+elgg_set_form_footer($footer);
 
 // clear sticky form
 elgg_clear_sticky_form('static');

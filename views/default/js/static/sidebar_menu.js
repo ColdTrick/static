@@ -14,6 +14,12 @@ define(function(require) {
 				$(ui.item).find(' > a').addClass('dragged');
 			},
 			update: function(event, ui) {
+				
+				if (!$(this).is($(ui.item).parent())) {
+					// only trigger update on receiving sortable
+					return;
+				}
+				
 				var $parent = $(ui.item).parent().parent();
 				var parent_guid = $parent.find(' > a').attr('rel');
 				var new_order = [];
@@ -21,7 +27,7 @@ define(function(require) {
 				$parent.find('> ul > li > a').each(function(index, child) {
 					new_order[index] = $(child).attr('rel');
 				});
-
+				
 				elgg.action('static/reorder', {
 					data: {
 						guid: parent_guid,
@@ -40,6 +46,11 @@ define(function(require) {
 		});
 
 		$('.elgg-menu-page-static li a span').on('click', function(event) {
+
+			if ($(this).parent().hasClass('dragged')) {
+				return;
+			}
+				
 			var href = $(this).parent().attr('href');
 			document.location = href;
 

@@ -2,7 +2,11 @@
 
 return array(
 	'item:object:static' => "Static page",
-	
+
+	// upgrades
+	'admin:upgrades:static:migrate_containers' => "Migrate static page containers",
+	'admin:upgrades:static:migrate_containers:description' => "This migrates the containers from the static pages from being static containers to group or site containers.",
+		
 	// settings
 	'static:settings:enable_out_of_date' => "Enable out-of-date notifications/listing",
 	'static:settings:out_of_date_days' => "Number of days before content is out-of-date",
@@ -45,7 +49,7 @@ return array(
 	'static:out_of_date:notification:subject' => "Your static content is out-of-date",
 	'static:out_of_date:notification:message' => "Hi %s,
 
-Some of your static content pages are out-of-date. Please have a look if the information is still current/usefull.
+Some of your static content pages are out-of-date. Please have a look if the information is still current/useful.
 
 Click here for a complete list:
 %s",
@@ -57,5 +61,5 @@ Click here for a complete list:
 	// actions
 	'static:action:edit:error:title_description' => "Please enter a Title and Description",
 	'static:action:edit:error:friendly_title' => "The permalink is already taken, please choose another one",
-	'static:action:edit:success' => "Save successfull",
+	'static:action:edit:success' => "Save successful",
 );

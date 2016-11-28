@@ -41,7 +41,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 			// no items in cache so generate menu + add them to the cache
 			$static_items = \ColdTrick\StaticPages\Cache::generateMenuItemsCache($root_entity);
 		}
-		
+				
 		if (!empty($static_items)) {
 			global $CONFIG;
 			
@@ -197,14 +197,14 @@ function static_is_moderator_in_container(ElggEntity $container_entity, ElggUser
 function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 	$result = [];
 	
-	if (!elgg_instanceof($entity, 'object', 'static')) {
-		return $result;
+	if (!($entity instanceof \StaticPage)) {
+		return;
 	}
 	
 	$ia = elgg_set_ignore_access(true);
 	
-	if ($entity->getContainerGUID() != $entity->site_guid) {
-		$parent = $entity->getContainerEntity();
+	if ($entity->parent_guid) {
+		$parent = $entity->getParentPage();
 		if (!empty($parent)) {
 			$moderators = $parent->moderators;
 			if (!empty($moderators)) {
@@ -226,11 +226,8 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 				}
 			}
 			
-			// did we reach the top page
-			if (elgg_instanceof($parent, 'object', 'static')) {
-				// not yet, so check further
-				$result += static_get_parent_moderators($parent, $guid_only);
-			}
+			// check further up the tree
+			$result += static_get_parent_moderators($parent, $guid_only);
 		}
 	}
 	
@@ -247,16 +244,17 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
  *
  * @return array
  */
-function static_get_parent_options($parent_guid = 0, $depth = 0) {
+function static_get_parent_options($parent_guid = null, $depth = 0) {
 	$result = [];
 	
-	if (empty($parent_guid)) {
-		$parent_guid = elgg_get_site_entity()->getGUID();
+	if ($parent_guid === null) {
+		$parent_guid = elgg_get_site_entity()->guid;
 	}
 	
 	$parent = get_entity($parent_guid);
-	if (elgg_instanceof($parent, 'site') || elgg_instanceof($parent, 'group')) {
+	if ($parent instanceof ElggSite || $parent instanceof ElggGroup) {
 		$result[0] = elgg_echo('static:new:parent:top_level');
+		$parent_guid = 0;
 	}
 
 	$can_write = $parent->canWriteToContainer(0, 'object', 'static');
@@ -265,16 +263,18 @@ function static_get_parent_options($parent_guid = 0, $depth = 0) {
 	}
 		
 	// more memory friendly
-	$parent_entities = new ElggBatch('elgg_get_entities', [
+	$parent_entities = new ElggBatch('elgg_get_entities_from_metadata', [
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
-		'container_guid' => $parent_guid,
+		'metadata_name_value_pair' => [
+			'parent_guid' => $parent_guid,
+		],
 		'limit' => false,
 	]);
 	foreach ($parent_entities as $parent) {
-		$result[$parent->getGUID()] = trim(str_repeat('-', $depth) . ' ' . $parent->title);
+		$result[$parent->guid] = trim(str_repeat('-', $depth) . ' ' . $parent->title);
 		
-		$result += static_get_parent_options($parent->getGUID(), $depth + 1);
+		$result += static_get_parent_options($parent->guid, $depth + 1);
 	}
 
 	if ($can_write) {
@@ -420,15 +420,17 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 	if (empty($tree_guid)) {
 		$tree_guid = $entity->getGUID();
 	}
-		
+			
 	// ignore access for this part
 	$ia = elgg_set_ignore_access(true);
 	
-	$batch = new ElggBatch('elgg_get_entities', [
+	$batch = new ElggBatch('elgg_get_entities_from_metadata', [
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
 		'owner_guid' => $entity->getOwnerGUID(),
-		'container_guid' => $entity->getGUID(),
+		'metadata_name_value_pair' => [
+			'parent_guid' => $entity->getGUID(),
+		],
 		'limit' => false,
 	]);
 	foreach ($batch as $static) {

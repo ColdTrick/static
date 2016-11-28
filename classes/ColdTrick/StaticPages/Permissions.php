@@ -21,14 +21,14 @@ class Permissions {
 	
 		if ($return_value) {
 			// already have access, no need to add
-			return $return_value;
+			return;
 		}
 	
 		$entity = elgg_extract('entity', $params);
 		$user = elgg_extract('user', $params);
 	
 		if (!elgg_instanceof($entity, 'object', 'static') || !elgg_instanceof($user, 'user')) {
-			return $return_value;
+			return;
 		}
 		
 		// check if the owner is a group
@@ -56,15 +56,13 @@ class Permissions {
 		}
 	
 		// if not moderator, check higher pages (if any)
-		if ($entity->getContainerGUID() !== $entity->site_guid) {
+		if ($entity->parent_guid) {
 			$moderators = static_get_parent_moderators($entity, true);
 	
 			if (in_array($user->getGUID(), $moderators)) {
 				return true;
 			}
 		}
-	
-		return $return_value;
 	}
 	
 	/**
@@ -90,11 +88,7 @@ class Permissions {
 		if ($subtype !== 'static') {
 			return;
 		}
-		
-// 		if (elgg_instanceof($container, 'site')) {
-// 			return true;
-// 		}
-		
+				
 		if (elgg_instanceof($container, 'group') && !$container->canEdit()) {
 			$return_value = false;
 			if ($user) {

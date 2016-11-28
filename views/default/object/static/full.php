@@ -26,6 +26,7 @@ if ($entity->icontime) {
 $body .= elgg_view('output/longtext', ['value' => $entity->description]);
 
 echo elgg_view('object/elements/full', [
+	'entity' => $entity,
 	'summary' => $summary,
 	'body' => $body,
 ]);

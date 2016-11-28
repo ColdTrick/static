@@ -3,7 +3,7 @@
 elgg_make_sticky_form('static');
 
 $guid = (int) get_input('guid');
-$owner_guid = (int) get_input('owner_guid');
+$owner_guid = (int) get_input('owner_guid'); // site or group
 $parent_guid = (int) get_input('parent_guid');
 $title = get_input('title');
 
@@ -38,13 +38,18 @@ if ($can_write) {
 	$ia = elgg_set_ignore_access(true);
 }
 
-if ($parent_guid) {
-	$parent = get_entity($parent_guid);
-	if (!elgg_instanceof($parent, 'object', 'static')) {
-		$parent_guid = $owner->getGUID();
-	}
-} else {
-	$parent_guid = $owner->getGUID();
+if ($guid == $parent_guid) {
+	// can't link to self
+	$parent_guid = 0;
+}
+
+$ia = elgg_set_ignore_access(true);
+$parent = get_entity($parent_guid);
+elgg_set_ignore_access($ia);
+
+if (!($parent instanceof StaticPage)) {
+	$parent_guid = 0;
+	unset($parent);
 }
 
 if ($can_write) {
@@ -65,7 +70,7 @@ $new_entity = false;
 if (!$entity) {
 	$entity = new \StaticPage();
 	$entity->owner_guid = $owner->getGUID();
-	$entity->container_guid = $parent_guid;
+	$entity->container_guid = $owner->getGUID();
 	$entity->access_id = $access_id;
 	
 	$ia = elgg_set_ignore_access(true);
@@ -77,54 +82,35 @@ if (!$entity) {
 	}
 	
 	elgg_set_ignore_access($ia);
+	
+	$entity->parent_guid = $parent_guid;
+	
 	$new_entity = true;
 }
 
-if ($parent_guid !== $entity->getContainerGUID()) {
+$parent_changed = false;
+if ($parent_guid !== $entity->parent_guid) {
 	// reset order if moved to another parent
 	unset($entity->order);
+	$parent_changed = true;
+	
+	// remove old tree relationships
+	remove_entity_relationships($entity->getGUID(), 'subpage_of');
 }
-
-// place in the correct tree
-$subpage_relationship_guid = false;
-if ($parent_guid !== $owner->getGUID()) {
 	
-	$ia = elgg_set_ignore_access(true);
-	$parent = get_entity($parent_guid);
-	elgg_set_ignore_access($ia);
-	
-	if (elgg_instanceof($parent, 'object', 'static')) {
-		
-		if ($parent->container_guid == $owner->getGUID()) {
-			// parent is a top page
-			$subpage_relationship_guid = $parent_guid;
-		} else {
-			// further in the tree, so find out which tree
-			$relations = $parent->getEntitiesFromRelationship([
-				'type' => 'object',
-				'subtype' => StaticPage::SUBTYPE,
-				'relationship' => 'subpage_of',
-				'limit' => 1,
-			]);
-			
-			if ($relations) {
-				$subpage_relationship_guid = $relations[0]->getGUID();
-			}
-		}
-		
-		if ($subpage_relationship_guid) {
-			// remove old tree relationships
-			remove_entity_relationships($entity->getGUID(), 'subpage_of');
-			
-			// add new tree relationship
-			$entity->addRelationship($subpage_relationship_guid, 'subpage_of');
-		}
-	}
+if (($new_entity || $parent_changed) && $parent) {
+	// add new tree relationship
+	$entity->addRelationship($parent->getRootPage()->guid, 'subpage_of');
 }
 
 // check the children for the correct tree
-if (!$new_entity) {
-	static_check_children_tree($entity, $subpage_relationship_guid);
+if ($parent_changed) {
+	
+	if ($parent) {
+		static_check_children_tree($entity, $parent->getRootPage()->guid);
+	} else {
+		static_check_children_tree($entity);
+	}
 }
 
 $ia = elgg_set_ignore_access(true);
@@ -133,11 +119,12 @@ $ia = elgg_set_ignore_access(true);
 $entity->title = $title;
 $entity->description = $description;
 $entity->access_id = $access_id;
-$entity->container_guid = $parent_guid;
 
+$entity->parent_guid = $parent_guid;
 $entity->friendly_title = $friendly_title;
 $entity->enable_comments = $enable_comments;
 $entity->moderators = $moderators;
+
 $entity->save();
 
 // icon

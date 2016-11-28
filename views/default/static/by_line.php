@@ -21,7 +21,7 @@ if ($owner instanceof ElggEntity) {
 
 $by_line[] = elgg_view_friendly_time($entity->time_created);
 
-$container_entity = $entity->getOwnerEntity();
+$container_entity = $entity->getContainerEntity();
 if ($container_entity instanceof ElggGroup && ($container_entity->getGUID() !== elgg_get_page_owner_guid())) {
 	$group_link = elgg_view('output/url', [
 		'href' => $container_entity->getURL(),

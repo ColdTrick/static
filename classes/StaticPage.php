@@ -19,6 +19,7 @@ class StaticPage extends \ElggObject {
 	 * @see ElggEntity::getURL()
 	 */
 	public function getURL() {
+		
 		// basic url
 		$url = "static/view/{$this->getGUID()}";
 		
@@ -105,6 +106,21 @@ class StaticPage extends \ElggObject {
 		unset($this->icontime);
 	}
 	
+	
+	/**
+	 * Clears the menu cache for this entity
+	 *
+	 * @return void
+	 */
+	public function clearMenuCache() {
+		$file = new \ElggFile();
+		$file->owner_guid = $this->guid;
+		$file->setFilename('static_menu_item_cache');
+		if ($file->exists()) {
+			$file->delete();
+		}
+	}
+	
 	/**
 	 * Removes the thumbnail of the object prior to the deletion of the object
 	 *
@@ -134,33 +150,43 @@ class StaticPage extends \ElggObject {
 	/**
 	 * Returns the root page of an entity
 	 *
-	 * @return \StaticPage|false
+	 * @return \StaticPage
 	 */
 	public function getRootPage() {
 		
-		$root_entity = false;
-		$container = $this->getContainerEntity();
-		
-		if ($container instanceof \ElggSite) {
-			// top page on site
-			$root_entity = $this;
-		} elseif($container instanceof \ElggGroup) {
-			// top page in group
-			$root_entity = $this;
-		} else {
-			// first created relationship is the root entity
-			$relations = $this->getEntitiesFromRelationship([
-				'type' => 'object',
-				'subtype' => StaticPage::SUBTYPE,
-				'relationship' => 'subpage_of',
-				'limit' => 1,
-			]);
-			if (!empty($relations)) {
-				$root_entity = $relations[0];
-			}
+		// first created relationship is the root entity
+		$relations = $this->getEntitiesFromRelationship([
+			'type' => 'object',
+			'subtype' => StaticPage::SUBTYPE,
+			'relationship' => 'subpage_of',
+			'limit' => 1,
+		]);
+		if (!empty($relations)) {
+			return $relations[0];
 		}
 		
-		return $root_entity;
+		// no relations so toppage
+		return $this;
+	}
+	
+	/**
+	 * Returns the parent page of an entity
+	 *
+	 * @return \StaticPage|false
+	 */
+	public function getParentPage() {
+		
+		$parent_guid = $this->parent_guid;
+		if (empty($parent_guid)) {
+			return false;
+		}
+		
+		$parent_entity = get_entity($parent_guid);
+		if (!($parent_entity instanceof \StaticPage)) {
+			return false;
+		}
+		
+		return $parent_entity;
 	}
 	
 	/**

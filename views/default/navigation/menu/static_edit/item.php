@@ -46,5 +46,6 @@ foreach ($children as $child) {
 		'indent' => $indent,
 		'selected_item_guid' => $selected_item_guid,
 		'parent_item_guid' => $parent_item_guid,
+		'root_entity' => $root_entity,
 	]);
 }

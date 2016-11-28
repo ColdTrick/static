@@ -40,16 +40,14 @@ if ($owner instanceof ElggGroup) {
 // show breadcrumb
 $ia = elgg_set_ignore_access(true);
 
-$container_entity = $entity->getContainerEntity();
-if ($container_entity instanceof StaticPage) {
-	while ($container_entity instanceof StaticPage) {
-		elgg_push_breadcrumb($container_entity->title, $container_entity->getURL());
-		$container_entity = $container_entity->getContainerEntity();
+$parent_entity = $entity->getParentPage();
+if ($parent_entity) {
+	while ($parent_entity) {
+		elgg_push_breadcrumb($parent_entity->title, $parent_entity->getURL());
+		$parent_entity = $parent_entity->getParentPage();
 	}
 	
 	elgg_set_config('breadcrumbs', array_reverse(elgg_get_config('breadcrumbs')));
-	
-	elgg_push_breadcrumb($entity->title);
 }
 elgg_set_ignore_access($ia);
 

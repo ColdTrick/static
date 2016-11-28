@@ -9,16 +9,6 @@ if (!static_out_of_date_enabled()) {
 $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 $include_groups = (int) get_input('include_groups', 0);
 
-$options = [
-	'type' => 'object',
-	'subtype' => StaticPage::SUBTYPE,
-	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->getGUID(),
-	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
-	'order_by' => 'e.time_updated DESC',
-	'no_results' => elgg_echo('static:out_of_date:none'),
-	'item_view' => 'object/static/simple',
-];
-
 // group filter
 $checkbox = elgg_view('input/checkbox', [
 	'name' => 'include_groups',
@@ -38,7 +28,15 @@ $body = elgg_view('input/form', [
 	'action' => 'static/out_of_date',
 ]);
 
-$body .= elgg_list_entities($options);
+$body .= elgg_list_entities([
+	'type' => 'object',
+	'subtype' => StaticPage::SUBTYPE,
+	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->getGUID(),
+	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
+	'order_by' => 'e.time_updated DESC',
+	'no_results' => elgg_echo('static:out_of_date:none'),
+	'item_view' => 'object/static/simple',
+]);
 
 $title_text = elgg_echo('static:out_of_date:title');
 $filter = elgg_view('page/layouts/elements/filter');
