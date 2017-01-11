@@ -65,7 +65,7 @@ class StaticPage extends \ElggObject {
 	 * (non-PHPdoc)
 	 * @see ElggObject::canComment()
 	 */
-	public function canComment($user_guid = 0) {
+	public function canComment($user_guid = 0, $default = null) {
 		
 		if ($this->enable_comments == 'yes') {
 			return true;
