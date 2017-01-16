@@ -28,6 +28,7 @@ $batch = new \ElggBatch('elgg_get_entities', [
 	'wheres' => [
 		"e.guid NOT IN (SELECT entity_guid FROM {$dbprefix}metadata WHERE name_id = {$name_id})"
 	],
+	'limit' => 50,
 ]);
 
 $batch->setIncrementOffset(false);
