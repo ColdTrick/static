@@ -135,7 +135,7 @@ if ($remove_icon) {
 	$fh->owner_guid = $entity->getGUID();
 	
 	$prefix = 'thumb';
-	$icon_sizes = elgg_get_config('icon_sizes');
+	$icon_sizes = elgg_get_icon_sizes('object', 'static');
 	
 	if (!empty($icon_sizes)) {
 		foreach ($icon_sizes as $size => $info) {
