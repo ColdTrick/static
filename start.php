@@ -64,6 +64,7 @@ function static_init() {
 	
 	elgg_register_plugin_hook_handler('likes:is_likable', 'object:' . \StaticPage::SUBTYPE, '\Elgg\Values::getTrue');
 	elgg_register_plugin_hook_handler('supported_types', 'entity_tools', '\ColdTrick\StaticPages\MigrateStatic::supportedSubtypes');
+	elgg_register_plugin_hook_handler('view_vars', 'forms/entity_tools/update_entities', '\ColdTrick\StaticPages\EntityTools::limitTopPages');
 	
 	// actions
 	elgg_register_action('static/edit', dirname(__FILE__) . '/actions/edit.php');

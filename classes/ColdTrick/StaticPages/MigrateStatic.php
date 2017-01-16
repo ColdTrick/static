@@ -19,7 +19,7 @@ class MigrateStatic extends Migrate {
 	public static function supportedSubtypes($hook, $type, $return_value, $params) {
 		
 		$return_value[\StaticPage::SUBTYPE] = self::class;
-		
+
 		return $return_value;
 	}
 	
@@ -40,11 +40,35 @@ class MigrateStatic extends Migrate {
 	 * @see \ColdTrick\EntityTools\Migrate::changeContainer()
 	 */
 	public function changeContainer($new_container_guid) {
-		
 		// do all the default stuff
 		parent::changeContainer($new_container_guid);
 		
 		// also move owner
 		$this->object->owner_guid = $new_container_guid;
+		$this->updateMetadataOwnerGUID();
+		
+		$this->object->save();
+
+		if ($this->object->parent_guid !== 0) {
+			return;
+		}
+		
+		// update all children (assuming only top level pages can be moved)
+		$ia = elgg_set_ignore_access(true);
+		$batch = new \ElggBatch('elgg_get_entities_from_relationship', [
+			'type' => 'object',
+			'subtype' => \StaticPage::SUBTYPE,
+			'relationship_guid' => $this->object->getGUID(),
+			'relationship' => 'subpage_of',
+			'limit' => false,
+			'inverse_relationship' => true,
+		]);
+		
+		foreach ($batch as $entity) {
+			$migrate = new MigrateStatic($entity);
+			$migrate->changeContainer($new_container_guid);
+		}
+						
+		elgg_set_ignore_access($ia);
 	}
 }
