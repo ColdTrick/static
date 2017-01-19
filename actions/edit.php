@@ -129,28 +129,12 @@ $entity->save();
 
 // icon
 if ($remove_icon) {
-	$entity->removeThumbnail();
-} elseif (get_resized_image_from_uploaded_file('thumbnail', 200, 200)) {
-	$fh = new \ElggFile();
-	$fh->owner_guid = $entity->getGUID();
-	
-	$prefix = 'thumb';
-	$icon_sizes = elgg_get_icon_sizes('object', 'static');
-	
-	if (!empty($icon_sizes)) {
-		foreach ($icon_sizes as $size => $info) {
-			$fh->setFilename($prefix . $size . '.jpg');
-			
-			$contents = get_resized_image_from_uploaded_file('thumbnail', $info['w'], $info['h'], $info['square'], $info['upscale']);
-			if (!empty($contents)) {
-				$fh->open('write');
-				$fh->write($contents);
-				$fh->close();
-			}
-		}
-		
-		$entity->icontime = time();
-		$entity->save();
+	$entity->deleteIcon();
+} elseif ($uploaded_files = elgg_get_uploaded_files('thumbnail')) {
+	/* @var $uploaded_file \Symfony\Component\HttpFoundation\File\UploadedFile */
+	$uploaded_file = $uploaded_files[0];
+	if (stripos($uploaded_file->getMimeType(), 'image/') !== false) {
+		$entity->saveIconFromUploadedFile('thumbnail');
 	}
 }
 

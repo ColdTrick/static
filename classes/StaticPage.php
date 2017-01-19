@@ -44,26 +44,6 @@ class StaticPage extends \ElggObject {
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see ElggEntity::getIconURL()
-	 */
-	public function getIconURL($params = array()) {
-		if (is_array($params)) {
-			$size = elgg_extract('size', $params, 'medium');
-		} else {
-			$size = is_string($params) ? $params : 'medium';
-		}
-	
-		if ($this->icontime) {
-			$file = new \ElggFile();
-			$file->owner_guid = $this->guid;
-			$file->setFilename("thumb{$size}.jpg");
-			
-			return elgg_get_inline_url($file);
-		}
-	}
-	
-	/**
-	 * (non-PHPdoc)
 	 * @see ElggObject::canComment()
 	 */
 	public function canComment($user_guid = 0, $default = null) {
@@ -75,38 +55,6 @@ class StaticPage extends \ElggObject {
 		return false;
 	}
 
-	/**
-	 * Removes the thumbnail
-	 *
-	 * @return void
-	 */
-	public function removeThumbnail() {
-		if (empty($this->icontime)) {
-			return;
-		}
-		
-		$fh = new \ElggFile();
-		$fh->owner_guid = $this->getGUID();
-		
-		$prefix = 'thumb';
-		$icon_sizes = elgg_get_config('icon_sizes');
-		
-		if (empty($icon_sizes)) {
-			return;
-		}
-		
-		foreach ($icon_sizes as $size => $info) {
-			$fh->setFilename($prefix . $size . '.jpg');
-				
-			if ($fh->exists()) {
-				$fh->delete();
-			}
-		}
-	
-		unset($this->icontime);
-	}
-	
-	
 	/**
 	 * Clears the menu cache for this entity
 	 *
