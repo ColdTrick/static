@@ -33,29 +33,60 @@ $batch = new \ElggBatch('elgg_get_entities', [
 
 $batch->setIncrementOffset(false);
 
+/* @var $page \StaticPage */
 foreach ($batch as $page) {
 	$success_count++;
 
-	if ($page->parent_guid) {
+	if ($page->parent_guid !== null) {
 		// already converted
 		continue;
 	}
 	
 	$container_entity = $page->getContainerEntity();
-	if (!($container_entity instanceof \StaticPage)) {
-		// probably top page
+	if (($container_entity instanceof \ElggSite) || ($container_entity instanceof \ElggGroup)) {
+		// this is a top page
 		$page->parent_guid = 0;
-	} else {
-		$root = $page->getRootPage();
+		
+		remove_entity_relationships($page->getGUID(), 'subpage_of');
+		continue;
+	}
 	
-		if ($root instanceof \StaticPage) {
-			$page->parent_guid = $page->container_guid;
+	$root = $page->getRootPage();
+	if (!($container_entity instanceof \StaticPage)) {
+		// probably orphaned
+		
+		if ($root->guid !== $page->guid) {
+			// link to root page exists
+			$page->parent_guid = $root->guid;
 			$page->container_guid = $root->container_guid;
 		} else {
-			// edge case where root page is gone... probably an orphaned page
+			// no root page found...
 			$page->parent_guid = 0;
+			$page->container_guid = $page->owner_guid;
+			
+			remove_entity_relationships($page->getGUID(), 'subpage_of');
 		}
+		
+		$page->save();
+		
+		continue;
 	}
+	
+	if ($root->guid === $page->guid) {
+		// parent is known, but there is no root.. moving to top level
+		$page->parent_guid = 0;
+		$page->container_guid = $page->owner_guid;
+		
+		remove_entity_relationships($page->getGUID(), 'subpage_of');
+		
+		$page->save();
+		
+		continue;
+	}
+
+	// all is good, update metadata and attribute
+	$page->parent_guid = $page->container_guid;
+	$page->container_guid = $root->container_guid;
 	
 	$page->save();
 }
