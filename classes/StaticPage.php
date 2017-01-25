@@ -70,17 +70,6 @@ class StaticPage extends \ElggObject {
 	}
 	
 	/**
-	 * Removes the thumbnail of the object prior to the deletion of the object
-	 *
-	 * @see ElggEntity::delete()
-	 */
-	public function delete($recursive = true) {
-		$this->removeThumbnail();
-		
-		return parent::delete($recursive);
-	}
-	
-	/**
 	 * Returns a friendly title
 	 */
 	public function getFriendlyTitle() {
