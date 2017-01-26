@@ -1,6 +1,14 @@
 Version history
 ===============
 
+5.0 (2017-01-26):
+
+- changed: increased Elgg version requirement to 2.3
+- changed: static page now exist in correct containers
+- changed: updated to correctly support migrating pages with entity_tools
+- changed: use the new elgg api for icon handling
+- fixed: incompatible function declaration
+
 4.3 (2016-11-18):
 
 - added: support for EntityTools migrate feature
