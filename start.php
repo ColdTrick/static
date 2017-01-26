@@ -38,6 +38,8 @@ function static_init() {
 	elgg_register_event_handler('create', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 	elgg_register_event_handler('update', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 	elgg_register_event_handler('delete', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
+	elgg_register_event_handler('create', 'relationship', '\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship');
+	elgg_register_event_handler('delete', 'relationship', '\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship');
 	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::registerClass');
 	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::migrateContainers');
 

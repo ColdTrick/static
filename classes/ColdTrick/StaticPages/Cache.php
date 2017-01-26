@@ -12,7 +12,7 @@ class Cache {
 	 *
 	 * @param string      $event  'create|delete|update'
 	 * @param string      $type   'object'
-	 * @param \ElggObject $entity the entity about to be removed
+	 * @param \ElggObject $entity the entity about to be changed
 	 *
 	 * @return void
 	 */
@@ -23,6 +23,33 @@ class Cache {
 		}
 	
 		$root_entity = $entity->getRootPage()->clearMenuCache();
+	}
+
+	/**
+	 * Resets the menu cache for static pages on update and create of an entity
+	 *
+	 * @param string            $event        'create|delete'
+	 * @param string            $type         'relationship'
+	 * @param \ElggRelationship $relationship the relationship
+	 *
+	 * @return void
+	 */
+	public static function resetMenuCacheFromRelationship($event, $type, \ElggRelationship $relationship) {
+	
+		if (!($relationship instanceof \ElggRelationship)) {
+			return;
+		}
+		
+		if ($relationship->relationship !== 'subpage_of') {
+			return;
+		}
+		
+		$root_page = get_entity($relationship->guid_two);
+		if (!($root_page instanceof \StaticPage)) {
+			return;
+		}
+		
+		$root_page->clearMenuCache();
 	}
 	
 	/**
