@@ -79,4 +79,7 @@ Click here for a complete list:
 	'static:csv_exporter:last_editor:username' => "Last editor username",
 	'static:csv_exporter:last_editor:email' => "Last editor email address",
 	'static:csv_exporter:last_editor:profile_url' => "Last editor profile URL",
+	
+	'static:csv_exporter:last_revision:timestamp' => "Last revision time created",
+	'static:csv_exporter:last_revision:timestamp:readable' => "Last revision time created (readable)",
 ];
