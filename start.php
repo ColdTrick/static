@@ -69,6 +69,9 @@ function static_init() {
 	elgg_register_plugin_hook_handler('supported_types', 'entity_tools', '\ColdTrick\StaticPages\MigrateStatic::supportedSubtypes');
 	elgg_register_plugin_hook_handler('view_vars', 'forms/entity_tools/update_entities', '\ColdTrick\StaticPages\EntityTools::limitTopPages');
 	
+	elgg_register_plugin_hook_handler('get_exportable_values', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::addLastEditor');
+	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportLastEditor');
+	
 	// actions
 	elgg_register_action('static/edit', dirname(__FILE__) . '/actions/edit.php');
 	elgg_register_action('static/delete', dirname(__FILE__) . '/actions/delete.php');

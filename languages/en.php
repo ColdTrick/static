@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 	'item:object:static' => "Static page",
 
 	// upgrades
@@ -72,4 +72,11 @@ Click here for a complete list:
 	'static:action:edit:error:title_description' => "Please enter a Title and Description",
 	'static:action:edit:error:friendly_title' => "The permalink is already taken, please choose another one",
 	'static:action:edit:success' => "Save successful",
-);
+	
+	// csv exporter
+	'static:csv_exporter:last_editor:guid' => "Last editor GUID",
+	'static:csv_exporter:last_editor:name' => "Last editor name",
+	'static:csv_exporter:last_editor:username' => "Last editor username",
+	'static:csv_exporter:last_editor:email' => "Last editor email address",
+	'static:csv_exporter:last_editor:profile_url' => "Last editor profile URL",
+];
