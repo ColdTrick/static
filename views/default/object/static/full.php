@@ -16,13 +16,17 @@ $summary = elgg_view('object/elements/summary', [
 	'tags' => false,
 ]);
 
-$body = '';
+// out of date message
+$body = elgg_view('static/out_of_date', $vars);
+
+// icon
 if ($entity->icontime) {
 	$body .= elgg_view_entity_icon($entity, 'large', [
 		'href' => false,
 		'class' => 'float-alt',
 	]);
 }
+// description
 $body .= elgg_view('output/longtext', ['value' => $entity->description]);
 
 echo elgg_view('object/elements/full', [

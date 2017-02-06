@@ -167,4 +167,16 @@ class StaticPage extends \ElggObject {
 		return $revisions[0];
 	}
 	
+	public function isOutOfDate() {
+		
+		if (!static_out_of_date_enabled()) {
+			return false;
+		}
+		
+		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
+		$compare_ts = time() - ($days * 24 * 60 * 60);
+		
+		return ($this->time_updated < $compare_ts);
+	}
+	
 }

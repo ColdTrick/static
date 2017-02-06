@@ -74,5 +74,8 @@ function static_init() {
 	elgg_register_action('static/delete', dirname(__FILE__) . '/actions/delete.php');
 	elgg_register_action('static/reorder', dirname(__FILE__) . '/actions/reorder.php');
 	elgg_register_action('static/reorder_root_pages', dirname(__FILE__) . '/actions/reorder_root_pages.php');
+	elgg_register_action('static/mark_not_out_of_date', dirname(__FILE__) . '/actions/mark_not_out_of_date.php');
+	
 	elgg_register_action('static/upgrades/migrate_containers', dirname(__FILE__) . '/actions/upgrades/migrate_containers.php', 'admin');
+	
 }
