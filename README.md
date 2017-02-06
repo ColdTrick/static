@@ -10,3 +10,12 @@ Features
 --------
 
 - Create static content pages (admin can add/edit/remove them)
+
+CSV Exporter
+------------
+
+This plugin has support for CSV Exporter. The following extra information can be exported
+
+- Last editor information (name, email, username, guid and profile URL)
+- Last revision (timestamps)
+- Out-of-date (is out of date, the times for compare are based on time_updated)
