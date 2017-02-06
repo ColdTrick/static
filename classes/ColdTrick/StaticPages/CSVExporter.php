@@ -145,4 +145,64 @@ class CSVExporter {
 				break;
 		}
 	}
+	
+	/**
+	 * Add out-of-date information to static export
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param arary  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @return void|array
+	 */
+	public static function addOutOfDate($hook, $type, $return_value, $params) {
+		
+		if (elgg_extract('subtype', $params) !== \StaticPage::SUBTYPE) {
+			return;
+		}
+		
+		if (!static_out_of_date_enabled()) {
+			return;
+		}
+		
+		$values = [
+			elgg_echo('static:csv_exporter:out_of_date:state') => 'static_out_of_date_state',
+		];
+		
+		if (!(bool) elgg_extract('readable', $params)) {
+			$values = array_values($values);
+		}
+		
+		return array_merge($return_value, $values);
+	}
+	
+	/**
+	 * Export out-of-date information
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param arary  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @retrun void|string
+	 */
+	public static function exportOutOfDate($hook, $type, $return_value, $params) {
+		
+		if (!is_null($return_value)) {
+			// someone already provided output
+			return;
+		}
+		
+		$entity = elgg_extract('entity', $params);
+		if (!($entity instanceof \StaticPage)) {
+			return;
+		}
+		
+		switch (elgg_extract('exportable_value', $params)) {
+			case 'static_out_of_date_state':
+				return $entity->isOutOfDate() ? 'yes' : 'no';
+				break;
+		}
+	}
 }

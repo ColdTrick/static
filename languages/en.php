@@ -82,4 +82,6 @@ Click here for a complete list:
 	
 	'static:csv_exporter:last_revision:timestamp' => "Last revision time created",
 	'static:csv_exporter:last_revision:timestamp:readable' => "Last revision time created (readable)",
+	
+	'static:csv_exporter:out_of_date:state' => "Is out-of-date",
 ];

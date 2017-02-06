@@ -73,6 +73,8 @@ function static_init() {
 	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportLastEditor');
 	elgg_register_plugin_hook_handler('get_exportable_values', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::addLastRevision');
 	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportLastRevision');
+	elgg_register_plugin_hook_handler('get_exportable_values', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::addOutOfDate');
+	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportOutOfDate');
 	
 	// actions
 	elgg_register_action('static/edit', dirname(__FILE__) . '/actions/edit.php');
