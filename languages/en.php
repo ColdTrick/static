@@ -8,10 +8,17 @@ return array(
 	'admin:upgrades:static:migrate_containers:description' => "This migrates the containers from the static pages from being static containers to group or site containers.",
 		
 	// settings
-	'static:settings:enable_out_of_date' => "Enable out-of-date notifications/listing",
-	'static:settings:out_of_date_days' => "Number of days before content is out-of-date",
-	'static:settings:out_of_date_days:days' => "days",
+	'static:settings:general:title' => "General settings",
 	'static:settings:enable_groups' => "Enable static pages in groups",
+	
+	'static:settings:out_of_date:title' => "Out-of-date settings",
+	'static:settings:out_of_date:description' => "With the out-of-date settings you can have a listing of content which is considered out-of-date. Also notifications will be sent to the last editor so that they can check if the content is still relevant.",
+	'static:settings:out_of_date_days' => "Number of days before content is out-of-date",
+	'static:settings:out_of_date_days:help' => "Enter a number of days after which content is considered out-of-date. 0 or empty to not enable this feature.",
+	'static:settings:out_of_date:reminder_interval' => "After a number of days send a reminder of out-of-date content",
+	'static:settings:out_of_date:reminder_interval:help' => "Enter a number of days after which content is re-checked if it's still out-of-date. 0 or empty to not have reminders.",
+	'static:settings:out_of_date:reminder_repeat' => "Number of times the reminder interval should be re-checked",
+	'static:settings:out_of_date:reminder_repeat:help' => "To send out the reminder of out-of-date content multiple times, set a number here. 0 means no reminders.",
 	
 	'static:admin:empty' => "No static pages created",
 	'static:list:info' => "Manage your static pages here. You can reorder them by dragging the pages to their new location.",

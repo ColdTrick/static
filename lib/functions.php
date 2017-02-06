@@ -392,11 +392,10 @@ function static_out_of_date_enabled() {
 	
 	$result = false;
 	
-	if (elgg_get_plugin_setting('enable_out_of_date', 'static') == 'yes') {
-		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
-		if ($days > 0) {
-			$result = true;
-		}
+	// check the plugin settings
+	$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
+	if ($days > 0) {
+		$result = true;
 	}
 	
 	return $result;

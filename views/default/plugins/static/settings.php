@@ -1,5 +1,6 @@
 <?php
 
+/* @var $plugin ElggPlugin */
 $plugin = elgg_extract('entity', $vars);
 
 $noyes_options = [
@@ -7,31 +8,49 @@ $noyes_options = [
 	'yes' => elgg_echo('option:yes'),
 ];
 
-$setting = elgg_echo('static:settings:enable_out_of_date');
-$setting .= elgg_view('input/select', [
-	'name' => 'params[enable_out_of_date]',
-	'options_values' => $noyes_options,
-	'value' => $plugin->enable_out_of_date,
-	'class' => 'mls',
-]);
-echo elgg_format_element('div', [], $setting);
-
-$setting = elgg_echo('static:settings:out_of_date_days');
-$setting .= elgg_view('input/text', [
-	'name' => 'params[out_of_date_days]',
-	'value' => (int) $plugin->out_of_date_days,
-	'size' => '4',
-	'class' => 'mls',
-	'style' => 'width:inherit;',
-]);
-$setting .= elgg_echo('static:settings:out_of_date_days:days');
-echo elgg_format_element('div', [], $setting);
-
-$setting = elgg_echo('static:settings:enable_groups');
-$setting .= elgg_view('input/select', [
+// general settings
+$general = elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('static:settings:enable_groups'),
 	'name' => 'params[enable_groups]',
 	'options_values' => $noyes_options,
 	'value' => $plugin->enable_groups,
-	'class' => 'mls',
 ]);
-echo elgg_format_element('div', [], $setting);
+
+echo elgg_view_module('inline', elgg_echo('static:settings:general:title'), $general);
+
+// out of date
+$out_of_date = elgg_view('output/longtext', [
+	'value' => elgg_echo('static:settings:out_of_date:description'),
+]);
+
+$out_of_date .= elgg_view_field([
+	'#type' => 'number',
+	'#label' => elgg_echo('static:settings:out_of_date_days'),
+	'#help' => elgg_echo('static:settings:out_of_date_days:help'),
+	'name' => 'params[out_of_date_days]',
+	'value' => $plugin->out_of_date_days,
+	'min' => 0,
+	'max' => 9999,
+]);
+
+$out_of_date .= elgg_view_field([
+	'#type' => 'number',
+	'#label' => elgg_echo('static:settings:out_of_date:reminder_interval'),
+	'#help' => elgg_echo('static:settings:out_of_date:reminder_interval:help'),
+	'name' => 'params[out_of_date_reminder_interval]',
+	'value' => $plugin->out_of_date_reminder_interval,
+	'min' => 0,
+	'max' => 999,
+]);
+
+$out_of_date .= elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('static:settings:out_of_date:reminder_repeat'),
+	'#help' => elgg_echo('static:settings:out_of_date:reminder_repeat:help'),
+	'name' => 'params[out_of_date_reminder_repeat]',
+	'value' => (int) $plugin->out_of_date_reminder_repear,
+	'options' => range(0, 9),
+]);
+
+echo elgg_view_module('inline', elgg_echo('static:settings:out_of_date:title'), $out_of_date);
