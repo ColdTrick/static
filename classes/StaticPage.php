@@ -167,6 +167,11 @@ class StaticPage extends \ElggObject {
 		return $revisions[0];
 	}
 	
+	/**
+	 * Is the page out-of-date
+	 *
+	 * @return bool
+	 */
 	public function isOutOfDate() {
 		
 		if (!static_out_of_date_enabled()) {
