@@ -49,7 +49,7 @@ $out_of_date .= elgg_view_field([
 	'#label' => elgg_echo('static:settings:out_of_date:reminder_repeat'),
 	'#help' => elgg_echo('static:settings:out_of_date:reminder_repeat:help'),
 	'name' => 'params[out_of_date_reminder_repeat]',
-	'value' => (int) $plugin->out_of_date_reminder_repear,
+	'value' => (int) $plugin->out_of_date_reminder_repeat,
 	'options' => range(0, 9),
 ]);
 
