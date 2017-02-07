@@ -63,7 +63,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler('group_tool_widgets', 'widget_manager', '\ColdTrick\StaticPages\Widgets::groupToolWidgets');
 	elgg_register_plugin_hook_handler('autocomplete', 'search_advanced', '\ColdTrick\StaticPages\Search::searchAdvancedAutocomplete');
 	
-	elgg_register_plugin_hook_handler('cron', 'daily', '\ColdTrick\StaticPages\Cron::daily');
+	elgg_register_plugin_hook_handler('cron', 'daily', '\ColdTrick\StaticPages\Cron::outOfDateNotification');
 	
 	elgg_register_plugin_hook_handler('likes:is_likable', 'object:' . \StaticPage::SUBTYPE, '\Elgg\Values::getTrue');
 	elgg_register_plugin_hook_handler('supported_types', 'entity_tools', '\ColdTrick\StaticPages\MigrateStatic::supportedSubtypes');

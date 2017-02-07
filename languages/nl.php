@@ -21,6 +21,8 @@ return array (
 
 Een aantal van je statische pagina\'s zijn verouderd. Controleer of de informatie nog actueel en/of nuttig is.
 
+%s
+
 Klik hier voor een complete lijst van de verouderde content
 %s',
   'static:group_tool_option:description' => 'Dit onderdeel is bedoeld voor zogenaamde ‘statische’ content. Dat wil zeggen informatie over jouw groep die je wilt delen met collega’s,  die relatief weinig verandert en die door de beheerders van de groep bewerkt kan worden.',
