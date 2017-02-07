@@ -58,7 +58,6 @@ class Cron {
 			
 			if (!isset($users[$recipient->getGUID()])) {
 				$users[$recipient->getGUID()] = [
-					'user' => $recipient,
 					'new' => [],
 				];
 			}
@@ -96,7 +95,6 @@ class Cron {
 					
 					if (!isset($users[$recipient->getGUID()])) {
 						$users[$recipient->getGUID()] = [
-							'user' => $recipient,
 							'reminders' => [],
 						];
 					}
@@ -162,6 +160,12 @@ class Cron {
 		$site = elgg_get_site_entity();
 		foreach ($notification_information as $user_guid => $info) {
 			
+			// get recipient
+			$user = get_user($user_guid);
+			if (empty($user)) {
+				continue;
+			}
+			
 			// build a list of all out-of-date pages
 			$list = '';
 			
@@ -208,10 +212,6 @@ class Cron {
 				// shouldn't happen
 				continue;
 			}
-			
-			// get recipient
-			/* @var $user \ElggUser */
-			$user = elgg_extract('user', $info);
 			
 			// build notification
 			$subject = elgg_echo('static:out_of_date:notification:subject');
