@@ -73,6 +73,11 @@ class PageHandler {
 	 * @return array
 	 */
 	public static function routeAll($hook, $type, $return_value, $params) {
+	
+		// need to register these hooks during route:rewrite as init:system is too late
+		elgg_register_plugin_hook_handler('permissions_check', 'object', '\ColdTrick\StaticPages\Permissions::objectPermissionsCheck');
+		elgg_register_plugin_hook_handler('container_permissions_check', 'all', '\ColdTrick\StaticPages\Permissions::containerPermissionsCheck');
+		
 		if (!is_array($return_value)) {
 			// someone else already routed this page
 			return;
@@ -103,7 +108,7 @@ class PageHandler {
 			'metadata_case_sensitive' => false,
 		]);
 		elgg_set_ignore_access($ia);
-			
+	
 		if (empty($entities)) {
 			return;
 		}

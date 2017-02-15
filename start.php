@@ -49,9 +49,6 @@ function static_init() {
 	elgg_register_plugin_hook_handler('entity:url', 'object', '\ColdTrick\StaticPages\Widgets::widgetURL');
 	elgg_register_plugin_hook_handler('entity:icon:file', 'object', '\ColdTrick\StaticPages\IconService::getIconFile');
 	
-	elgg_register_plugin_hook_handler('permissions_check', 'object', '\ColdTrick\StaticPages\Permissions::objectPermissionsCheck');
-	elgg_register_plugin_hook_handler('container_permissions_check', 'all', '\ColdTrick\StaticPages\Permissions::containerPermissionsCheck');
-	
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', '\ColdTrick\StaticPages\Menus::ownerBlockMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:filter', '\ColdTrick\StaticPages\Menus::filterMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:entity', '\ColdTrick\StaticPages\Menus::entityMenuRegister');

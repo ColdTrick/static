@@ -18,7 +18,6 @@ class Permissions {
 	 * @return bool
 	 */
 	public static function objectPermissionsCheck($hook, $type, $return_value, $params) {
-	
 		if ($return_value) {
 			// already have access, no need to add
 			return;
@@ -43,6 +42,7 @@ class Permissions {
 		// check if the user is a moderator of this static page
 		$ia = elgg_set_ignore_access(true);
 		$moderators = $entity->moderators;
+		$parent_guid = $entity->parent_guid;
 		elgg_set_ignore_access($ia);
 
 		if (!empty($moderators)) {
@@ -56,7 +56,7 @@ class Permissions {
 		}
 	
 		// if not moderator, check higher pages (if any)
-		if ($entity->parent_guid) {
+		if ($parent_guid) {
 			$moderators = static_get_parent_moderators($entity, true);
 	
 			if (in_array($user->getGUID(), $moderators)) {
