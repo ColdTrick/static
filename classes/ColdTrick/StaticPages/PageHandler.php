@@ -74,10 +74,6 @@ class PageHandler {
 	 */
 	public static function routeAll($hook, $type, $return_value, $params) {
 	
-		// need to register these hooks during route:rewrite as init:system is too late
-		elgg_register_plugin_hook_handler('permissions_check', 'object', '\ColdTrick\StaticPages\Permissions::objectPermissionsCheck');
-		elgg_register_plugin_hook_handler('container_permissions_check', 'all', '\ColdTrick\StaticPages\Permissions::containerPermissionsCheck');
-		
 		if (!is_array($return_value)) {
 			// someone else already routed this page
 			return;
@@ -114,9 +110,6 @@ class PageHandler {
 		}
 		
 		$entity = $entities[0];
-		if (!has_access_to_entity($entity) && !$entity->canEdit()) {
-			return;
-		}
 		
 		$return_value['segments'] = ['view', $entity->getGUID()];
 		$return_value['identifier'] = 'static';
