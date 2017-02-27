@@ -45,6 +45,11 @@ class Cron {
 		/* @var $entity \StaticPage */
 		foreach ($batch as $entity) {
 			
+			// allows a hook to influence entities being notified
+			if (!$entity->isOutOfDate()) {
+				continue;
+			}
+			
 			$last_editor = $entity->getLastEditor();
 			if (empty($last_editor)) {
 				continue;
@@ -81,6 +86,11 @@ class Cron {
 				$batch = new \ElggBatch('elgg_get_entities', $options);
 				/* @var $entity \StaticPage */
 				foreach ($batch as $entity) {
+					
+					// allows a hook to influence entities being notified
+					if (!$entity->isOutOfDate()) {
+						continue;
+					}
 					
 					$last_editor = $entity->getLastEditor();
 					if (empty($last_editor)) {

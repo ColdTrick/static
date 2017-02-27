@@ -169,6 +169,7 @@ class StaticPage extends \ElggObject {
 	
 	/**
 	 * Is the page out-of-date
+	 * This can be influenced using a hook
 	 *
 	 * @return bool
 	 */
@@ -181,7 +182,12 @@ class StaticPage extends \ElggObject {
 		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 		$compare_ts = time() - ($days * 24 * 60 * 60);
 		
-		return ($this->time_updated < $compare_ts);
+		$params = [
+			'entity' => $this,
+		];
+		$result = ($this->time_updated < $compare_ts);
+		
+		return (bool) elgg_trigger_plugin_hook('out_of_date:state', 'static', $params, $result);
 	}
 	
 }
