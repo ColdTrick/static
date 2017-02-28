@@ -1,6 +1,16 @@
 Version history
 ===============
 
+5.1 (2017-02-28):
+
+- added: isOutOfDate function is now hookable and used in cron
+- added: last editor information to csv_exporter
+- added: last revision information to csv_exporter
+- added: more out-of-date settings
+- added: out-of-date information to csv_exporter
+- added: show a message of out-of-date content on the full view
+- changed: out-of-date notification has bundled content
+
 5.0 (2017-01-26):
 
 - changed: increased Elgg version requirement to 2.3
