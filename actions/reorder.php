@@ -2,19 +2,21 @@
 
 $guid = (int) get_input('guid');
 $guids = get_input('order');
-
 if (empty($guids)) {
-	return;
+	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
+// fetch the entity with access ignored (for moderators)
+$ia = elgg_set_ignore_access(true);
 $parent = get_entity($guid);
-if (!($parent instanceof \StaticPage)) {
-	return;
+elgg_set_ignore_access($ia);
+
+if (!($parent instanceof \StaticPage) || !$parent->canEdit()) {
+	return elgg_error_response(elgg_echo('actionunauthorized'));
 }
 
-if (!$parent->canEdit()) {
-	return;
-}
+// ignore access (for moderators)
+$ia = elgg_set_ignore_access(true);
 
 $order = 1;
 foreach ($guids as $child_guid) {
@@ -30,4 +32,10 @@ foreach ($guids as $child_guid) {
 	$order++;
 }
 
+// restore access
+elgg_set_ignore_access($ia);
+
+// clear menu cache
 $parent->getRootPage()->clearMenuCache();
+
+return elgg_ok_response();
