@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.1.1 (2017-07-12):
+
+- fixed: reordering of pages not always possible for moderators
+
 5.1 (2017-02-28):
 
 - added: isOutOfDate function is now hookable and used in cron
