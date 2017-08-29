@@ -23,6 +23,9 @@ class Cron {
 			return;
 		}
 		
+		echo 'Starting Static out-of-date' . PHP_EOL;
+		elgg_log('Starting Static out-of-date', 'NOTICE');
+		
 		$time = elgg_extract('time', $params, time());
 		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 		
@@ -121,10 +124,16 @@ class Cron {
 		elgg_set_ignore_access($ia);
 		
 		if (empty($users)) {
+			echo 'Done with Static out-of-date' . PHP_EOL;
+			elgg_log('Done with Static out-of-date', 'NOTICE');
+			
 			return;
 		}
 		
 		self::sendNotifications($users);
+		
+		echo 'Done with Static out-of-date' . PHP_EOL;
+		elgg_log('Done with Static out-of-date', 'NOTICE');
 	}
 	
 	/**
