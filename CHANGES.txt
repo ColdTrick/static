@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.1.2 (2017-09-06):
+
+- several small chores/fixes
+
 5.1.1 (2017-07-12):
 
 - fixed: reordering of pages not always possible for moderators
