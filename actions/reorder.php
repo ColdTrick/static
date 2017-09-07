@@ -28,7 +28,6 @@ foreach ($guids as $child_guid) {
 	$child->parent_guid = $guid;
 	$child->order = $order;
 
-	$child->save();
 	$order++;
 }
 
