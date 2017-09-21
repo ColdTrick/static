@@ -1,5 +1,6 @@
 <?php
 
+/* @var $entity StaticPage */
 $entity = elgg_extract('entity', $vars);
 
 $metadata = elgg_view_menu('entity', [
@@ -20,10 +21,13 @@ $summary = elgg_view('object/elements/summary', [
 $body = elgg_view('static/out_of_date', $vars);
 
 // icon
-if ($entity->icontime) {
+if ($entity->hasIcon('large')) {
 	$body .= elgg_view_entity_icon($entity, 'large', [
 		'href' => false,
 		'class' => 'float-alt',
+		'img_attr' => [
+			'data-highres-url' => $entity->getIconURL(['size' => 'master']),
+		],
 	]);
 }
 // description
