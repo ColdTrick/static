@@ -6,6 +6,9 @@ return [
 	// upgrades
 	'admin:upgrades:static:migrate_containers' => "Migrate static page containers",
 	'admin:upgrades:static:migrate_containers:description' => "This migrates the containers from the static pages from being static containers to group or site containers.",
+	
+	'admin:upgrades:static:delete_orphaned_children' => "Delete orphaned static pages",
+	'admin:upgrades:static:delete_orphaned_children:description' => "After the migration to correct containers for static pages. The children of deleted pages were not removed. This left orphaned pages which this upgrade will cleanup.",
 		
 	// settings
 	'static:settings:general:title' => "General settings",

@@ -52,4 +52,33 @@ class Upgrade {
 		
 		elgg_set_ignore_access($ia);
 	}
+	
+	/**
+	 * Delete orphaned static pages, during the migration to correct containers the deletion of child pages was forgotten
+	 * when a parent page was deleted, the children remained.
+	 * This upgrade will remove all orphaned child pages
+	 *
+	 * @param string $event  the name of the event
+	 * @param string $type   the type of the event
+	 * @param mixed  $entity supplied entity
+	 *
+	 * @return void
+	 * @since 5.2
+	 */
+	public static function deleteOrphanedChildren($event, $type, $object) {
+		
+		$ia = elgg_set_ignore_access(true);
+		
+		$path = 'admin/upgrades/static/delete_orphaned_children';
+		$upgrade = new \ElggUpgrade();
+		if (!$upgrade->getUpgradeFromPath($path)) {
+			$upgrade->setPath($path);
+			$upgrade->title = elgg_echo('admin:upgrades:static:delete_orphaned_children');
+			$upgrade->description = elgg_echo('admin:upgrades:static:delete_orphaned_children:description');
+				
+			$upgrade->save();
+		}
+		
+		elgg_set_ignore_access($ia);
+	}
 }

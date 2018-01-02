@@ -54,6 +54,45 @@ class StaticPage extends \ElggObject {
 				
 		return false;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see ElggEntity::delete()
+	 */
+	public function delete($recursive = true) {
+		$guid = $this->guid;
+		
+		$result = parent::delete($recursive);
+		if ($result === false || $recursive !== true) {
+			return $result;
+		}
+		
+		// remove sub pages
+		$ia = elgg_set_ignore_access(true);
+		
+		/* @var $batch \ElggBatch */
+		$batch = elgg_get_entities_from_metadata([
+			'type' => 'object',
+			'subtype' => self::SUBTYPE,
+			'metadata_name_value_pairs' => [
+				'name' => 'parent_guid',
+				'value' => $guid,
+			],
+			'limit' => false,
+			'batch' => true,
+			'batch_inc_offset' => false,
+		]);
+		
+		/* @var $entity \StaticPage */
+		foreach ($batch as $entity) {
+			$entity->delete($recursive);
+		}
+		
+		// restore access
+		elgg_set_ignore_access($ia);
+		
+		return $result;
+	}
 
 	/**
 	 * Clears the menu cache for this entity

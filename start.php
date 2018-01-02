@@ -42,6 +42,7 @@ function static_init() {
 	elgg_register_event_handler('delete', 'relationship', '\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship');
 	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::registerClass');
 	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::migrateContainers');
+	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\StaticPages\Upgrade::deleteOrphanedChildren');
 
 	elgg_register_event_handler('cache:flush', 'system', '\ColdTrick\StaticPages\Cache::resetAllCache');;
 	
@@ -84,5 +85,6 @@ function static_init() {
 	elgg_register_action('static/mark_not_out_of_date', dirname(__FILE__) . '/actions/mark_not_out_of_date.php');
 	
 	elgg_register_action('static/upgrades/migrate_containers', dirname(__FILE__) . '/actions/upgrades/migrate_containers.php', 'admin');
+	elgg_register_action('static/upgrades/delete_orphaned_children', dirname(__FILE__) . '/actions/upgrades/delete_orphaned_children.php', 'admin');
 	
 }
