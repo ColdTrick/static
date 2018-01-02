@@ -48,8 +48,8 @@ class StaticPage extends \ElggObject {
 	 */
 	public function canComment($user_guid = 0, $default = null) {
 		
-		if ($this->enable_comments == 'yes') {
-			return true;
+		if ($this->enable_comments === 'yes') {
+			return parent::canComment($user_guid, $default);
 		}
 				
 		return false;
