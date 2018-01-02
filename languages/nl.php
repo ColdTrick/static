@@ -1,10 +1,12 @@
 <?php
 /**
- * This file was created by Translation Editor v5.2
- * On 2017-02-13 12:19
+ * This file was created by Translation Editor v6.0
+ * On 2018-01-02 14:05
  */
 
 return array (
+  'admin:upgrades:static:delete_orphaned_children' => 'Verwijder verweesde statische pagina\'s',
+  'admin:upgrades:static:delete_orphaned_children:description' => 'Na de migratie om de containers voor statische pagina\'s goed te zetten, was het mogelijk om pagina\'s te verwijderen zonder zijn subpagina\'s te verwijderen. Dit liet verweesde pagina\'s achter, deze upgrade verwijderd de achtergebleven pagina\'s.',
   'admin:upgrades:static:migrate_containers' => 'Migreer statische pagina containers',
   'admin:upgrades:static:migrate_containers:description' => 'Dit migreert de containers van de statische pagina\'s zodat de pagina\'s netjes bij een groep of een site horen.',
   'static:settings:general:title' => 'Algemene instellingen',
