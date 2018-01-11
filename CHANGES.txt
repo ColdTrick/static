@@ -1,6 +1,11 @@
 Version history
 ===============
 
+5.2.1 (2018-01-11):
+
+- fixed: canComment permissions
+- fixed: remove children when deleting a static page
+
 5.2 (2017-10-04):
 
 - added: support for image_enlarger
