@@ -60,8 +60,8 @@ $body = elgg_view_entity($entity, [
 	'full_view' => true,
 ]);
 
-if ($entity->canComment()) {
-	$body .= elgg_view_comments($entity);
+if ($entity->enable_comments === 'yes') {
+	$body .= elgg_view_comments($entity, $entity->canComment());
 }
 
 // build sub pages menu
