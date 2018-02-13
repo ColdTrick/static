@@ -34,63 +34,67 @@ function static_setup_page_menu(\StaticPage $entity) {
 		elgg_set_ignore_access($ia);
 	}
 	
-	if ($root_entity) {
-		// check for availability in cache
-		$static_items = \ColdTrick\StaticPages\Cache::getMenuItemsCache($root_entity);
-		if (empty($static_items)) {
-			// no items in cache so generate menu + add them to the cache
-			$static_items = \ColdTrick\StaticPages\Cache::generateMenuItemsCache($root_entity);
-		}
-				
-		if (!empty($static_items)) {
-			global $CONFIG;
+	if (!$root_entity instanceof \StaticPage) {
+		return;
+	}
+	
+	// check for availability in cache
+	$static_items = \ColdTrick\StaticPages\Cache::getMenuItemsCache($root_entity);
+	if (empty($static_items)) {
+		// no items in cache so generate menu + add them to the cache
+		$static_items = \ColdTrick\StaticPages\Cache::generateMenuItemsCache($root_entity);
+	}
 			
-			// fetch all menu items the user has access to
-			$menu_options = [
-				'type' => 'object',
-				'subtype' => StaticPage::SUBTYPE,
-				'relationship_guid' => $root_entity->getGUID(),
-				'relationship' => 'subpage_of',
-				'limit' => false,
-				'inverse_relationship' => true,
-				'callback' => function($row) {
-					return (int) $row->guid;
-				},
-			];
-			if ($can_write) {
+	if (empty($static_items) || count($static_items) < 2) {
+		return;
+	}
+	
+	global $CONFIG;
+	
+	// fetch all menu items the user has access to
+	$menu_options = [
+		'type' => 'object',
+		'subtype' => StaticPage::SUBTYPE,
+		'relationship_guid' => $root_entity->getGUID(),
+		'relationship' => 'subpage_of',
+		'limit' => false,
+		'inverse_relationship' => true,
+		'callback' => function($row) {
+			return (int) $row->guid;
+		},
+	];
+	if ($can_write) {
+		$ia = elgg_set_ignore_access(true);
+	}
+	$allowed_guids = elgg_get_entities_from_relationship($menu_options);
+	if ($can_write) {
+		elgg_set_ignore_access($ia);
+	}
+	$allowed_guids[] = $root_entity->guid;
+	
+	$manages_guids = null;
+	foreach ($static_items as $item) {
+		if (in_array($item->rel, $allowed_guids)) {
+			// if you have access to the guid, then add menu item
+			$CONFIG->menus['page'][] = $item;
+		} else {
+			// is the manager of any of the pages? If so do a canEdit check to determine if we can add it to the
+			if (!isset($manages_guids)) {
+				$manages_guids = static_check_moderator_in_list(array_keys($static_items));
+			}
+			
+			if ($manages_guids) {
 				$ia = elgg_set_ignore_access(true);
-			}
-			$allowed_guids = elgg_get_entities_from_relationship($menu_options);
-			if ($can_write) {
+				// need to get without access otherwise we can not check for canEdit()
+				$tmp_entity = get_entity($item->rel);
 				elgg_set_ignore_access($ia);
-			}
-			$allowed_guids[] = $root_entity->guid;
-			
-			$manages_guids = null;
-			foreach ($static_items as $item) {
-				if (in_array($item->rel, $allowed_guids)) {
-					// if you have access to the guid, then add menu item
+				
+				if (!($tmp_entity instanceof ElggObject)) {
+					continue;
+				}
+				
+				if ($tmp_entity->canEdit()) {
 					$CONFIG->menus['page'][] = $item;
-				} else {
-					// is the manager of any of the pages? If so do a canEdit check to determine if we can add it to the
-					if (!isset($manages_guids)) {
-						$manages_guids = static_check_moderator_in_list(array_keys($static_items));
-					}
-					
-					if ($manages_guids) {
-						$ia = elgg_set_ignore_access(true);
-						// need to get without access otherwise we can not check for canEdit()
-						$tmp_entity = get_entity($item->rel);
-						elgg_set_ignore_access($ia);
-						
-						if (!($tmp_entity instanceof ElggObject)) {
-							continue;
-						}
-						
-						if ($tmp_entity->canEdit()) {
-							$CONFIG->menus['page'][] = $item;
-						}
-					}
 				}
 			}
 		}
