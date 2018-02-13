@@ -95,15 +95,6 @@ function static_setup_page_menu(\StaticPage $entity) {
 			}
 		}
 	}
-	
-	if ($entity->canEdit() && !elgg_instanceof($page_owner, 'group')) {
-		elgg_register_menu_item('page', [
-			'name' => 'manage',
-			'href' => 'static/all',
-			'text' => elgg_echo('static:all'),
-			'section' => 'static_admin',
-		]);
-	}
 }
 
 /**
