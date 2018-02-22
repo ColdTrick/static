@@ -1,6 +1,11 @@
 Version history
 ===============
 
+5.3 (2018-02-22):
+
+- changed: do not register page menu items if there is only one
+- changed: no longer show sidebar menu item to manage all static pages
+
 5.2.2 (2018-01-25):
 
 - fixed: comment permissions
