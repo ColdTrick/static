@@ -34,7 +34,6 @@ function static_init() {
 	}
 	
 	// events
-	elgg_register_event_handler('create', 'object', '\ColdTrick\StaticPages\Notifications::notifyLastEditor');
 	elgg_register_event_handler('create', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 	elgg_register_event_handler('update', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 	elgg_register_event_handler('delete', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
@@ -76,6 +75,8 @@ function static_init() {
 	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportLastRevision');
 	elgg_register_plugin_hook_handler('get_exportable_values', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::addOutOfDate');
 	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportOutOfDate');
+	
+	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::addLastEditorOnComment');
 	
 	// actions
 	elgg_register_action('static/edit', dirname(__FILE__) . '/actions/edit.php');

@@ -2,68 +2,72 @@
 
 namespace ColdTrick\StaticPages;
 
+use Elgg\Notifications\InstantNotificationEvent;
+
 /**
  * Notifications
  */
 class Notifications {
 	
 	/**
-	 * Make sure the last editor of a static page gets notified about a comment
+	 * Add the last editor to a comment nofitication
 	 *
-	 * @param string     $event  'create'
-	 * @param string     $type   'object'
-	 * @param \ElggObject $object the object that was just created
+	 * @param string $hook         'get'
+	 * @param string $type         'subscriptions'
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
 	 *
-	 * @return void
+	 * @return void|array
 	 */
-	public static function notifyLastEditor($event, $type, \ElggObject $object) {
-	
-		// check of this is a comment
-		if (empty($object) || !elgg_instanceof($object, 'object', 'comment')) {
-			return;
-		}
-	
-		// is it a comment on a static page
-		$container = $object->getContainerEntity();
-		if (empty($container) || !elgg_instanceof($container, 'object', 'static')) {
-			return;
-		}
-	
-		$comment_owner = $object->getOwnerEntity();
-	
-		// get last revisor
-		$ia = elgg_set_ignore_access(true);
-		$revisions = $container->getAnnotations([
-			'annotation_name' => 'static_revision',
-			'limit' => 1,
-			'reverse_order_by' => true,
-		]);
-	
-		$static_owner = $revisions[0]->getOwnerEntity();
-	
-		elgg_set_ignore_access($ia);
+	public static function addLastEditorOnComment($hook, $type, $return_value, $params) {
 		
-		// don't notify yourself
-		if ($static_owner->getGUID() == $comment_owner->getGUID()) {
+		$event = elgg_extract('event', $params);
+		if (!$event instanceof InstantNotificationEvent) {
+			// only instant notifications (eg. notify_user)
 			return;
 		}
+		
+		$object = $event->getObject();
+		if (!$object instanceof \ElggComment) {
+			// not a comment
+			return;
+		}
+		
+		$container = $object->getContainerEntity();
+		if (!$container instanceof \StaticPage) {
+			// not static
+			return;
+		}
+		
+		$last_editor = $container->getLastEditor();
+		if (!$last_editor instanceof \ElggUser) {
+			return;
+		}
+		
+		if (isset($return_value[$last_editor->guid])) {
+			// already in the list
+			return;
+		}
+		
+		$notification_settings = $last_editor->getNotificationSettings();
+		if (empty($notification_settings)) {
+			return;
+		}
+		
+		$methods = [];
+		foreach ($notification_settings as $method => $enabled) {
+			if (empty($enabled)) {
+				continue;
+			}
 			
-		// @see actions/comment/save
-		$subject = elgg_echo('generic_comment:email:subject');
-		$message = elgg_echo('generic_comment:email:body', [
-			$container->title,
-			$comment_owner->name,
-			$object->description,
-			$container->getURL(),
-			$comment_owner->name,
-			$comment_owner->getURL(),
-		]);
-	
-		$params = [
-			'object' => $object,
-			'action' => 'create',
-		];
-	
-		notify_user($static_owner->getGUID(), $comment_owner->getGUID(), $subject, $message, $params);
+			$methods[] = $method;
+		}
+		if (empty($methods)) {
+			return;
+		}
+		
+		$return_value[$last_editor->guid] = $methods;
+		
+		return $return_value;
 	}
 }
