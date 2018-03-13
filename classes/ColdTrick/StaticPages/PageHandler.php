@@ -61,7 +61,7 @@ class PageHandler {
 				return true;
 		}
 	}
-	
+		
 	/**
 	 * Check if requested page is a static page
 	 *
@@ -72,26 +72,14 @@ class PageHandler {
 	 *
 	 * @return array
 	 */
-	public static function routeAll($hook, $type, $return_value, $params) {
+	public static function respondAll($hook, $type, $return_value, $params) {
 	
-		if (!is_array($return_value)) {
-			// someone else already routed this page
+		if ($return_value->getStatusCode() !== 404) {
 			return;
 		}
 		
-		/**
-		 * $return_value contains:
-		 * $return_value['identifier'] => requested handler
-		 * $return_value['segments'] => url parts ($page)
-		 */
-	
-		$identifier = elgg_extract('identifier', $return_value);
-		if (empty($identifier)) {
-			return;
-		}
-		
-		$handlers = _elgg_services()->router->getPageHandlers();
-		if (elgg_extract($identifier, $handlers)) {
+		list($path_type, $identifier) = explode(':', $type);
+		if ($path_type !== 'path') {
 			return;
 		}
 		
@@ -111,9 +99,10 @@ class PageHandler {
 		
 		$entity = $entities[0];
 		
-		$return_value['segments'] = ['view', $entity->getGUID()];
-		$return_value['identifier'] = 'static';
-
-		return $return_value;
+		$content = elgg_view_resource('static/view', [
+			'guid' => $entity->guid
+		]);
+		
+		return elgg_ok_response($content);
 	}
 }

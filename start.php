@@ -7,7 +7,6 @@ use Alliander\Theme\StaticPage;
 require_once(dirname(__FILE__) . '/lib/functions.php');
 
 // register default Elgg events
-elgg_register_plugin_hook_handler('route:rewrite', 'all', '\ColdTrick\StaticPages\PageHandler::routeAll');
 elgg_register_event_handler('init', 'system', 'static_init');
 
 /**
@@ -57,6 +56,7 @@ function static_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:entity', '\ColdTrick\StaticPages\Menus::entityMenuRegister');
 	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\StaticPages\Menus::registerAdminPageMenuItems');
 	elgg_register_plugin_hook_handler('register', 'menu:static_edit', '\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems');
+	elgg_register_plugin_hook_handler('response', 'all', '\ColdTrick\StaticPages\PageHandler::respondAll');
 	elgg_register_plugin_hook_handler('prepare', 'menu:page', '\ColdTrick\StaticPages\Menus::pageMenuPrepare');
 	
 	elgg_register_plugin_hook_handler('entity_types', 'content_subscriptions', '\ColdTrick\StaticPages\ContentSubscriptions::entityTypes');
