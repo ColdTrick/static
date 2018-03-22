@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.3.2 (2018-03-22):
+
+- changed: moved the friendly title url detection to the respond hook
+
 5.3.1 (2018-03-08):
 
 - changed: simplified comment notifications
