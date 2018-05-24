@@ -91,4 +91,11 @@ Click here for a complete list:
 	'static:csv_exporter:last_revision:timestamp:readable' => "Last revision time created (readable)",
 	
 	'static:csv_exporter:out_of_date:state' => "Is out-of-date",
+	
+	'static:csv_exporter:parent:title' => "Parent page title",
+	'static:csv_exporter:parent:guid' => "Parent page GUID",
+	'static:csv_exporter:parent:url' => "Parent page URL",
+	'static:csv_exporter:main:title' => "Main page title",
+	'static:csv_exporter:main:guid' => "Main page GUID",
+	'static:csv_exporter:main:url' => "Main page URL",
 ];

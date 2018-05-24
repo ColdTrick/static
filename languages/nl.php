@@ -1,10 +1,16 @@
 <?php
 /**
- * This file was created by Translation Editor v6.0
- * On 2018-01-02 14:05
+ * This file was created by Translation Editor v6.1
+ * On 2018-05-24 10:58
  */
 
 return array (
+  'static:csv_exporter:parent:title' => 'Bovenliggende paginatitel',
+  'static:csv_exporter:parent:guid' => 'Bovenliggende pagina GUID',
+  'static:csv_exporter:parent:url' => 'Bovenliggende pagina URL',
+  'static:csv_exporter:main:title' => 'Hoofdpaginatitel',
+  'static:csv_exporter:main:guid' => 'Hoofdpagina GUID',
+  'static:csv_exporter:main:url' => 'Hoofdpagina URL',
   'admin:upgrades:static:delete_orphaned_children' => 'Verwijder verweesde statische pagina\'s',
   'admin:upgrades:static:delete_orphaned_children:description' => 'Na de migratie om de containers voor statische pagina\'s goed te zetten, was het mogelijk om pagina\'s te verwijderen zonder zijn subpagina\'s te verwijderen. Dit liet verweesde pagina\'s achter, deze upgrade verwijderd de achtergebleven pagina\'s.',
   'admin:upgrades:static:migrate_containers' => 'Migreer statische pagina containers',

@@ -205,4 +205,114 @@ class CSVExporter {
 				break;
 		}
 	}
+	
+	/**
+	 * Add parent and main pages to export
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @return void|array
+	 */
+	public static function addParentPages($hook, $type, $return_value, $params) {
+		
+		if (elgg_extract('subtype', $params) !== \StaticPage::SUBTYPE) {
+			return;
+		}
+		
+		if (!static_out_of_date_enabled()) {
+			return;
+		}
+		
+		$values = [
+			elgg_echo('static:csv_exporter:parent:title') => 'static_parent_title',
+			elgg_echo('static:csv_exporter:parent:guid') => 'static_parent_guid',
+			elgg_echo('static:csv_exporter:parent:url') => 'static_parent_url',
+			elgg_echo('static:csv_exporter:main:title') => 'static_main_title',
+			elgg_echo('static:csv_exporter:main:guid') => 'static_main_guid',
+			elgg_echo('static:csv_exporter:main:url') => 'static_main_url',
+		];
+		
+		if (!(bool) elgg_extract('readable', $params)) {
+			$values = array_values($values);
+		}
+		
+		return array_merge($return_value, $values);
+	}
+	
+	/**
+	 * Export parent and main pages
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @retrun void|string
+	 */
+	public static function exportParentPages($hook, $type, $return_value, $params) {
+		
+		if (!is_null($return_value)) {
+			// someone already provided output
+			return;
+		}
+		
+		$entity = elgg_extract('entity', $params);
+		if (!($entity instanceof \StaticPage)) {
+			return;
+		}
+		
+		switch (elgg_extract('exportable_value', $params)) {
+			case 'static_parent_title':
+				$parent = $entity->getParentPage();
+				if (empty($parent)) {
+					return '';
+				}
+				
+				return $parent->getDisplayName();
+				break;
+			case 'static_parent_guid':
+				$parent = $entity->getParentPage();
+				if (empty($parent)) {
+					return '';
+				}
+				
+				return $parent->guid;
+				break;
+			case 'static_parent_url':
+				$parent = $entity->getParentPage();
+				if (empty($parent)) {
+					return '';
+				}
+				
+				return $parent->getURL();
+				break;
+			case 'static_main_title':
+				$main = $entity->getRootPage();
+				if ($main->guid === $entity->guid) {
+					return '';
+				}
+				
+				return $main->getDisplayName();
+				break;
+			case 'static_main_guid':
+				$main = $entity->getRootPage();
+				if ($main->guid === $entity->guid) {
+					return '';
+				}
+				
+				return $main->guid;
+				break;
+			case 'static_main_url':
+				$main = $entity->getRootPage();
+				if ($main->guid === $entity->guid) {
+					return '';
+				}
+				
+				return $main->getURL();
+				break;
+		}
+	}
 }

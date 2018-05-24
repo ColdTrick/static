@@ -75,6 +75,8 @@ function static_init() {
 	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportLastRevision');
 	elgg_register_plugin_hook_handler('get_exportable_values', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::addOutOfDate');
 	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportOutOfDate');
+	elgg_register_plugin_hook_handler('get_exportable_values', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::addParentPages');
+	elgg_register_plugin_hook_handler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportParentPages');
 	
 	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::addLastEditorOnComment');
 	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::removeLastEditorFromDelayedNotification', 999);
