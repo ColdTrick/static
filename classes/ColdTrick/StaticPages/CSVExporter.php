@@ -9,7 +9,7 @@ class CSVExporter {
 	 *
 	 * @param string $hook         the name of the hook
 	 * @param string $type         the type of the hook
-	 * @param arary  $return_value current return value
+	 * @param array  $return_value current return value
 	 * @param array  $params       supplied params
 	 *
 	 * @return void|array
@@ -40,7 +40,7 @@ class CSVExporter {
 	 *
 	 * @param string $hook         the name of the hook
 	 * @param string $type         the type of the hook
-	 * @param arary  $return_value current return value
+	 * @param array  $return_value current return value
 	 * @param array  $params       supplied params
 	 *
 	 * @retrun void|string
@@ -86,7 +86,7 @@ class CSVExporter {
 	 *
 	 * @param string $hook         the name of the hook
 	 * @param string $type         the type of the hook
-	 * @param arary  $return_value current return value
+	 * @param array  $return_value current return value
 	 * @param array  $params       supplied params
 	 *
 	 * @return void|array
@@ -114,7 +114,7 @@ class CSVExporter {
 	 *
 	 * @param string $hook         the name of the hook
 	 * @param string $type         the type of the hook
-	 * @param arary  $return_value current return value
+	 * @param array  $return_value current return value
 	 * @param array  $params       supplied params
 	 *
 	 * @retrun void|string
@@ -151,7 +151,7 @@ class CSVExporter {
 	 *
 	 * @param string $hook         the name of the hook
 	 * @param string $type         the type of the hook
-	 * @param arary  $return_value current return value
+	 * @param array  $return_value current return value
 	 * @param array  $params       supplied params
 	 *
 	 * @return void|array
@@ -182,7 +182,7 @@ class CSVExporter {
 	 *
 	 * @param string $hook         the name of the hook
 	 * @param string $type         the type of the hook
-	 * @param arary  $return_value current return value
+	 * @param array  $return_value current return value
 	 * @param array  $params       supplied params
 	 *
 	 * @retrun void|string
