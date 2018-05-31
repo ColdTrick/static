@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.4 (2018-05-31):
+
+- added: parent and root page to CSVExport
+
 5.3.2 (2018-03-22):
 
 - changed: moved the friendly title url detection to the respond hook
