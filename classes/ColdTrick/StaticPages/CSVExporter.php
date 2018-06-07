@@ -222,10 +222,6 @@ class CSVExporter {
 			return;
 		}
 		
-		if (!static_out_of_date_enabled()) {
-			return;
-		}
-		
 		$values = [
 			elgg_echo('static:csv_exporter:parent:title') => 'static_parent_title',
 			elgg_echo('static:csv_exporter:parent:guid') => 'static_parent_guid',
