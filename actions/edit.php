@@ -7,8 +7,10 @@ $owner_guid = (int) get_input('owner_guid'); // site or group
 $parent_guid = (int) get_input('parent_guid');
 $title = get_input('title');
 
-$friendly_title = get_input('friendly_title', $title);
-$friendly_title = static_make_friendly_title($friendly_title, $guid);
+$friendly_title = get_input('friendly_title');
+if (empty($guid)) {
+	$friendly_title = static_make_friendly_title($title);
+}
 
 $description = get_input('description');
 $access_id = (int) get_input('access_id', ACCESS_PUBLIC);
@@ -19,13 +21,11 @@ $moderators = get_input('moderators');
 $remove_icon = (int) get_input('remove_thumbnail');
 
 if (empty($title) || empty($description)) {
-	register_error(elgg_echo('static:action:edit:error:title_description'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('static:action:edit:error:title_description'));
 }
 
 if (empty($friendly_title)) {
-	register_error(elgg_echo('static:action:edit:error:friendly_title'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('static:action:edit:error:friendly_title'));
 }
 
 $owner = get_entity($owner_guid);
@@ -62,7 +62,7 @@ if ($guid) {
 	elgg_set_ignore_access($ia);
 
 	if (!elgg_instanceof($entity, 'object', 'static') || !$entity->canEdit()) {
-		forward(REFERER);
+		return elgg_error_response();
 	}
 }
 
@@ -77,8 +77,7 @@ if (!$entity) {
 	if (!$entity->save()) {
 		elgg_set_ignore_access($ia);
 		
-		register_error(elgg_echo('actionunauthorized'));
-		forward(REFERER);
+		return elgg_error_response(elgg_echo('actionunauthorized'));
 	}
 	
 	elgg_set_ignore_access($ia);
@@ -115,6 +114,14 @@ if ($parent_changed) {
 
 $ia = elgg_set_ignore_access(true);
 
+// validate friendly title for existing entities if changed
+if (!$new_entity && ($entity->friendly_title !== $friendly_title)) {
+	$friendly_title = static_make_friendly_title($friendly_title, $guid);
+	if (empty($friendly_title)) {
+		return elgg_error_response(elgg_echo('static:action:edit:error:friendly_title'));
+	}
+}
+
 // save all the content
 $entity->title = $title;
 $entity->description = $description;
@@ -142,6 +149,5 @@ $entity->annotate('static_revision', $description);
 
 elgg_set_ignore_access($ia);
 elgg_clear_sticky_form('static');
-system_message(elgg_echo('static:action:edit:success'));
 
-forward($entity->getURL());
+return elgg_ok_response('', elgg_echo('static:action:edit:success'), $entity->getURL());

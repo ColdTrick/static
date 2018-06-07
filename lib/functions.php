@@ -293,17 +293,18 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
 		return false;
 	}
 	
-	$entity_guid = sanitise_int($entity_guid, false);
 	$friendly_title = strtolower($friendly_title);
+	$friendly_title = html_entity_decode($friendly_title);
+	$friendly_title = preg_replace('/[^a-z0-9-_]/', '-', $friendly_title); // only allow a-z, 0-9, - and _
+	$friendly_title = preg_replace('/-{2,}/', '-', $friendly_title); // replace multiple -- with only one -
+	$friendly_title = trim($friendly_title, '-'); // remove trailing -
 	
-	// make an URL friendly title
-	$friendly_title = str_replace('"', "", $friendly_title);
-	$friendly_title = str_replace("'", "", $friendly_title);
-	$friendly_title = str_replace("`", "", $friendly_title);
-	$friendly_title = preg_replace('~&([a-z]{1,2})(acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($friendly_title, ENT_QUOTES, 'UTF-8'));
-	$friendly_title = preg_replace('~&([a-z]{1,2})(quo);~i', '', $friendly_title); // rich text editor double quotes
+	if (empty($friendly_title)) {
+		// only contained replaced chars
+		return false;
+	}
 	
-	$friendly_title = elgg_get_friendly_title($friendly_title);
+	$entity_guid = sanitise_int($entity_guid, false);
 	
 	$available = static_is_friendly_title_available($friendly_title, $entity_guid);
 	
