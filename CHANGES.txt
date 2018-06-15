@@ -1,6 +1,11 @@
 Version history
 ===============
 
+5.4.1 (2018-06-15):
+
+- fixed: invalid characters in permalink no longer allowed
+- fixed: removed invalid code which prevents export of parent pages
+
 5.4 (2018-05-31):
 
 - added: parent and root page to CSVExport
