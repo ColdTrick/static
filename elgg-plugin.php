@@ -7,7 +7,7 @@ require_once(dirname(__FILE__) . '/lib/functions.php');
 return [
 	'bootstrap' => Bootstrap::class,
 	'settings' => [
-		
+		'enable_groups' => 'no',
 	],
 	'entities' => [
 		[

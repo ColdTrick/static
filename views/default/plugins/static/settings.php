@@ -3,21 +3,18 @@
 /* @var $plugin ElggPlugin */
 $plugin = elgg_extract('entity', $vars);
 
-$noyes_options = [
-	'no' => elgg_echo('option:no'),
-	'yes' => elgg_echo('option:yes'),
-];
-
 // general settings
 $general = elgg_view_field([
-	'#type' => 'select',
+	'#type' => 'checkbox',
 	'#label' => elgg_echo('static:settings:enable_groups'),
 	'name' => 'params[enable_groups]',
-	'options_values' => $noyes_options,
-	'value' => $plugin->enable_groups,
+	'checked' => $plugin->enable_groups === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
 ]);
 
-echo elgg_view_module('inline', elgg_echo('static:settings:general:title'), $general);
+echo elgg_view_module('info', elgg_echo('static:settings:general:title'), $general);
 
 // out of date
 $out_of_date = elgg_view('output/longtext', [
@@ -53,4 +50,4 @@ $out_of_date .= elgg_view_field([
 	'options' => range(0, 9),
 ]);
 
-echo elgg_view_module('inline', elgg_echo('static:settings:out_of_date:title'), $out_of_date);
+echo elgg_view_module('info', elgg_echo('static:settings:out_of_date:title'), $out_of_date);
