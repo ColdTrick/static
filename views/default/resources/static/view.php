@@ -67,7 +67,8 @@ static_setup_page_menu($entity);
 $page = elgg_view_layout('content', [
 	'title' => $title,
 	'content' => $body,
-	'filter' => '',
+	'filter' => false,
+	'entity' => $entity,
 ]);
 
 elgg_set_ignore_access($ia);

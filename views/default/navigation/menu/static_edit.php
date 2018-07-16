@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Site navigation menu
  *
@@ -6,7 +7,7 @@
  */
 
 $items = elgg_extract('static', $vars['menu'], []);
-if (empty($items) || empty($items[0]->getChildren())) {
+if (empty($items)) {
 	return;
 }
 

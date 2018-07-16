@@ -75,7 +75,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 	foreach ($static_items as $item) {
 		if (in_array($item->rel, $allowed_guids)) {
 			// if you have access to the guid, then add menu item
-			$CONFIG->menus['page'][] = $item;
+			elgg_register_menu_item('page', $item);
 		} else {
 			// is the manager of any of the pages? If so do a canEdit check to determine if we can add it to the
 			if (!isset($manages_guids)) {
@@ -93,7 +93,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 				}
 				
 				if ($tmp_entity->canEdit()) {
-					$CONFIG->menus['page'][] = $item;
+					elgg_register_menu_item('page', $item);
 				}
 			}
 		}

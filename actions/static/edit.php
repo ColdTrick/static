@@ -7,10 +7,8 @@ $owner_guid = (int) get_input('owner_guid'); // site or group
 $parent_guid = (int) get_input('parent_guid');
 $title = get_input('title');
 
-$friendly_title = get_input('friendly_title');
-if (empty($guid)) {
-	$friendly_title = static_make_friendly_title($title);
-}
+$friendly_title = get_input('friendly_title', $title);
+$friendly_title = static_make_friendly_title($friendly_title, $guid);
 
 $description = get_input('description');
 $access_id = (int) get_input('access_id', ACCESS_PUBLIC);
@@ -72,6 +70,9 @@ if (!$entity) {
 	$entity->owner_guid = $owner->getGUID();
 	$entity->container_guid = $owner->getGUID();
 	$entity->access_id = $access_id;
+	
+	// new static pages should go on top
+	$entity->order = -time();
 	
 	$ia = elgg_set_ignore_access(true);
 	if (!$entity->save()) {
