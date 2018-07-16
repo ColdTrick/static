@@ -74,7 +74,7 @@ class Cache {
 		// ignore access
 		$ia = elgg_set_ignore_access(true);
 	
-		$batch = new \ElggBatch('elgg_get_entities_from_relationship', $options);
+		$batch = new \ElggBatch('elgg_get_entities', $options);
 		foreach ($batch as $entity) {
 			// reset cache for the pages
 			$file = new \ElggFile();
@@ -125,7 +125,7 @@ class Cache {
 			
 		// add all sub menu items so they are cacheable
 		$ia = elgg_set_ignore_access(true);
-		$submenu_entities = elgg_get_entities_from_relationship([
+		$submenu_entities = elgg_get_entities([
 			'type' => 'object',
 			'subtype' => \StaticPage::SUBTYPE,
 			'relationship_guid' => $root_entity->getGUID(),

@@ -137,9 +137,8 @@ $entity->save();
 // icon
 if ($remove_icon) {
 	$entity->deleteIcon();
-} elseif ($uploaded_files = elgg_get_uploaded_files('thumbnail')) {
+} elseif ($uploaded_file = elgg_get_uploaded_file('thumbnail')) {
 	/* @var $uploaded_file \Symfony\Component\HttpFoundation\File\UploadedFile */
-	$uploaded_file = $uploaded_files[0];
 	if (stripos($uploaded_file->getMimeType(), 'image/') !== false) {
 		$entity->saveIconFromUploadedFile('thumbnail');
 	}

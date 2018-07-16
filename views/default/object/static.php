@@ -1,35 +1,43 @@
 <?php
 
 $entity = elgg_extract('entity', $vars);
-$full_view = elgg_extract('full_view', $vars);
-
-if ($full_view) {
-	echo elgg_view('object/static/full', $vars);
+if (!$entity instanceof \StaticPage) {
 	return;
 }
 
-$icon = '';
-$editor = $entity->getLastEditor();
-if ($editor) {
-	$icon = elgg_view_entity_icon($editor, 'tiny');
+if (elgg_extract('full_view', $vars)) {
+	// out of date message
+	$body = elgg_view('static/out_of_date', $vars);
+	
+	// icon
+	if ($entity->hasIcon('large')) {
+		$body .= elgg_view_entity_icon($entity, 'large', [
+			'href' => false,
+			'class' => 'float-alt',
+			'img_attr' => [
+				'data-highres-url' => $entity->getIconURL(['size' => 'master']),
+			],
+		]);
+	}
+	
+	// description
+	$body .= elgg_view('output/longtext', ['value' => $entity->description]);
+
+	$params = [
+		'show_summary' => true,
+		'body' => $body,
+		'icon_entity' => $entity->getLastEditor(),
+	];
+	$params = $params + $vars;
+	
+	echo elgg_view('object/elements/full', $params);
+} else {
+	// brief view
+	$params = [
+		'icon' => true,
+		'icon_entity' => $entity->getLastEditor(),
+		'content' => false,
+	];
+	$params = $params + $vars;
+	echo elgg_view('object/elements/summary', $params);
 }
-
-$metadata = elgg_view_menu('entity', [
-	'entity' => $entity,
-	'handler' => 'static',
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz',
-]);
-
-$excerpt = elgg_get_excerpt($entity->description);
-
-$params = [
-	'entity' => $entity,
-	'metadata' => $metadata,
-	'subtitle' => elgg_view('static/by_line', $vars),
-	'content' => $excerpt,
-];
-$params = $params + $vars;
-$list_body = elgg_view('object/elements/summary', $params);
-
-echo elgg_view_image_block($icon, $list_body);

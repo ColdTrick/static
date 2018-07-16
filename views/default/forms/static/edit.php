@@ -13,11 +13,6 @@ $content_enable_comments = 'no';
 $content_moderators = ELGG_ENTITIES_NO_VALUE;
 $content_owner_guid = $owner->getGUID();
 
-$comment_options = [
-	'no' => elgg_echo('option:no'),
-	'yes' => elgg_echo('option:yes'),
-];
-
 if ($entity) {
 	$content_guid = $entity->getGUID();
 	$content_title = $entity->title;
@@ -87,11 +82,13 @@ $form_body .= elgg_view_field([
 ]);
 
 $form_body .= elgg_view_field([
-	'#type' => 'select',
+	'#type' => 'checkbox',
 	'#label' => elgg_echo('static:new:comment'),
 	'name' => 'enable_comments',
-	'value' => elgg_get_sticky_value('static', 'enable_comments', $content_enable_comments),
-	'options_values' => $comment_options,
+	'checked' => elgg_get_sticky_value('static', 'enable_comments', $content_enable_comments) === 'yes',
+	'switch' => true,
+	'default' => 'no',
+	'value' => 'yes',
 ]);
 
 $form_body .= elgg_view_field([

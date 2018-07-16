@@ -99,9 +99,8 @@ class Menus {
 			'name' => 'static_all',
 			'href' => 'static/all',
 			'text' => elgg_echo('static:all'),
-			'context' => 'admin',
-			'parent_name' => 'appearance',
-			'section' => 'configure',
+			'parent_name' => 'administer_utilities',
+			'section' => 'administer',
 		]);
 	
 		return $return_value;

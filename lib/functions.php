@@ -52,7 +52,10 @@ function static_setup_page_menu(\StaticPage $entity) {
 	global $CONFIG;
 	
 	// fetch all menu items the user has access to
-	$menu_options = [
+	if ($can_write) {
+		$ia = elgg_set_ignore_access(true);
+	}
+	$allowed_guids = elgg_get_entities([
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
 		'relationship_guid' => $root_entity->getGUID(),
@@ -62,11 +65,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 		'callback' => function($row) {
 			return (int) $row->guid;
 		},
-	];
-	if ($can_write) {
-		$ia = elgg_set_ignore_access(true);
-	}
-	$allowed_guids = elgg_get_entities_from_relationship($menu_options);
+	]);
 	if ($can_write) {
 		elgg_set_ignore_access($ia);
 	}
@@ -258,7 +257,7 @@ function static_get_parent_options($parent_guid = null, $depth = 0) {
 	}
 		
 	// more memory friendly
-	$parent_entities = new ElggBatch('elgg_get_entities_from_metadata', [
+	$parent_entities = new ElggBatch('elgg_get_entities', [
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
 		'metadata_name_value_pair' => [
@@ -340,6 +339,8 @@ function static_is_friendly_title_available($friendly_title, $entity_guid) {
 	}
 	
 	// check handler
+	return true;
+	// @todo need to update with elgg()->routes->get(params)
 	$router = _elgg_services()->router;
 	$handlers = $router->getPageHandlers();
 	
@@ -364,7 +365,7 @@ function static_is_friendly_title_available($friendly_title, $entity_guid) {
 	}
 	
 	$ia = elgg_set_ignore_access(true);
-	$entities = elgg_get_entities_from_metadata($options);
+	$entities = elgg_get_entities($options);
 	elgg_set_ignore_access($ia);
 	
 	if (!empty($entities)) {
@@ -419,7 +420,7 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 	// ignore access for this part
 	$ia = elgg_set_ignore_access(true);
 	
-	$batch = new ElggBatch('elgg_get_entities_from_metadata', [
+	$batch = new ElggBatch('elgg_get_entities', [
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
 		'owner_guid' => $entity->getOwnerGUID(),

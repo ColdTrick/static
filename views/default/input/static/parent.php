@@ -27,7 +27,7 @@ echo elgg_view('input/hidden', [
 ]);
 
 // are there root pages in the container?
-$parent_pages = new ElggBatch('elgg_get_entities_from_metadata', [
+$parent_pages = new ElggBatch('elgg_get_entities', [
 	'type' => 'object',
 	'subtype' => \StaticPage::SUBTYPE,
 	'container_guid' => $owner->getGUID(),

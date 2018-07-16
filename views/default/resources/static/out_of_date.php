@@ -35,7 +35,6 @@ $body .= elgg_list_entities([
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
 	'order_by' => 'e.time_updated DESC',
 	'no_results' => elgg_echo('static:out_of_date:none'),
-	'item_view' => 'object/static/simple',
 ]);
 
 $title_text = elgg_echo('static:out_of_date:title');

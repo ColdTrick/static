@@ -6,18 +6,15 @@ $site = elgg_get_site_entity();
 
 $ia = elgg_set_ignore_access(true);
 
-$entities = elgg_get_entities_from_metadata([
+$entities = elgg_get_entities([
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
 	'metadata_name_value_pairs' => [
 		'parent_guid' => 0,
 	],
 	'limit' => false,
-	'container_guid' => $site->getGUID(),
-	'joins' => [
-		'JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid',
-	],
-	'order_by' => 'oe.title asc',
+	'container_guid' => $site->guid,
+	'order_by_metadata' => ['title' => 'ASC'],
 ]);
 
 elgg_set_ignore_access($ia);
@@ -50,7 +47,7 @@ if ($entities) {
 	$body .= elgg_format_element('div', [
 		'class' => 'static-list-reorder',
 		'data-container-guid' => $site->guid,
-	], elgg_view_entity_list($ordered_entities, ['item_view' => 'object/static/simple']));
+	], elgg_view_entity_list($ordered_entities, ['full_view' => false]));
 } else {
 	$body = elgg_echo('static:admin:empty');
 }

@@ -10,13 +10,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 	 * {@inheritdoc}
 	 */
 	public function init() {
-		
-		// register page handler for nice URL's
-		elgg_register_page_handler('static', '\ColdTrick\StaticPages\PageHandler::staticHandler');
-	
-		
-	
-		
+				
 		// groups
 		if (static_group_enabled()) {
 			add_group_tool_option('static', elgg_echo('static:groups:tool_option'), true);

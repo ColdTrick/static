@@ -78,7 +78,7 @@ class StaticPage extends \ElggObject {
 		$ia = elgg_set_ignore_access(true);
 		
 		/* @var $batch \ElggBatch */
-		$batch = elgg_get_entities_from_metadata([
+		$batch = elgg_get_entities([
 			'type' => 'object',
 			'subtype' => self::SUBTYPE,
 			'metadata_name_value_pairs' => [
