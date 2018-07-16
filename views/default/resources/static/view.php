@@ -15,6 +15,9 @@ if (!has_access_to_entity($entity) && !$entity->canEdit()) {
 	forward(REFERER);
 }
 
+// since static has 'magic' URLs make sure context is correct
+elgg_set_context('static');
+
 if ($entity->canEdit()) {
 	elgg_register_menu_item('title', [
 		'name' => 'edit',
