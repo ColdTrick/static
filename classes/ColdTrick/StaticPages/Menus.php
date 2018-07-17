@@ -233,37 +233,4 @@ class Menus {
 		
 		return $return_value;
 	}
-	
-	/**
-	 * Add some menu items
-	 *
-	 * @param string         $hook         the name of the hook
-	 * @param string         $type         the type of the hook
-	 * @param ElggMenuItem[] $return_value current menu items
-	 * @param array          $params       supplied params
-	 *
-	 * @return ElggMenuItem[]
-	 */
-	public static function entityMenuRegister($hook, $type, $return_value, $params) {
-	
-		$entity = elgg_extract('entity', $params);
-		if (!elgg_instanceof($entity, 'object', 'static')) {
-			return;
-		}
-	
-		if (!$entity->canComment()) {
-			return $return_value;
-		}
-		
-		// add comment link
-		$return_value[] = \ElggMenuItem::factory([
-			'name' => 'comments',
-			'text' => elgg_view_icon('speech-bubble'),
-			'href' => "{$entity->getURL()}#comments",
-			'title' => elgg_echo('comment:this'),
-			'priority' => 300,
-		]);
-	
-		return $return_value;
-	}
 }
