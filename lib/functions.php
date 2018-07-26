@@ -6,11 +6,12 @@
 /**
  * Register page menu items
  *
- * @param \StaticPage $entity base entity on which the menu will be created
+ * @param \StaticPage $entity    base entity on which the menu will be created
+ * @param string      $menu_name menu name (default page)
  *
  * @return void
  */
-function static_setup_page_menu(\StaticPage $entity) {
+function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
 	
 	if (!elgg_instanceof($entity, 'object', 'static')) {
 		return;
@@ -75,7 +76,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 	foreach ($static_items as $item) {
 		if (in_array($item->rel, $allowed_guids)) {
 			// if you have access to the guid, then add menu item
-			elgg_register_menu_item('page', $item);
+			elgg_register_menu_item($menu_name, $item);
 		} else {
 			// is the manager of any of the pages? If so do a canEdit check to determine if we can add it to the
 			if (!isset($manages_guids)) {
@@ -93,7 +94,7 @@ function static_setup_page_menu(\StaticPage $entity) {
 				}
 				
 				if ($tmp_entity->canEdit()) {
-					elgg_register_menu_item('page', $item);
+					elgg_register_menu_item($menu_name, $item);
 				}
 			}
 		}
