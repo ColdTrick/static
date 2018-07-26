@@ -109,8 +109,8 @@ class Cache {
 		}
 			
 		$root_menu_options = [
-			'name' => $root_entity->getGUID(),
-			'rel' => $root_entity->getGUID(),
+			'name' => $root_entity->guid,
+			'rel' => $root_entity->guid,
 			'href' => $root_entity->getURL(),
 			'text' => elgg_format_element('span', [], $root_entity->title),
 			'priority' => $priority,
@@ -121,14 +121,17 @@ class Cache {
 			$root_menu_options['itemClass'] = ['static-sortable'];
 		}
 		// add main menu items
-		$static_items[$root_entity->getGUID()] = \ElggMenuItem::factory($root_menu_options);
+		$menu_item = \ElggMenuItem::factory($root_menu_options);
+		$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $root_entity], $menu_item);
+		
+		$static_items[$root_entity->guid] = $menu_item;
 			
 		// add all sub menu items so they are cacheable
 		$ia = elgg_set_ignore_access(true);
 		$submenu_entities = elgg_get_entities([
 			'type' => 'object',
 			'subtype' => \StaticPage::SUBTYPE,
-			'relationship_guid' => $root_entity->getGUID(),
+			'relationship_guid' => $root_entity->guid,
 			'relationship' => 'subpage_of',
 			'limit' => false,
 			'inverse_relationship' => true,
@@ -146,22 +149,25 @@ class Cache {
 					$priority = (int) $submenu_item->time_created;
 				}
 				
-				$static_items[$submenu_item->getGUID()] = \ElggMenuItem::factory([
-					'name' => $submenu_item->getGUID(),
-					'rel' => $submenu_item->getGUID(),
+				$menu_item = \ElggMenuItem::factory([
+					'name' => $submenu_item->guid,
+					'rel' => $submenu_item->guid,
 					'href' => $submenu_item->getURL(),
 					'text' => elgg_format_element('span', [], $submenu_item->title),
 					'priority' => $priority,
 					'parent_name' => $submenu_item->parent_guid,
 					'section' => 'static',
 				]);
+				$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
+				
+				$static_items[$submenu_item->guid] = $menu_item;
 			}
 		}
 			
 		elgg_set_ignore_access($ia);
 		
 		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->getGUID();
+		$file->owner_guid = $root_entity->guid;
 		$file->setFilename('static_menu_item_cache');
 		$file->open('write');
 		$file->write(serialize($static_items));
@@ -181,7 +187,7 @@ class Cache {
 		$static_items = [];
 	
 		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->getGUID();
+		$file->owner_guid = $root_entity->guid;
 		$file->setFilename('static_menu_item_cache');
 		if ($file->exists()) {
 			$static_items = unserialize($file->grabFile());
