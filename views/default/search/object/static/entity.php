@@ -4,8 +4,7 @@ $entity = elgg_extract('entity', $vars);
 
 $editor = $entity->getLastEditor();
 if ($editor) {
-	$entity->setVolatileData('search_icon', elgg_view_entity_icon($editor, 'tiny'));
+	$entity->setVolatileData('search_icon', elgg_view_entity_icon($editor, 'small'));
 }
-$vars['entity'] = $entity;
 
-echo elgg_view('search/object/entity', $vars);
+echo elgg_view('search/entity/default', $vars);
