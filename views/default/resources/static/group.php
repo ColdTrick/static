@@ -69,18 +69,12 @@ if ($can_write) {
 	elgg_register_title_button();
 }
 
-$filter = '';
-if (static_out_of_date_enabled()) {
-	$filter = elgg_view('page/layouts/elements/filter');
-}
-
 $title_text = elgg_echo('static:groups:title');
 
 // build page
 $body = elgg_view_layout('content', [
 	'title' => $title_text,
 	'content' => $body,
-	'filter' => $filter,
 ]);
 
 // draw page

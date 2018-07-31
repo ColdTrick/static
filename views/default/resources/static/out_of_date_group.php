@@ -34,7 +34,6 @@ $options = [
 ];
 
 $title_text = elgg_echo('static:out_of_date:title');
-$filter = elgg_view('page/layouts/elements/filter');
 
 $body = elgg_list_entities($options);
 
@@ -42,7 +41,6 @@ $body = elgg_list_entities($options);
 $page_data = elgg_view_layout('content', [
 	'title' => $title_text,
 	'content' => $body,
-	'filter' => $filter,
 ]);
 
 // draw page

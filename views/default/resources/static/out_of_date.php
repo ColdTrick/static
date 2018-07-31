@@ -38,12 +38,11 @@ $body .= elgg_list_entities([
 ]);
 
 $title_text = elgg_echo('static:out_of_date:title');
-$filter = elgg_view('page/layouts/elements/filter');
 
 // build page
 $page_data = elgg_view_layout('one_column', [
 	'title' => $title_text,
-	'content' => $filter . $body,
+	'content' => $body,
 ]);
 
 // draw page

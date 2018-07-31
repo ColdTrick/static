@@ -45,6 +45,10 @@ return [
 			'path' => '/static/group/{guid}/out_of_date',
 			'resource' => 'static/out_of_date',
 		],
+		'collection:object:static:user:out_of_date' => [
+			'path' => '/static/out_of_date/{username}',
+			'resource' => 'static/out_of_date_owner',
+		],
 		'collection:object:static:out_of_date' => [
 			'path' => '/static/out_of_date',
 			'resource' => 'static/out_of_date',
@@ -57,22 +61,5 @@ return [
 			'path' => '/static',
 			'resource' => 'static/all',
 		],
-		/**
-		 * @todo case 'out_of_date':
-				
-			$user = false;
-			$username = elgg_extract(1, $page);
-			if (!empty($username)) {
-				$user = get_user_by_username($username);
-			}
-			
-			if ($user instanceof \ElggUser) {
-				elgg_set_page_owner_guid($user->getGUID());
-				
-				echo elgg_view_resource('static/out_of_date_owner', ['user' => $user]);
-			} else {
-				echo elgg_view_resource('static/out_of_date');
-			}
-		 */
 	],
 ];

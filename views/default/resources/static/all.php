@@ -52,11 +52,6 @@ if ($entities) {
 	$body = elgg_echo('static:admin:empty');
 }
 
-$filter = '';
-if (static_out_of_date_enabled()) {
-	$filter = elgg_view('page/layouts/elements/filter');
-}
-
 if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', 'static')) {
 	elgg_register_title_button();
 }
@@ -66,7 +61,7 @@ $title_text = elgg_echo('static:all');
 // build page
 $body = elgg_view_layout('one_column', [
 	'title' => $title_text,
-	'content' => $filter . $body,
+	'content' => $body,
 ]);
 
 // draw page
