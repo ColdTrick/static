@@ -43,6 +43,7 @@ $title_text = elgg_echo('static:out_of_date:title');
 $page_data = elgg_view_layout('one_column', [
 	'title' => $title_text,
 	'content' => $body,
+	'filter_id' => 'static',
 ]);
 
 // draw page

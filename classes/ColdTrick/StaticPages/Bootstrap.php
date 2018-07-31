@@ -47,7 +47,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('container_permissions_check', 'all', '\ColdTrick\StaticPages\Permissions::containerPermissionsCheck');
 			
 		$hooks->registerHandler('register', 'menu:owner_block', '\ColdTrick\StaticPages\Menus::ownerBlockMenuRegister');
-		$hooks->registerHandler('register', 'menu:filter', '\ColdTrick\StaticPages\Menus::filterMenuRegister');
+		$hooks->registerHandler('register', 'menu:filter:static', '\ColdTrick\StaticPages\Menus::filterMenuRegister');
 		$hooks->registerHandler('register', 'menu:entity', '\ColdTrick\StaticPages\Menus::entityMenuRegister');
 		$hooks->registerHandler('register', 'menu:page', '\ColdTrick\StaticPages\Menus::registerAdminPageMenuItems');
 		$hooks->registerHandler('register', 'menu:static_edit', '\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems');

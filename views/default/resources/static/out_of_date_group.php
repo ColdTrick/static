@@ -41,6 +41,7 @@ $body = elgg_list_entities($options);
 $page_data = elgg_view_layout('content', [
 	'title' => $title_text,
 	'content' => $body,
+	'filter_id' => 'static',
 ]);
 
 // draw page

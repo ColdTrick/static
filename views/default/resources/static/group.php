@@ -75,6 +75,7 @@ $title_text = elgg_echo('static:groups:title');
 $body = elgg_view_layout('content', [
 	'title' => $title_text,
 	'content' => $body,
+	'filter_id' => 'static',
 ]);
 
 // draw page

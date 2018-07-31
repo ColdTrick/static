@@ -43,7 +43,7 @@ return [
 		],
 		'collection:object:static:group:out_of_date' => [
 			'path' => '/static/group/{guid}/out_of_date',
-			'resource' => 'static/out_of_date',
+			'resource' => 'static/out_of_date_group',
 		],
 		'collection:object:static:user:out_of_date' => [
 			'path' => '/static/out_of_date/{username}',
