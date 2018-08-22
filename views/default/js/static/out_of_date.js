@@ -10,10 +10,11 @@ define(function(require) {
 			return false;
 		}
 		
+		var $link = $(this);
 		var ajax = new Ajax();
-		ajax.action($(this).attr('href'), {
+		ajax.action($link.attr('href'), {
 			success: function() {
-				$('#static-out-of-date-message').remove();
+				$link.closest('.static-out-of-date-message').remove();
 			}
 		});
 		

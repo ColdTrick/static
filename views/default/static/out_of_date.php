@@ -39,11 +39,7 @@ if (!$entity->canEdit()) {
 	}
 }
 
-echo elgg_format_element('div', [
-	'id' => 'static-out-of-date-message',
-	'class' => [
-		'elgg-message',
-		'elgg-state-error',
-		'mbm',
-	],
-], $message);
+echo elgg_view_message('warning', $message, [
+	'class' => 'static-out-of-date-message',
+	'title' => false,
+]);
