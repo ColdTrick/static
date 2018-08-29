@@ -23,27 +23,21 @@ class Search {
 		if (empty($query)) {
 			return;
 		}
+		
+		$params['type'] = 'object';
+		$params['subtype'] = \StaticPage::SUBTYPE;
 	
-		$limit = (int) elgg_extract('limit', $params, 5);
-	
-		$options = [
-			'type' => 'object',
-			'subtype' => \StaticPage::SUBTYPE,
-			'limit' => $limit,
-			'joins' => ['JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid'],
-			'wheres' => ["(oe.title LIKE '%{$query}%' OR oe.description LIKE '%{$query}%')"],
-		];
-		$entities = elgg_get_entities($options);
+		$entities = elgg_search($params);
 	
 		if (empty($entities)) {
 			return;
 		}
 		
-		if (count($entities) >= $limit) {
-			$options['count'] = true;
-			$static_count = elgg_get_entities($options);
-		} else {
-			$static_count = count($entities);
+		$static_count = count($entities);
+		
+		if ($static_count >= $limit) {
+			$params['count'] = true;
+			$static_count = elgg_search($params);
 		}
 
 		$return_value[] = [
@@ -55,7 +49,7 @@ class Search {
 		foreach ($entities as $entity) {
 			$return_value[] = [
 				'type' => 'object',
-				'value' => $entity->title,
+				'value' => $entity->getDisplayName(),
 				'href' => $entity->getURL(),
 				'content' => elgg_view('static/search_advanced/item', ['entity' => $entity]),
 			];
