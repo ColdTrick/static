@@ -59,6 +59,7 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('entity_types', 'content_subscriptions', '\ColdTrick\StaticPages\ContentSubscriptions::entityTypes');
 		$hooks->registerHandler('group_tool_widgets', 'widget_manager', '\ColdTrick\StaticPages\Widgets::groupToolWidgets');
 		$hooks->registerHandler('autocomplete', 'search_advanced', '\ColdTrick\StaticPages\Search::searchAdvancedAutocomplete');
+		$hooks->registerHandler('to:object', 'entity', '\ColdTrick\StaticPages\Elasticsearch::exportChangeOwner');
 		
 		$hooks->registerHandler('cron', 'daily', '\ColdTrick\StaticPages\Cron::outOfDateNotification');
 		
@@ -77,7 +78,5 @@ class Bootstrap extends DefaultPluginBootstrap {
 		
 		$hooks->registerHandler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::addLastEditorOnComment');
 		$hooks->registerHandler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::removeLastEditorFromDelayedNotification', 999);
-		
-		
 	}
 }
