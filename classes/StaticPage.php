@@ -20,13 +20,11 @@ class StaticPage extends \ElggObject {
 	 */
 	public function getURL() {
 		
-		// basic url
-		$url = "static/view/{$this->getGUID()}";
-		
 		// custom url (eg. /my-static-page)
-		$friendly_title = $this->friendly_title;
-		if ($friendly_title) {
-			$url = $friendly_title;
+		$url = $this->friendly_title;
+		if (!$url) {
+			// basic url
+			$url = elgg_generate_entity_url($this, 'view');
 		}
 		
 		// normalize the url
@@ -75,28 +73,25 @@ class StaticPage extends \ElggObject {
 		}
 		
 		// remove sub pages
-		$ia = elgg_set_ignore_access(true);
-		
-		/* @var $batch \ElggBatch */
-		$batch = elgg_get_entities([
-			'type' => 'object',
-			'subtype' => self::SUBTYPE,
-			'metadata_name_value_pairs' => [
-				'name' => 'parent_guid',
-				'value' => $guid,
-			],
-			'limit' => false,
-			'batch' => true,
-			'batch_inc_offset' => false,
-		]);
-		
-		/* @var $entity \StaticPage */
-		foreach ($batch as $entity) {
-			$entity->delete($recursive);
-		}
-		
-		// restore access
-		elgg_set_ignore_access($ia);
+		elgg_call(ELGG_IGNORE_ACCESS, function() use ($guid, $recursive) {
+			/* @var $batch \ElggBatch */
+			$batch = elgg_get_entities([
+				'type' => 'object',
+				'subtype' => self::SUBTYPE,
+				'metadata_name_value_pairs' => [
+					'name' => 'parent_guid',
+					'value' => $guid,
+				],
+				'limit' => false,
+				'batch' => true,
+				'batch_inc_offset' => false,
+			]);
+			
+			/* @var $entity \StaticPage */
+			foreach ($batch as $entity) {
+				$entity->delete($recursive);
+			}
+		});
 		
 		return $result;
 	}
@@ -165,7 +160,7 @@ class StaticPage extends \ElggObject {
 		}
 		
 		$parent_entity = get_entity($parent_guid);
-		if (!($parent_entity instanceof \StaticPage)) {
+		if (!$parent_entity instanceof \StaticPage) {
 			return false;
 		}
 		
