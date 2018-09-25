@@ -6,7 +6,7 @@ if (empty($guid)) {
 }
 
 $entity = get_entity($guid);
-if (!($entity instanceof StaticPage) || !$entity->canEdit()) {
+if (!$entity instanceof StaticPage || !$entity->canEdit()) {
 	return elgg_error_response(elgg_echo('actionunauthorized'));
 }
 

@@ -1,29 +1,30 @@
 <?php
+
 $container_guid = (int) get_input('container_guid');
 $guids = get_input('ordered_guids');
 
 if (empty($container_guid) || empty($guids)) {
-	return;
+	return elgg_error_response();
 }
 
 $container_entity = get_entity($container_guid);
 if (empty($container_entity)) {
-	return;
+	return elgg_error_response();
 }
 
 if (!($container_entity instanceof ElggSite) && !($container_entity instanceof ElggGroup)) {
-	return;
+	return elgg_error_response();
 }
 
 if (!$container_entity->canEdit()) {
-	return;
+	return elgg_error_response();
 }
 
 $order = 1;
 foreach ($guids as $guid) {
 	$page_entity = get_entity($guid);
 	
-	if (!elgg_instanceof($page_entity, 'object', 'static')) {
+	if (!$page_entity instanceof StaticPage) {
 		continue;
 	}
 
@@ -35,3 +36,5 @@ foreach ($guids as $guid) {
 	
 	$order++;
 }
+
+return elgg_ok_response();

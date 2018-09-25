@@ -27,39 +27,31 @@ if (empty($friendly_title)) {
 }
 
 $owner = get_entity($owner_guid);
-if (!elgg_instanceof($owner, 'group')) {
+if (!$owner instanceof ElggGroup) {
 	$owner = elgg_get_site_entity();
 }
 
-$can_write = $owner->canWriteToContainer(0, 'object', 'static');
-if ($can_write) {
-	$ia = elgg_set_ignore_access(true);
-}
-
-if ($guid == $parent_guid) {
+if ($guid === $parent_guid) {
 	// can't link to self
 	$parent_guid = 0;
 }
 
-$ia = elgg_set_ignore_access(true);
-$parent = get_entity($parent_guid);
-elgg_set_ignore_access($ia);
+$parent = elgg_call(ELGG_IGNORE_ACCESS, function () use ($parent_guid){
+	return get_entity($parent_guid);
+});
 
-if (!($parent instanceof StaticPage)) {
+if (!$parent instanceof StaticPage) {
 	$parent_guid = 0;
 	unset($parent);
 }
 
-if ($can_write) {
-	elgg_set_ignore_access($ia);
-}
-
+$entity = false;
 if ($guid) {
-	$ia = elgg_set_ignore_access(true);
-	$entity = get_entity($guid);
-	elgg_set_ignore_access($ia);
+	$entity = elgg_call(ELGG_IGNORE_ACCESS, function () use ($guid){
+		return get_entity($guid);
+	});
 
-	if (!elgg_instanceof($entity, 'object', 'static') || !$entity->canEdit()) {
+	if (!$entity instanceof StaticPage || !$entity->canEdit()) {
 		return elgg_error_response();
 	}
 }
@@ -67,21 +59,20 @@ if ($guid) {
 $new_entity = false;
 if (!$entity) {
 	$entity = new \StaticPage();
-	$entity->owner_guid = $owner->getGUID();
-	$entity->container_guid = $owner->getGUID();
+	$entity->owner_guid = $owner->guid;
+	$entity->container_guid = $owner->guid;
 	$entity->access_id = $access_id;
 	
 	// new static pages should go on top
 	$entity->order = -time();
 	
-	$ia = elgg_set_ignore_access(true);
-	if (!$entity->save()) {
-		elgg_set_ignore_access($ia);
-		
+	$saved = elgg_call(ELGG_IGNORE_ACCESS, function () use (&$entity) {
+		return $entity->save();
+	});
+	
+	if (!$saved) {
 		return elgg_error_response(elgg_echo('actionunauthorized'));
 	}
-	
-	elgg_set_ignore_access($ia);
 	
 	$entity->parent_guid = $parent_guid;
 	
@@ -95,7 +86,7 @@ if ($parent_guid !== $entity->parent_guid) {
 	$parent_changed = true;
 	
 	// remove old tree relationships
-	remove_entity_relationships($entity->getGUID(), 'subpage_of');
+	remove_entity_relationships($entity->guid, 'subpage_of');
 }
 	
 if (($new_entity || $parent_changed) && $parent) {
@@ -105,7 +96,6 @@ if (($new_entity || $parent_changed) && $parent) {
 
 // check the children for the correct tree
 if ($parent_changed) {
-	
 	if ($parent) {
 		static_check_children_tree($entity, $parent->getRootPage()->guid);
 	} else {

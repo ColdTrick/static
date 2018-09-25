@@ -2,20 +2,29 @@
 
 $guid = (int) get_input('guid');
 if (empty($guid)) {
-	forward('static/all');
-}
-	
-$ia = elgg_set_ignore_access(true);
-$entity = get_entity($guid);
-elgg_set_ignore_access($ia);
-
-if (elgg_instanceof($entity, 'object', 'static') && $entity->canEdit()) {
-	$entity->delete();
+	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
+$entity = elgg_call(ELGG_IGNORE_ACCESS, function() use ($guid) {
+	return get_entity($guid);
+});
+
+if (!$entity instanceof StaticPage || !$entity->canDelete()) {
+	return elgg_error_response(elgg_echo('entity:delete:permission_denied'));
+}
+
+$display_name = $entity->getDisplayName();
 $container = $entity->getContainerEntity();
-if ($container instanceof ElggGroup) {
-	forward('static/group/' . $container->guid);
+
+if (!$entity->delete()) {
+	return elgg_error_response(elgg_echo('entity:delete:fail', [$display_name]));
 }
 
-forward('static/all');
+$forward_url = elgg_generate_url('collection:object:static:all');
+if ($container instanceof ElggGroup) {
+	$forward_url = elgg_generate_url('collection:object:static:group', [
+		'guid' => $container->guid,
+	]);
+}
+
+return elgg_ok_response('', '', $forward_url);

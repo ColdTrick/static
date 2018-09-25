@@ -7,32 +7,29 @@ if (empty($guids)) {
 }
 
 // fetch the entity with access ignored (for moderators)
-$ia = elgg_set_ignore_access(true);
-$parent = get_entity($guid);
-elgg_set_ignore_access($ia);
+$parent = elgg_call(ELGG_IGNORE_ACCESS, function () use ($guid) {
+	return get_entity($guid);
+});
 
-if (!($parent instanceof \StaticPage) || !$parent->canEdit()) {
+if (!$parent instanceof \StaticPage || !$parent->canEdit()) {
 	return elgg_error_response(elgg_echo('actionunauthorized'));
 }
 
 // ignore access (for moderators)
-$ia = elgg_set_ignore_access(true);
-
-$order = 1;
-foreach ($guids as $child_guid) {
-	$child = get_entity($child_guid);
-	if (!($child instanceof \StaticPage)) {
-		continue;
-	}
+elgg_call(ELGG_IGNORE_ACCESS, function () use ($guids, $guid) {
+	$order = 1;
+	foreach ($guids as $child_guid) {
+		$child = get_entity($child_guid);
+		if (!$child instanceof \StaticPage) {
+			continue;
+		}
+		
+		$child->parent_guid = $guid;
+		$child->order = $order;
 	
-	$child->parent_guid = $guid;
-	$child->order = $order;
-
-	$order++;
-}
-
-// restore access
-elgg_set_ignore_access($ia);
+		$order++;
+	}
+});
 
 // clear menu cache
 $parent->getRootPage()->clearMenuCache();
