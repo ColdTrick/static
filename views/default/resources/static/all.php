@@ -5,7 +5,7 @@ elgg_gatekeeper();
 $site = elgg_get_site_entity();
 
 $entities = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
-	elgg_get_entities([
+	return elgg_get_entities([
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
 		'metadata_name_value_pairs' => [
