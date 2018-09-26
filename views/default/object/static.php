@@ -27,6 +27,7 @@ if (elgg_extract('full_view', $vars)) {
 		'show_summary' => true,
 		'body' => $body,
 		'icon_entity' => $entity->getLastEditor(),
+		'byline' => false,
 	];
 	$params = $params + $vars;
 	
@@ -37,6 +38,7 @@ if (elgg_extract('full_view', $vars)) {
 		'icon' => true,
 		'icon_entity' => $entity->getLastEditor(),
 		'content' => false,
+		'byline' => false,
 	];
 	$params = $params + $vars;
 	echo elgg_view('object/elements/summary', $params);
