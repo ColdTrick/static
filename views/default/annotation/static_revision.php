@@ -13,6 +13,6 @@ $output = elgg_view('output/url', [
 	'text' => $owner->getDisplayName(),
 ]);
 
-$output .= elgg_format_element('span', ['class' => 'elgg-subtext'], elgg_view_friendly_time($annotation->time_created));
+$output .= elgg_format_element('span', ['class' => 'mls'], elgg_view_friendly_time($annotation->time_created));
 
 echo elgg_format_element('div', [], $output);
