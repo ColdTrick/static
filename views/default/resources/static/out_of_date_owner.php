@@ -1,20 +1,20 @@
 <?php
 
+use Elgg\EntityPermissionsException;
+use Elgg\PageNotFoundException;
+use Elgg\Database\QueryBuilder;
+use Elgg\Database\Clauses\OrderByClause;
+
 elgg_gatekeeper();
+elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'user');
 
 if (!static_out_of_date_enabled()) {
-	forward(REFERER);
+	throw new PageNotFoundException();
 }
 
 $page_owner = elgg_get_page_owner_entity();
-if (!$page_owner instanceof ElggUser) {
-	register_error(elgg_echo('pageownerunavailable', [elgg_get_page_owner_guid()]));
-	forward(REFERER);
-}
-
 if (!$page_owner->canEdit()) {
-	register_error(elgg_echo('limited_access'));
-	forward(REFERER);
+	throw new EntityPermissionsException();
 }
 
 $dbprefix = elgg_get_config('dbprefix');
@@ -35,14 +35,14 @@ $options = [
 					WHERE name = 'static_revision'
 					ORDER BY entity_guid, time_created DESC) a1
 				GROUP BY a1.entity_guid) a2
-			WHERE a2.owner_guid = {$page_owner->getGUID()})
+			WHERE a2.owner_guid = {$page_owner->guid})
 		",
 	],
-	'order_by' => 'e.time_updated DESC',
+	'order_by' => new OrderByClause('e.time_updated', 'DESC'),
 	'no_results' => elgg_echo('static:out_of_date:none'),
 ];
 
-$title_text = elgg_echo('static:out_of_date:owner:title', [$page_owner->name]);
+$title_text = elgg_echo('static:out_of_date:owner:title', [$page_owner->getDisplayName()]);
 
 $body = elgg_list_entities($options);
 

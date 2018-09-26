@@ -2,7 +2,7 @@
 
 $name = elgg_extract('name', $vars);
 $owner = elgg_extract('owner', $vars);
-if (empty($owner)) {
+if (!$owner instanceof ElggEntity) {
 	return;
 }
 elgg_require_js('static/edit');
@@ -27,19 +27,20 @@ echo elgg_view('input/hidden', [
 ]);
 
 // are there root pages in the container?
-$parent_pages = new ElggBatch('elgg_get_entities', [
+$parent_pages = elgg_get_entities([
 	'type' => 'object',
 	'subtype' => \StaticPage::SUBTYPE,
-	'container_guid' => $owner->getGUID(),
+	'container_guid' => $owner->guid,
 	'metadata_name_value_pairs' => [
 		'parent_guid' => 0,
 	],
 	'limit' => false,
+	'batch' => true,
 ]);
 
 $parent_select = [0 => elgg_echo('static:new:parent:top_level')];
 foreach ($parent_pages as $parent_page) {
-	$parent_select[$parent_page->guid] = $parent_page->title;
+	$parent_select[$parent_page->guid] = $parent_page->getDisplayName();
 }
 
 if ($parent_entity) {
@@ -58,7 +59,7 @@ echo elgg_view('input/select', [
 	'class' => 'static-edit-top-parent-select',
 ]);
 
-if (!($parent_entity instanceof \StaticPage)) {
+if (!$parent_entity instanceof \StaticPage) {
 	return;
 }
 

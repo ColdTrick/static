@@ -1,5 +1,7 @@
 <?php
 
+use Elgg\EntityPermissionsException;
+
 elgg_gatekeeper();
 
 $guid = (int) elgg_extract('guid', $vars);
@@ -8,29 +10,28 @@ $sidebar = '';
 $page_owner = elgg_get_page_owner_entity();
 $site = elgg_get_site_entity();
 
-if (!($page_owner instanceof ElggGroup)) {
-	elgg_set_page_owner_guid($site->getGUID());
+if (!$page_owner instanceof ElggGroup) {
+	elgg_set_page_owner_guid($site->guid);
 	$page_owner = $site;
 }
 $body_vars['owner'] = $page_owner;
 
-elgg_push_breadcrumb(elgg_echo('static:all'), 'static/all');
+elgg_push_breadcrumb(elgg_echo('static:all'), elgg_generate_url('collection:object:static'));
 
 $ia = elgg_set_ignore_access(true);
 if ($guid) {
 	
-	elgg_entity_gatekeeper($guid, 'object', 'static');
+	elgg_entity_gatekeeper($guid, 'object', StaticPage::SUBTYPE);
 	
 	$entity = get_entity($guid);
-	
 	if (!$entity->canEdit()) {
 		elgg_set_ignore_access($ia);
-		forward(REFERER);
+		throw new EntityPermissionsException();
 	}
 	
 	$body_vars['entity'] = $entity;
 	
-	elgg_set_page_owner_guid($entity->getOwnerGUID());
+	elgg_set_page_owner_guid($entity->owner_guid);
 	$page_owner = elgg_get_page_owner_entity();
 	$body_vars['owner'] = $page_owner;
 	
@@ -40,11 +41,13 @@ if ($guid) {
 }
 
 if ($page_owner instanceof ElggGroup) {
-	elgg_push_breadcrumb(elgg_echo('static:groups:title'), "static/group/{$page_owner->getGUID()}");
+	elgg_push_breadcrumb(elgg_echo('static:groups:title'), elgg_generate_url('collection:object:static:group', [
+		'guid' => $page_owner->guid,
+	]));
 }
 
 if (!empty($entity)) {
-	elgg_push_breadcrumb($entity->title, $entity->getURL());
+	elgg_push_breadcrumb($entity->getDisplayName(), $entity->getURL());
 }
 
 $body = elgg_view_form('static/edit', [

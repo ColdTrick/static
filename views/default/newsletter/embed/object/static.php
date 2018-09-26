@@ -1,7 +1,7 @@
 <?php
 
 $entity = elgg_extract('entity', $vars);
-if (empty($entity) || !elgg_instanceof($entity, 'object')) {
+if (!$entity instanceof StaticPage) {
 	return;
 }
 $newsletter = elgg_extract('newsletter', $vars);
@@ -9,7 +9,7 @@ $container = $entity->getContainerEntity();
 
 // data for embedding
 $data = [
-	'data-title' => $entity->title,
+	'data-title' => $entity->getDisplayName(),
 	'data-description' => $entity->description,
 	'data-url' => $entity->getURL(),
 ];
@@ -24,21 +24,21 @@ if (!empty($excerpt)) {
 }
 
 // icon support
-if ($entity->icontime) {
+if ($entity->hasIcon('large')) {
 	$data['data-icon-url'] = $entity->getIconURL('large');
 }
 
 // subtitle
 $subtitle = [elgg_echo('item:object:' . $entity->getSubtype())];
 
-if (elgg_instanceof($container, 'group')) {
-	$subtitle[] = elgg_echo('river:ingroup', [$container->name]);
+if ($container instanceof ElggGroup) {
+	$subtitle[] = elgg_echo('river:ingroup', [$container->getDisplayName()]);
 }
 
 // build listing view
 $params = [
 	'entity' => $entity,
-	'title' => $entity->title,
+	'title' => $entity->getDisplayName(),
 	'subtitle' => implode(' ', $subtitle),
 	'tags' => false,
 	'content' => $excerpt,

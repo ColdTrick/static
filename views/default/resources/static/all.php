@@ -4,20 +4,18 @@ elgg_gatekeeper();
 
 $site = elgg_get_site_entity();
 
-$ia = elgg_set_ignore_access(true);
-
-$entities = elgg_get_entities([
-	'type' => 'object',
-	'subtype' => StaticPage::SUBTYPE,
-	'metadata_name_value_pairs' => [
-		'parent_guid' => 0,
-	],
-	'limit' => false,
-	'container_guid' => $site->guid,
-	'order_by_metadata' => ['title' => 'ASC'],
-]);
-
-elgg_set_ignore_access($ia);
+$entities = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
+	elgg_get_entities([
+		'type' => 'object',
+		'subtype' => StaticPage::SUBTYPE,
+		'metadata_name_value_pairs' => [
+			'parent_guid' => 0,
+		],
+		'limit' => false,
+		'container_guid' => $site->guid,
+		'order_by_metadata' => ['title' => 'ASC'],
+	]);
+});
 
 if ($entities) {
 	
@@ -52,7 +50,7 @@ if ($entities) {
 	$body = elgg_echo('static:admin:empty');
 }
 
-if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', 'static')) {
+if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', StaticPage::SUBTYPE)) {
 	elgg_register_title_button();
 }
 

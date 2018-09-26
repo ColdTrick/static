@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Site navigation menu
  *

@@ -1,12 +1,12 @@
 <?php
 
 $entity = elgg_extract('entity', $vars);
-if (empty($entity)) {
+if (!$entity instanceof StaticPage) {
 	return;
 }
 
 $annotations = elgg_list_annotations([
-	'guid' => $entity->getGUID(),
+	'guid' => $entity->guid,
 	'annotation_name' => 'static_revision',
 	'limit' => false,
 ]);

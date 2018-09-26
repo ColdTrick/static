@@ -1,9 +1,12 @@
 <?php
 
 $entity = elgg_extract('entity', $vars);
+if (!$entity instanceof StaticPage) {
+	return;
+}
 
 $body = elgg_view('output/url', [
-	'text' => $entity->title,
+	'text' => $entity->getDisplayName(),
 	'href' => $entity->getURL(),
 ]);
 

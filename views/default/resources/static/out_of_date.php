@@ -1,9 +1,12 @@
 <?php
 
+use Elgg\PageNotFoundException;
+use Elgg\Database\Clauses\OrderByClause;
+
 elgg_admin_gatekeeper();
 
 if (!static_out_of_date_enabled()) {
-	forward(REFERER);
+	throw new PageNotFoundException();
 }
 
 $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
@@ -31,9 +34,9 @@ $body = elgg_view('input/form', [
 $body .= elgg_list_entities([
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
-	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->getGUID(),
+	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->guid,
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
-	'order_by' => 'e.time_updated DESC',
+	'order_by' => new OrderByClause('e.time_updated', 'DESC'),
 	'no_results' => elgg_echo('static:out_of_date:none'),
 ]);
 

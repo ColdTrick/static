@@ -1,8 +1,9 @@
 <?php
 
+/* @var $widget ElggWidget */
 $widget = elgg_extract('entity', $vars);
 $group = $widget->getOwnerEntity();
-if (empty($group) || !elgg_instanceof($group, 'group')) {
+if (!$group instanceof ElggGroup) {
 	return;
 }
 
@@ -10,7 +11,7 @@ if (!static_group_enabled($group)) {
 	return;
 }
 
-$can_write = $group->canWriteToContainer(0, 'object', 'static');
+$can_write = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
 
 if ($can_write) {
 	$ia = elgg_set_ignore_access(true);

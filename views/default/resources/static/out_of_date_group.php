@@ -1,25 +1,21 @@
 <?php
 
+use Elgg\PageNotFoundException;
+use Elgg\EntityPermissionsException;
+use Elgg\Database\Clauses\OrderByClause;
+
 elgg_gatekeeper();
-elgg_group_gatekeeper();
+elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'group');
 
 if (!static_out_of_date_enabled()) {
-	forward(REFERER);
+	throw new PageNotFoundException();
 }
+
+elgg_group_tool_gatekeeper('static', elgg_get_page_owner_guid());
 
 $page_owner = elgg_get_page_owner_entity();
-if (!($page_owner instanceof ElggGroup)) {
-	register_error(elgg_echo('pageownerunavailable', [elgg_get_page_owner_guid()]));
-	forward(REFERER);
-}
-
-if (!static_group_enabled($page_owner)) {
-	forward(REFERER);
-}
-
 if (!$page_owner->canEdit()) {
-	register_error(elgg_echo('limited_access'));
-	forward(REFERER);
+	throw new EntityPermissionsException();
 }
 
 $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
@@ -27,9 +23,9 @@ $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 $options = [
 	'type' => 'object',
 	'subtype' => StaticPage::SUBTYPE,
-	'container_guid' => $page_owner->getGUID(),
+	'container_guid' => $page_owner->guid,
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
-	'order_by' => 'e.time_updated DESC',
+	'order_by' => new OrderByClause('e.time_updated', 'DESC'),
 	'no_results' => elgg_echo('static:out_of_date:none'),
 ];
 

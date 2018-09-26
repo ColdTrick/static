@@ -1,8 +1,7 @@
 <?php
 
-/* @var $entity StaticPage */
 $entity = elgg_extract('entity', $vars);
-if (!($entity instanceof StaticPage)) {
+if (!$entity instanceof StaticPage) {
 	return;
 }
 
@@ -13,8 +12,11 @@ if (!$entity->isOutOfDate()) {
 $message = elgg_echo('static:out_of_date:message');
 if ($entity->canEdit()) {
 	$message .= elgg_view('output/url', [
-		'text' => elgg_view_icon('hand-pointer-o') . elgg_echo('static:out_of_date:message:mark'),
-		'href' => "action/static/mark_not_out_of_date?guid={$entity->getGUID()}",
+		'icon' => 'hand-pointer-o',
+		'text' => elgg_echo('static:out_of_date:message:mark'),
+		'href' => elgg_generate_action_url('static/mark_not_out_of_date', [
+			'guid' => $entity->guid,
+		]),
 		'confirm' => true,
 		'class' => 'mls',
 		'id' => 'static-out-of-date-touch-link',
