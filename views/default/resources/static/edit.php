@@ -16,7 +16,7 @@ if (!$page_owner instanceof ElggGroup) {
 }
 $body_vars['owner'] = $page_owner;
 
-elgg_push_breadcrumb(elgg_echo('static:all'), elgg_generate_url('collection:object:static'));
+elgg_push_breadcrumb(elgg_echo('static:all'), elgg_generate_url('collection:object:static:all'));
 
 $ia = elgg_set_ignore_access(true);
 if ($guid) {
