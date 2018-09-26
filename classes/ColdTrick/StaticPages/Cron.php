@@ -2,6 +2,8 @@
 
 namespace ColdTrick\StaticPages;
 
+use Elgg\Database\Clauses\OrderByClause;
+
 /**
  * Cron
  */
@@ -38,13 +40,14 @@ class Cron {
 			'limit' => false,
 			'modified_time_upper' => $compare_ts,
 			'modified_time_lower' => $compare_ts - (24 * 60 * 60),
-			'order_by' => 'e.time_updated DESC',
+			'order_by' => new OrderByClause('e.time_updated', 'DESC'),
+			'batch' => true,
 		];
 		
 		// ignore access
 		$ia = elgg_set_ignore_access(true);
 		
-		$batch = new \ElggBatch('elgg_get_entities', $options);
+		$batch = elgg_get_entities($options);
 		/* @var $entity \StaticPage */
 		foreach ($batch as $entity) {
 			
@@ -86,7 +89,7 @@ class Cron {
 				$options['modified_time_upper'] = $compare_ts;
 				$options['modified_time_lower'] = $compare_ts - (24 * 60 * 60);
 				
-				$batch = new \ElggBatch('elgg_get_entities', $options);
+				$batch = elgg_get_entities($options);
 				/* @var $entity \StaticPage */
 				foreach ($batch as $entity) {
 					
@@ -237,7 +240,9 @@ class Cron {
 			$message = elgg_echo('static:out_of_date:notification:message', [
 				$user->getDisplayName(),
 				$list,
-				elgg_normalize_url("static/out_of_date/{$user->username}"),
+				elgg_normalize_url(elgg_generate_url('collection:object:static:user:out_of_date', [
+					'username' => $user->username,
+				])),
 			]);
 			
 			// send notification

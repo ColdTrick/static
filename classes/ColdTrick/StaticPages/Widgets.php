@@ -24,13 +24,15 @@ class Widgets {
 		}
 		
 		$entity = elgg_extract('entity', $params);
-		if (!elgg_instanceof($entity, 'object', 'widget')) {
+		if (!$entity instanceof \ElggWidget) {
 			return;
 		}
 		
 		switch ($entity->handler) {
 			case 'static_groups':
-				$return_value = "static/group/{$entity->getOwnerGUID()}";
+				$return_value = elgg_generate_url('collection:object:static:group', [
+					'guid' => $entity->owner_guid
+				]);
 				break;
 		}
 	
@@ -50,7 +52,7 @@ class Widgets {
 	public static function groupToolWidgets($hook, $type, $return_value, $params) {
 	
 		$entity = elgg_extract('entity', $params);
-		if (!elgg_instanceof($entity, 'group')) {
+		if (!$entity instanceof \ElggGroup) {
 			return;
 		}
 		

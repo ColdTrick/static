@@ -28,16 +28,15 @@ class PageHandler {
 			return;
 		}
 		
-		$ia = elgg_set_ignore_access(true);
-		$entities = elgg_get_entities([
-			'type' => 'object',
-			'subtype' => \StaticPage::SUBTYPE,
-			'limit' => 1,
-			'metadata_name_value_pairs' => ['friendly_title' => $identifier],
-			'metadata_case_sensitive' => false,
-		]);
-		elgg_set_ignore_access($ia);
-	
+		$entities = elgg_call(ELGG_IGNORE_ACCESS, function() use ($identifier) {
+			return elgg_get_entities([
+				'type' => 'object',
+				'subtype' => \StaticPage::SUBTYPE,
+				'limit' => 1,
+				'metadata_name_value_pairs' => ['friendly_title' => $identifier],
+				'metadata_case_sensitive' => false,
+			]);
+		});
 		if (empty($entities)) {
 			return;
 		}

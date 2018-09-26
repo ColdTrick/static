@@ -26,13 +26,13 @@ class Permissions {
 		$entity = elgg_extract('entity', $params);
 		$user = elgg_extract('user', $params);
 	
-		if (!elgg_instanceof($entity, 'object', 'static') || !elgg_instanceof($user, 'user')) {
+		if (!$entity instanceof \StaticPage || !$user instanceof \ElggUser) {
 			return;
 		}
 		
 		// check if the owner is a group
 		$owner = $entity->getOwnerEntity();
-		if (!empty($owner) && elgg_instanceof($owner, 'group')) {
+		if ($owner instanceof \ElggGroup) {
 			// if you can edit the group, you can edit the static page
 			if ($owner->canEdit($user->getGUID())) {
 				return true;
@@ -40,11 +40,9 @@ class Permissions {
 		}
 	
 		// check if the user is a moderator of this static page
-		$ia = elgg_set_ignore_access(true);
 		$moderators = $entity->moderators;
 		$parent_guid = $entity->parent_guid;
-		elgg_set_ignore_access($ia);
-
+		
 		if (!empty($moderators)) {
 			if (!is_array($moderators)) {
 				$moderators = [$moderators];

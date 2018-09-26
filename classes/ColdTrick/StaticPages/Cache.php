@@ -69,23 +69,22 @@ class Cache {
 			'subtype' => \StaticPage::SUBTYPE,
 			'limit' => false,
 			'relationship' => 'subpage_of',
+			'batch' => true,
 		];
 	
 		// ignore access
-		$ia = elgg_set_ignore_access(true);
-	
-		$batch = new \ElggBatch('elgg_get_entities', $options);
-		foreach ($batch as $entity) {
-			// reset cache for the pages
-			$file = new \ElggFile();
-			$file->owner_guid = $entity->guid;
-			$file->setFilename('static_menu_item_cache');
-			if ($file->exists()) {
-				$file->delete();
+		elgg_call(ELGG_IGNORE_ACCESS, function() use ($options) {
+			$batch = elgg_get_entities($options);
+			foreach ($batch as $entity) {
+				// reset cache for the pages
+				$file = new \ElggFile();
+				$file->owner_guid = $entity->guid;
+				$file->setFilename('static_menu_item_cache');
+				if ($file->exists()) {
+					$file->delete();
+				}
 			}
-		}
-	
-		elgg_set_ignore_access($ia);
+		});
 	}
 	
 	/**
@@ -135,33 +134,31 @@ class Cache {
 			'relationship' => 'subpage_of',
 			'limit' => false,
 			'inverse_relationship' => true,
+			'batch' => true,
 		]);
-			
-		if ($submenu_entities) {
-			foreach ($submenu_entities as $submenu_item) {
-					
-				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
-					continue;
-				}
-					
-				$priority = (int) $submenu_item->order;
-				if (empty($priority)) {
-					$priority = (int) $submenu_item->time_created;
-				}
+		foreach ($submenu_entities as $submenu_item) {
 				
-				$menu_item = \ElggMenuItem::factory([
-					'name' => $submenu_item->guid,
-					'rel' => $submenu_item->guid,
-					'href' => $submenu_item->getURL(),
-					'text' => elgg_format_element('span', [], $submenu_item->title),
-					'priority' => $priority,
-					'parent_name' => $submenu_item->parent_guid,
-					'section' => 'static',
-				]);
-				$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
-				
-				$static_items[$submenu_item->guid] = $menu_item;
+			if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
+				continue;
 			}
+				
+			$priority = (int) $submenu_item->order;
+			if (empty($priority)) {
+				$priority = (int) $submenu_item->time_created;
+			}
+			
+			$menu_item = \ElggMenuItem::factory([
+				'name' => $submenu_item->guid,
+				'rel' => $submenu_item->guid,
+				'href' => $submenu_item->getURL(),
+				'text' => elgg_format_element('span', [], $submenu_item->title),
+				'priority' => $priority,
+				'parent_name' => $submenu_item->parent_guid,
+				'section' => 'static',
+			]);
+			$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
+			
+			$static_items[$submenu_item->guid] = $menu_item;
 		}
 			
 		elgg_set_ignore_access($ia);
