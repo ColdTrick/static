@@ -47,11 +47,11 @@ define(function(require) {
 
 		$('.elgg-menu-page-static li a span').on('click', function(event) {
 
-			if ($(this).parent().hasClass('dragged')) {
+			if ($(this).closest('a').hasClass('dragged')) {
 				return;
 			}
-				
-			var href = $(this).parent().attr('href');
+			
+			var href = $(this).closest('a').attr('href');
 			document.location = href;
 
 			event.preventDefault();

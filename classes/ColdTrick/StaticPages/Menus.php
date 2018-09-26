@@ -19,11 +19,14 @@ class Menus {
 	 * @return \ElggMenuItem[]
 	 */
 	public static function pageMenuPrepare($hook, $type, $return_value, $params) {
+		
 		$static = elgg_extract('static', $return_value);
-	
-		if (is_array($static)) {
-			$return_value['static'] = self::orderMenu($static);
+		if (!$static instanceof \Elgg\Menu\MenuSection) {
+			return;
 		}
+		
+		$ordered = self::orderMenu($static->getItems());
+		$return_value['static'] = $static->fill($ordered);
 	
 		return $return_value;
 	}
@@ -36,7 +39,7 @@ class Menus {
 	 * @return array
 	 */
 	private static function orderMenu($menu_items) {
-	
+		
 		if (!is_array($menu_items)) {
 			return $menu_items;
 		}
@@ -52,7 +55,7 @@ class Menus {
 			$ordered[$menu_item->getPriority()] = $menu_item;
 		}
 		ksort($ordered);
-
+		
 		return $ordered;
 	}
 	
@@ -119,7 +122,7 @@ class Menus {
 	public static function ownerBlockMenuRegister($hook, $type, $return_value, $params) {
 
 		$owner = elgg_extract('entity', $params);
-		if (empty($owner) || !elgg_instanceof($owner, 'group')) {
+		if (!$owner instanceof \ElggGroup) {
 			return;
 		}
 	
@@ -130,7 +133,9 @@ class Menus {
 		$return_value[] = \ElggMenuItem::factory([
 			'name' => 'static',
 			'text' => elgg_echo('static:groups:owner_block'),
-			'href' => "static/group/{$owner->getGUID()}",
+			'href' => elgg_generate_url('collection:object:static:group', [
+				'guid' => $owner->guid,
+			]),
 		]);
 	
 		return $return_value;
