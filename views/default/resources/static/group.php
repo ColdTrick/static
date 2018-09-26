@@ -65,7 +65,7 @@ if ($entities) {
 }
 
 if ($can_write) {
-	elgg_register_title_button();
+	elgg_register_title_button('static', 'add', 'object', StaticPage::SUBTYPE);
 }
 
 $title_text = elgg_echo('static:groups:title');

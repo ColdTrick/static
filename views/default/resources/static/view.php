@@ -31,7 +31,7 @@ if ($entity->canEdit()) {
 		'name' => 'create_subpage',
 		'text' => elgg_echo('static:add:subpage'),
 		'href' => elgg_generate_url('add:object:static', [
-			'container_guid' => $entity->owner_guid,
+			'guid' => $entity->owner_guid,
 			'parent_guid' => $entity->guid,
 		]),
 		'link_class' => 'elgg-button elgg-button-action',

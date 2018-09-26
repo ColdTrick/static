@@ -51,7 +51,7 @@ if ($entities) {
 }
 
 if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', StaticPage::SUBTYPE)) {
-	elgg_register_title_button();
+	elgg_register_title_button('static', 'add', 'object', StaticPage::SUBTYPE);
 }
 
 $title_text = elgg_echo('static:all');

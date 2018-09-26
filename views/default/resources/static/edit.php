@@ -20,24 +20,29 @@ elgg_push_breadcrumb(elgg_echo('static:all'), elgg_generate_url('collection:obje
 
 $ia = elgg_set_ignore_access(true);
 if ($guid) {
-	
-	elgg_entity_gatekeeper($guid, 'object', StaticPage::SUBTYPE);
-	
 	$entity = get_entity($guid);
-	if (!$entity->canEdit()) {
+	if ($entity instanceof StaticPage && !$entity->canEdit()) {
 		elgg_set_ignore_access($ia);
 		throw new EntityPermissionsException();
 	}
 	
-	$body_vars['entity'] = $entity;
-	
-	elgg_set_page_owner_guid($entity->owner_guid);
-	$page_owner = elgg_get_page_owner_entity();
-	$body_vars['owner'] = $page_owner;
-	
-	$sidebar = elgg_view('static/sidebar/revisions', [
-		'entity' => $entity,
-	]);
+	if ($entity instanceof StaticPage) {
+		// edit
+		$body_vars['entity'] = $entity;
+		
+		elgg_set_page_owner_guid($entity->owner_guid);
+		$page_owner = elgg_get_page_owner_entity();
+		$body_vars['owner'] = $page_owner;
+		
+		$sidebar = elgg_view('static/sidebar/revisions', [
+			'entity' => $entity,
+		]);
+	} elseif ($entity instanceof ElggGroup) {
+		// new in group
+		elgg_set_page_owner_guid($entity->guid);
+		$page_owner = elgg_get_page_owner_entity();
+		$body_vars['owner'] = $page_owner;
+	}
 }
 
 if ($page_owner instanceof ElggGroup) {

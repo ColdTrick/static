@@ -30,7 +30,7 @@ return [
 			'resource' => 'static/view',
 		],
 		'add:object:static' => [
-			'path' => '/static/add/{container_guid?}',
+			'path' => '/static/add/{guid?}',
 			'resource' => 'static/edit',
 		],
 		'edit:object:static' => [
