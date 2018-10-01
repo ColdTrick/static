@@ -2,7 +2,3 @@
 .static-edit-sub-parent-select {
 	max-width: 200px;	
 }
-
-#static-out-of-date-message.elgg-message {
-	cursor: default;
-}
