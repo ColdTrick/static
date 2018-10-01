@@ -3,13 +3,13 @@ define(function(require) {
 	var elgg = require('elgg');
 
 	var init = function() {
-		$('.elgg-menu-page-static > li.static-sortable ul').sortable({
+		$('.elgg-menu[data-menu-section="static"] > li.static-sortable ul').sortable({
 			items: '> li',
-			connectWith: '.elgg-menu-page-static > li.static-sortable ul',
+			connectWith: '.elgg-menu[data-menu-section="static"] > li.static-sortable ul',
 			forcePlaceholderSize: true,
 			revert: true,
 			tolerance: 'pointer',
-			containment: '.elgg-menu-page-static',
+			containment: '.elgg-menu[data-menu-section="static"]',
 			start:  function(event, ui) {
 				$(ui.item).find(' > a').addClass('dragged');
 			},
@@ -37,7 +37,7 @@ define(function(require) {
 			}
 		});
 
-		$('.elgg-menu-page-static li a').on('click', function(event) {
+		$('.elgg-menu[data-menu-section="static"] li a').on('click', function(event) {
 			if ($(this).hasClass('dragged')) {
 				event.preventDefault();
 				event.stopImmediatePropagation();
@@ -45,7 +45,7 @@ define(function(require) {
 			}
 		});
 
-		$('.elgg-menu-page-static li a span').on('click', function(event) {
+		$('.elgg-menu[data-menu-section="static"] li a span').on('click', function(event) {
 
 			if ($(this).closest('a').hasClass('dragged')) {
 				return;
