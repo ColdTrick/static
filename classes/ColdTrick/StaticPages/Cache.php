@@ -111,7 +111,7 @@ class Cache {
 			'name' => $root_entity->guid,
 			'rel' => $root_entity->guid,
 			'href' => $root_entity->getURL(),
-			'text' => elgg_format_element('span', [], $root_entity->title),
+			'text' => $root_entity->title,
 			'priority' => $priority,
 			'section' => 'static',
 		];
@@ -151,7 +151,7 @@ class Cache {
 				'name' => $submenu_item->guid,
 				'rel' => $submenu_item->guid,
 				'href' => $submenu_item->getURL(),
-				'text' => elgg_format_element('span', [], $submenu_item->title),
+				'text' => $submenu_item->title,
 				'priority' => $priority,
 				'parent_name' => $submenu_item->parent_guid,
 				'section' => 'static',
