@@ -17,7 +17,6 @@ return [
 	'static:settings:out_of_date:reminder_repeat:help' => "To send out the reminder of out-of-date content multiple times, set a number here. 0 means no reminders.",
 	
 	'static:admin:empty' => "No static pages created",
-	'static:list:info' => "Manage your static pages here. You can reorder them by dragging the pages to their new location.",
 	'static:all' => "Manage static pages",
 	'static:edit' => "Create/Edit a static page",
 	'static:new:permalink' => "Permalink",

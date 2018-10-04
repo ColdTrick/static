@@ -21,7 +21,6 @@ return [
 		'static/edit' => [],
 		'static/delete' => [],
 		'static/reorder' => [],
-		'static/reorder_root_pages' => [],
 		'static/mark_not_out_of_date' => [],
 	],
 	'routes' => [
