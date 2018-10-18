@@ -27,4 +27,4 @@ if ($container instanceof ElggGroup) {
 	]);
 }
 
-return elgg_ok_response('', '', $forward_url);
+return elgg_ok_response('', elgg_echo('entity:delete:success', [$display_name]), $forward_url);
