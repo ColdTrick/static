@@ -65,10 +65,22 @@ class StaticPage extends \ElggObject {
 	 * @see ElggEntity::delete()
 	 */
 	public function delete($recursive = true) {
+		
+		// do this here so we can ignore access later
+		if (!$this->canDelete()) {
+			return false;
+		}
+		
+		// ignore access, so moderators cleanup everything correctly
+		$ia = elgg_set_ignore_access(true);
+		
 		$guid = $this->guid;
 		
 		$result = parent::delete($recursive);
 		if ($result === false || $recursive !== true) {
+			// restore access
+			elgg_set_ignore_access($ia);
+			
 			return $result;
 		}
 		
