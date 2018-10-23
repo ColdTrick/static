@@ -25,14 +25,26 @@ class MigrateStatic extends Migrate {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see \ColdTrick\EntityTools\Migrate::setSupportedOptions()
+	 * @see \ColdTrick\EntityTools\Migrate::canBackDate()
 	 */
-	protected function setSupportedOptions() {
-		$this->supported_options = [
-			'backdate' => true,
-			'change_owner' => false,
-			'change_container' => true,
-		];
+	public function canBackDate() {
+		return true;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see \ColdTrick\EntityTools\Migrate::canChangeOwner()
+	 */
+	public function canChangeOwner() {
+		return false;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see \ColdTrick\EntityTools\Migrate::canChangeContainer()
+	 */
+	public function canChangeContainer() {
+		return true;
 	}
 
 	/**
