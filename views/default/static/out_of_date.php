@@ -12,7 +12,7 @@ if (!$entity->isOutOfDate()) {
 $message = elgg_echo('static:out_of_date:message');
 if ($entity->canEdit()) {
 	$message .= elgg_view('output/url', [
-		'icon' => 'hand-pointer-o',
+		'icon' => 'exclamation-triangle',
 		'text' => elgg_echo('static:out_of_date:message:mark'),
 		'href' => elgg_generate_action_url('static/mark_not_out_of_date', [
 			'guid' => $entity->guid,
