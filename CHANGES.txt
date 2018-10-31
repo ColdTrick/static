@@ -1,6 +1,10 @@
 Version history
 ===============
 
+5.4.2 (2018-10-31):
+
+- fixed: permissions for moderators during deletion
+
 5.4.1 (2018-06-15):
 
 - fixed: invalid characters in permalink no longer allowed
