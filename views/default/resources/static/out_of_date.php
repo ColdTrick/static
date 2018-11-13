@@ -9,6 +9,8 @@ if (!static_out_of_date_enabled()) {
 	throw new PageNotFoundException();
 }
 
+elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
+
 $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 $include_groups = (int) get_input('include_groups', 0);
 

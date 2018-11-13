@@ -42,6 +42,10 @@ if ($entity->canEdit()) {
 $owner = $entity->getOwnerEntity();
 if ($owner instanceof ElggGroup) {
 	elgg_set_page_owner_guid($owner->guid);
+	
+	elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $owner);
+} else {
+	elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
 }
 
 // show breadcrumb
@@ -64,6 +68,8 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity) {
 		elgg_push_breadcrumb($parent->getDisplayName(), $parent->getURL());
 	}
 });
+
+elgg_push_breadcrumb($entity->getDisplayName());
 
 $ia = elgg_set_ignore_access($entity->canEdit());
 

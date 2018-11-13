@@ -16,8 +16,6 @@ if (!$page_owner instanceof ElggGroup) {
 }
 $body_vars['owner'] = $page_owner;
 
-elgg_push_breadcrumb(elgg_echo('static:all'), elgg_generate_url('collection:object:static:all'));
-
 $ia = elgg_set_ignore_access(true);
 if ($guid) {
 	$entity = get_entity($guid);
@@ -46,12 +44,12 @@ if ($guid) {
 }
 
 if ($page_owner instanceof ElggGroup) {
-	elgg_push_breadcrumb(elgg_echo('static:groups:title'), elgg_generate_url('collection:object:static:group', [
-		'guid' => $page_owner->guid,
-	]));
+	elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $page_owner);
+} else {
+	elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
 }
 
-if (!empty($entity)) {
+if ($entity instanceof StaticPage) {
 	elgg_push_breadcrumb($entity->getDisplayName(), $entity->getURL());
 }
 

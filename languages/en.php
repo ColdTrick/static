@@ -2,6 +2,7 @@
 
 return [
 	'item:object:static' => "Static page",
+	'collection:object:static' => "Static pages",
 	
 	// settings
 	'static:settings:general:title' => "General settings",

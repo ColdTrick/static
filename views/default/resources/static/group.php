@@ -1,9 +1,9 @@
 <?php
-use Elgg\PageNotFoundException;
-
 /**
  * List the main static pages of this group
  */
+
+use Elgg\PageNotFoundException;
 
 elgg_gatekeeper();
 elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'group');
@@ -13,6 +13,8 @@ $group = elgg_get_page_owner_entity();
 if (!static_group_enabled($group)) {
 	throw new PageNotFoundException();
 }
+
+elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $group);
 
 $can_write = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
 

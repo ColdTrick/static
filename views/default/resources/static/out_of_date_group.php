@@ -18,6 +18,8 @@ if (!$page_owner->canEdit()) {
 	throw new EntityPermissionsException();
 }
 
+elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $page_owner);
+
 $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 
 $options = [
