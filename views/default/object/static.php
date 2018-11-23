@@ -5,6 +5,8 @@ if (!$entity instanceof \StaticPage) {
 	return;
 }
 
+$last_editor = $entity->getLastEditor();
+
 if (elgg_extract('full_view', $vars)) {
 	// out of date message
 	$body = elgg_view('static/out_of_date', $vars);
@@ -26,8 +28,8 @@ if (elgg_extract('full_view', $vars)) {
 	$params = [
 		'show_summary' => true,
 		'body' => $body,
-		'icon_entity' => $entity->getLastEditor(),
-		'byline' => false,
+		'icon_entity' => $last_editor,
+		'byline_owner_entity' => $last_editor,
 	];
 	$params = $params + $vars;
 	
@@ -36,9 +38,9 @@ if (elgg_extract('full_view', $vars)) {
 	// brief view
 	$params = [
 		'icon' => true,
-		'icon_entity' => $entity->getLastEditor(),
-		'content' => false,
-		'byline' => false,
+		'icon_entity' => $last_editor,
+		'byline_owner_entity' => $last_editor,
+		'content' => elgg_get_excerpt($entity->description),
 	];
 	$params = $params + $vars;
 	echo elgg_view('object/elements/summary', $params);
