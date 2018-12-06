@@ -43,10 +43,14 @@ class PageHandler {
 		
 		$entity = $entities[0];
 		
-		$content = elgg_view_resource('static/view', [
-			'guid' => $entity->guid
-		]);
-		
-		return elgg_ok_response($content);
+		try {
+			$content = elgg_view_resource('static/view', [
+				'guid' => $entity->guid
+			]);
+			
+			return elgg_ok_response($content);
+		} catch (\Elgg\HttpException $exception) {
+			return elgg_error_response($exception->getMessage(), REFERER, $exception->getCode());
+		}
 	}
 }
