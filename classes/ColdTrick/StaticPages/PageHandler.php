@@ -2,6 +2,8 @@
 
 namespace ColdTrick\StaticPages;
 
+use Elgg\Http\ErrorResponse;
+
 /**
  * PageHandler
  */
@@ -50,7 +52,7 @@ class PageHandler {
 			
 			return elgg_ok_response($content);
 		} catch (\Elgg\HttpException $exception) {
-			return elgg_error_response($exception->getMessage(), REFERER, $exception->getCode());
+			return new ErrorResponse($exception->getMessage(), $exception->getCode());
 		}
 	}
 }
