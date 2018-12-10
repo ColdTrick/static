@@ -1,5 +1,7 @@
 <?php
 
+use Elgg\Database\Clauses\OrderByClause;
+
 class StaticPage extends \ElggObject {
 	
 	const SUBTYPE = 'static';
@@ -205,14 +207,13 @@ class StaticPage extends \ElggObject {
 	 */
 	public function getLastRevision() {
 		
-		$ia = elgg_set_ignore_access(true);
-		$revisions = $this->getAnnotations([
-			'annotation_name' => 'static_revision',
-			'limit' => 1,
-			'reverse_order_by' => true,
-		]);
-		elgg_set_ignore_access($ia);
-		
+		$revisions = elgg_call(ELGG_IGNORE_ACCESS, function() {
+			return $this->getAnnotations([
+				'annotation_name' => 'static_revision',
+				'limit' => 1,
+				'order_by' => new OrderByClause('time_created', 'DESC'),
+			]);
+		});
 		if (empty($revisions)) {
 			return false;
 		}
