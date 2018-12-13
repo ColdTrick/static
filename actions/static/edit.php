@@ -16,8 +16,6 @@ $access_id = (int) get_input('access_id', ACCESS_PUBLIC);
 $enable_comments = get_input('enable_comments');
 $moderators = get_input('moderators');
 
-$remove_icon = (int) get_input('remove_thumbnail');
-
 if (empty($title) || empty($description)) {
 	return elgg_error_response(elgg_echo('static:action:edit:error:title_description'));
 }
@@ -126,13 +124,10 @@ $entity->moderators = $moderators;
 $entity->save();
 
 // icon
-if ($remove_icon) {
+if (get_input('icon_remove')) {
 	$entity->deleteIcon();
-} elseif ($uploaded_file = elgg_get_uploaded_file('thumbnail')) {
-	/* @var $uploaded_file \Symfony\Component\HttpFoundation\File\UploadedFile */
-	if (stripos($uploaded_file->getMimeType(), 'image/') !== false) {
-		$entity->saveIconFromUploadedFile('thumbnail');
-	}
+} else {
+	$entity->saveIconFromUploadedFile('icon');
 }
 
 $entity->annotate('static_revision', $description);

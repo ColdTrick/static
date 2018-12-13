@@ -53,16 +53,11 @@ if (!empty($entity)) {
 	]);
 }
 
-$form_body .= '<div class="mbm"><label>' . elgg_echo('static:new:thumbnail') . '</label><br />';
-$form_body .= elgg_view('input/file', ['name' => 'thumbnail']);
-if ($entity && $entity->icontime) {
-	$form_body .= elgg_view('input/checkbox', [
-		'name' => 'remove_thumbnail',
-		'value' => '1',
-		'label' => elgg_echo('static:new:remove_thumbnail'),
-	]);
-}
-$form_body .= '</div>';
+$form_body .= elgg_view('entity/edit/icon', [
+	'entity' => $entity,
+	'entity_type' => 'object',
+	'entity_subtype' => StaticPage::SUBTYPE,
+]);
 
 $form_body .= elgg_view_field([
 	'#type' => 'longtext',
