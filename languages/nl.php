@@ -1,10 +1,11 @@
 <?php
 /**
- * This file was created by Translation Editor v6.1
- * On 2018-05-24 10:58
+ * This file was created by Translation Editor v7.0-beta
+ * On 2018-12-14 16:19
  */
 
 return array (
+  'collection:object:static' => 'Statische pagina\'s',
   'static:csv_exporter:parent:title' => 'Bovenliggende paginatitel',
   'static:csv_exporter:parent:guid' => 'Bovenliggende pagina GUID',
   'static:csv_exporter:parent:url' => 'Bovenliggende pagina URL',
@@ -51,8 +52,6 @@ Een aantal van je statische pagina\'s zijn verouderd. Controleer of de informati
 
 Klik hier voor een complete lijst van de verouderde content
 %s',
-  'static:new:thumbnail' => 'Upload afbeelding',
-  'static:new:remove_thumbnail' => 'Verwijder afbeelding',
   'static:widgets:static_groups:title' => 'Statische pagina\'s',
   'static:widgets:static_groups:description' => 'Toon de statische pagina\'s van de groep',
   'static:groups:title' => 'Beheer groep statische pagina\'s',
@@ -72,5 +71,4 @@ Klik hier voor een complete lijst van de verouderde content
   'static:admin:empty' => 'Geen statische pagina\'s gemaakt',
   'static:all' => 'Beheer statische pagina\'s',
   'static:new:permalink' => 'Permalink',
-  'static:add' => 'Maak een statische pagina',
 );
