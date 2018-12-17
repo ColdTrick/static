@@ -6,6 +6,7 @@
 
 return array (
   'collection:object:static' => 'Statische pagina\'s',
+  'add:object:static' => "Voeg statische pagina toe",
   'static:csv_exporter:parent:title' => 'Bovenliggende paginatitel',
   'static:csv_exporter:parent:guid' => 'Bovenliggende pagina GUID',
   'static:csv_exporter:parent:url' => 'Bovenliggende pagina URL',
