@@ -22,6 +22,7 @@ elgg_set_context('static');
 if ($entity->canEdit()) {
 	elgg_register_menu_item('title', [
 		'name' => 'edit',
+		'icon' => 'edit',
 		'href' => elgg_generate_entity_url($entity, 'edit'),
 		'text' => elgg_echo('edit'),
 		'link_class' => 'elgg-button elgg-button-action',
@@ -29,6 +30,7 @@ if ($entity->canEdit()) {
 		
 	elgg_register_menu_item('title', [
 		'name' => 'create_subpage',
+		'icon' => 'plus',
 		'text' => elgg_echo('static:add:subpage'),
 		'href' => elgg_generate_url('add:object:static', [
 			'guid' => $entity->owner_guid,
