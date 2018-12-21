@@ -35,7 +35,7 @@ class Search {
 		
 		$static_count = count($entities);
 		
-		if ($static_count >= $limit) {
+		if ($static_count >= elgg_extract('limit', $params)) {
 			$params['count'] = true;
 			$static_count = elgg_search($params);
 		}
