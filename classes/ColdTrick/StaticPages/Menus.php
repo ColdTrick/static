@@ -157,12 +157,6 @@ class Menus {
 			return;
 		}
 		
-		if (!elgg_in_context('static')) {
-			return;
-		}
-		
-		$return_value = [];
-		
 		$page_owner = elgg_get_page_owner_entity();
 		if ($page_owner instanceof \ElggGroup) {
 			$return_value[] = \ElggMenuItem::factory([

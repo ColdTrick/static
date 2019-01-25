@@ -28,9 +28,10 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
 });
 
 // build page
-$body = elgg_view_layout('one_column', [
+$body = elgg_view_layout('default', [
 	'title' => $title_text,
 	'content' => $body,
+	'sidebar' => false,
 	'filter_id' => 'static',
 ]);
 

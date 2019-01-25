@@ -36,7 +36,7 @@ $title_text = elgg_echo('static:out_of_date:title');
 $body = elgg_list_entities($options);
 
 // build page
-$page_data = elgg_view_layout('content', [
+$page_data = elgg_view_layout('default', [
 	'title' => $title_text,
 	'content' => $body,
 	'filter_id' => 'static',

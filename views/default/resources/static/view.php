@@ -86,7 +86,7 @@ $body = elgg_view_entity($entity, [
 static_setup_page_menu($entity);
 
 // build page
-$page = elgg_view_layout('content', [
+$page = elgg_view_layout('default', [
 	'title' => $title,
 	'content' => $body,
 	'filter' => false,

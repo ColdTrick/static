@@ -61,7 +61,7 @@ $body = elgg_view_form('static/edit', [
 $title_text = elgg_echo('static:edit');
 
 // build page
-$body = elgg_view_layout('one_sidebar', [
+$body = elgg_view_layout('default', [
 	'title' => $title_text,
 	'content' => $body,
 	'sidebar' => $sidebar,

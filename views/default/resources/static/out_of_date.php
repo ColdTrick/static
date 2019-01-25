@@ -45,9 +45,10 @@ $body .= elgg_list_entities([
 $title_text = elgg_echo('static:out_of_date:title');
 
 // build page
-$page_data = elgg_view_layout('one_column', [
+$page_data = elgg_view_layout('default', [
 	'title' => $title_text,
 	'content' => $body,
+	'sidebar' => false,
 	'filter_id' => 'static',
 ]);
 

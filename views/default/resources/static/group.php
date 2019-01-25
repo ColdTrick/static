@@ -44,7 +44,7 @@ if ($can_write) {
 $title_text = elgg_echo('static:groups:title');
 
 // build page
-$body = elgg_view_layout('content', [
+$body = elgg_view_layout('default', [
 	'title' => $title_text,
 	'content' => $body,
 	'filter_id' => 'static',
