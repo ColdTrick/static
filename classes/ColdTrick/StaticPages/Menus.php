@@ -2,6 +2,8 @@
 
 namespace ColdTrick\StaticPages;
 
+use Elgg\Menu\MenuItems;
+
 /**
  * Menus
  */
@@ -214,5 +216,48 @@ class Menus {
 		}
 		
 		return $return_value;
+	}
+	
+	/**
+	 * Change some information in the delete link of static pages
+	 *
+	 * @param \Elgg\Hook $hook 'register', 'menu:entity'
+	 *
+	 * @return void|MenuItems
+	 */
+	public static function changeDeleteItem(\Elgg\Hook $hook) {
+		
+		$entity = $hook->getEntityParam();
+		if (!$entity instanceof \StaticPage) {
+			return;
+		}
+		
+		/* @var $result MenuItems */
+		$result = $hook->getValue();
+		
+		$delete = $result->get('delete');
+		if (!$delete instanceof \ElggMenuItem) {
+			return;
+		}
+		
+		$parent = $entity->getParentPage();
+		if (empty($parent) || $parent->guid === $entity->guid) {
+			$container = $entity->getContainerEntity();
+			if ($container instanceof \ElggGroup) {
+				$forward_url = elgg_generate_url('collection:object:static:group', [
+					'guid' => $container->guid,
+				]);
+			} else {
+				$foward_url = elgg_generate_url('collection:object:static:all');
+			}
+		} else {
+			$forward_url = $parent->getURL();
+		}
+		
+		$delete->setHref(elgg_http_add_url_query_elements($delete->getHref(), [
+			'forward_url' => $forward_url,
+		]));
+		
+		return $result;
 	}
 }
