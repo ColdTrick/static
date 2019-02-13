@@ -87,7 +87,7 @@ class Menus {
 	 * Add menu items to the admin page menu
 	 *
 	 * @param string          $hook         'register'
-	 * @param string          $type         'menu:owner_block'
+	 * @param string          $type         'menu:page'
 	 * @param \ElggMenuItem[] $return_value the menu items
 	 * @param array           $params       supplied params
 	 *
@@ -100,7 +100,7 @@ class Menus {
 		
 		$return_value[] = \ElggMenuItem::factory([
 			'name' => 'static_all',
-			'href' => 'static/all',
+			'href' => elgg_generate_url('collection:object:static:all'),
 			'text' => elgg_echo('static:all'),
 			'parent_name' => 'administer_utilities',
 			'section' => 'administer',
