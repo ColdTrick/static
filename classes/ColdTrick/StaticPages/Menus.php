@@ -241,6 +241,7 @@ class Menus {
 		}
 		
 		$parent = $entity->getParentPage();
+		$forward_url = null;
 		if (empty($parent) || $parent->guid === $entity->guid) {
 			$container = $entity->getContainerEntity();
 			if ($container instanceof \ElggGroup) {
@@ -248,7 +249,7 @@ class Menus {
 					'guid' => $container->guid,
 				]);
 			} else {
-				$foward_url = elgg_generate_url('collection:object:static:all');
+				$forward_url = elgg_generate_url('collection:object:static:all');
 			}
 		} else {
 			$forward_url = $parent->getURL();
