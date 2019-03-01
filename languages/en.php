@@ -3,6 +3,7 @@
 return [
 	'item:object:static' => "Static page",
 	'collection:object:static' => "Static pages",
+	'river:object:static:comment' => "%s commented on the static page %s",
 	
 	// settings
 	'static:settings:general:title' => "General settings",

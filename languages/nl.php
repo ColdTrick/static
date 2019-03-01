@@ -7,6 +7,7 @@
 return array (
   'collection:object:static' => 'Statische pagina\'s',
   'add:object:static' => "Voeg statische pagina toe",
+  'river:object:static:comment' => "%s reageerde op de statische pagina %s",
   'static:csv_exporter:parent:title' => 'Bovenliggende paginatitel',
   'static:csv_exporter:parent:guid' => 'Bovenliggende pagina GUID',
   'static:csv_exporter:parent:url' => 'Bovenliggende pagina URL',
