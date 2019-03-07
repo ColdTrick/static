@@ -78,6 +78,5 @@ class Bootstrap extends DefaultPluginBootstrap {
 		$hooks->registerHandler('export_value', 'csv_exporter', '\ColdTrick\StaticPages\CSVExporter::exportParentPages');
 		
 		$hooks->registerHandler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::addLastEditorOnComment');
-		$hooks->registerHandler('get', 'subscriptions', '\ColdTrick\StaticPages\Notifications::removeLastEditorFromDelayedNotification', 999);
 	}
 }
