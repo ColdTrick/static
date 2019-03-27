@@ -1,6 +1,32 @@
 Version history
 ===============
 
+6.0 (2019-03-27):
+
+- added: elasticsearch export change for last editor access
+- added: menu item preparation is now hookable
+- added: registering static menu items can be targeted to a specific menu
+- changed: now using elgg-plugin and bootstrap class for plugin init
+- changed: out of date message now uses elgg_view_message
+- changed: set minimal requirement to Elgg 3.0
+- changed: use core views for entity icon upload
+- fix: use correct search entity view
+- fixed: comment notifications to last editor
+- fixed: correctly handle exceptions from gatekeepers
+- fixed: deprecated notice about group tool
+- fixed: EntityTools support
+- fixed: filter menu has wrong tabs
+- fixed: getLastEditor ordering
+- fixed: incorrect forwarding after deleting static page
+- fixed: out-of-date double filter menus
+- fixed: permissions for moderators during deletion
+- fixed: revision listing. newest first
+- fixed: static menu js generalized
+- removed: custom view for newsletter embedding
+- removed: no longer able to reorder root pages
+- removed: old upgrade/migration jobs
+- removed: unused css rule
+
 5.4.2 (2018-10-31):
 
 - fixed: permissions for moderators during deletion
