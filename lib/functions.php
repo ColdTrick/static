@@ -136,7 +136,7 @@ function static_check_moderator_in_list(array $guids) {
 		$user_guids[] = $metadata->value;
 	}
 	
-	return in_array($user_guid, $md);
+	return in_array($user_guid, $user_guids);
 }
 
 /**
