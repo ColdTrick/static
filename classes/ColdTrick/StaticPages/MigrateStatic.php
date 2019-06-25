@@ -57,7 +57,6 @@ class MigrateStatic extends Migrate {
 		
 		// also move owner
 		$this->object->owner_guid = $new_container_guid;
-		$this->updateMetadataOwnerGUID();
 		
 		$this->object->save();
 
