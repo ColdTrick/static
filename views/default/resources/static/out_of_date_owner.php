@@ -2,8 +2,8 @@
 
 use Elgg\EntityPermissionsException;
 use Elgg\PageNotFoundException;
-use Elgg\Database\QueryBuilder;
 use Elgg\Database\Clauses\OrderByClause;
+use Elgg\Database\Clauses\WhereClause;
 
 elgg_gatekeeper();
 elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'user');
@@ -27,7 +27,7 @@ $options = [
 	'subtype' => StaticPage::SUBTYPE,
 	'modified_time_upper' => time() - ($days * 24 * 60 * 60),
 	'wheres' => [
-		"e.guid IN (
+		new WhereClause("e.guid IN (
 			SELECT entity_guid
 			FROM (
 				SELECT *
@@ -38,7 +38,7 @@ $options = [
 					ORDER BY entity_guid, time_created DESC) a1
 				GROUP BY a1.entity_guid) a2
 			WHERE a2.owner_guid = {$page_owner->guid})
-		",
+		"),
 	],
 	'order_by' => new OrderByClause('e.time_updated', 'DESC'),
 	'no_results' => elgg_echo('static:out_of_date:none'),

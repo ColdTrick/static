@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.0.1 (2019-04-17):
+
+- fixed: incorrect user_guid in array check
+
 6.0 (2019-03-27):
 
 - added: elasticsearch export change for last editor access
