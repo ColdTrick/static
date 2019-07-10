@@ -62,7 +62,10 @@ class Cache {
 	 * @return void
 	 */
 	public static function resetAllCache($event, $type, $entity) {
-	
+		
+		// this could take a while
+		set_time_limit(0);
+		
 		// fetch all top pages
 		$options = [
 			'type' => 'object',
