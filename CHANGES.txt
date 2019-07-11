@@ -1,6 +1,12 @@
 Version history
 ===============
 
+6.0.2 (2019-07-11):
+
+- fixed: no longer call unexisting entity_tools class function
+- fixed: out of date for owner shows incorrect results
+- fixed: timeout issue during cache flush
+
 6.0.1 (2019-04-17):
 
 - fixed: incorrect user_guid in array check
