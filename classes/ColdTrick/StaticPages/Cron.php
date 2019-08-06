@@ -12,14 +12,11 @@ class Cron {
 	/**
 	 * Notify users about out-of-date content
 	 *
-	 * @param string $hook         'cron'
-	 * @param string $type         'daily'
-	 * @param string $return_value optional output
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'cron', 'daily'
 	 *
 	 * @return void
 	 */
-	public static function outOfDateNotification($hook, $type, $return_value, $params) {
+	public static function outOfDateNotification(\Elgg\Hook $hook) {
 		
 		if (!static_out_of_date_enabled()) {
 			return;
@@ -28,7 +25,7 @@ class Cron {
 		echo 'Starting Static out-of-date' . PHP_EOL;
 		elgg_log('Starting Static out-of-date', 'NOTICE');
 		
-		$time = elgg_extract('time', $params, time());
+		$time = $hook->getParam('time', time());
 		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 		
 		$compare_ts = $time - ($days * 24 * 60 * 60);

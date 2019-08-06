@@ -8,16 +8,14 @@ namespace ColdTrick\StaticPages;
 class ContentSubscriptions {
 
 	/**
+	 * Allow content subscriptions for static pages
 	 *
-	 * @param string $hook         'entity_types'
-	 * @param string $type         'content_subscriptions'
-	 * @param array  $return_value the current supported entity types
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'entity_types', 'content_subscriptions'
 	 *
 	 * @return array
 	 */
-	public static function entityTypes($hook, $type, $return_value, $params) {
-	
+	public static function entityTypes(\Elgg\Hook $hook) {
+		$return_value = $hook->getValue();
 		if (!is_array($return_value)) {
 			$return_value = [];
 		}

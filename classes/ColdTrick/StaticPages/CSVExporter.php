@@ -7,16 +7,13 @@ class CSVExporter {
 	/**
 	 * Add last editor information to static export
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'get_exportable_values', 'csv_exporter'
 	 *
 	 * @return void|array
 	 */
-	public static function addLastEditor($hook, $type, $return_value, $params) {
+	public static function addLastEditor(\Elgg\Hook $hook) {
 		
-		if (elgg_extract('subtype', $params) !== \StaticPage::SUBTYPE) {
+		if ($hook->getParam('subtype') !== \StaticPage::SUBTYPE) {
 			return;
 		}
 		
@@ -28,32 +25,29 @@ class CSVExporter {
 			elgg_echo('static:csv_exporter:last_editor:profile_url') => 'static_last_editor_profile_url',
 		];
 		
-		if (!(bool) elgg_extract('readable', $params)) {
+		if (!(bool) $hook->getParam('readable')) {
 			$values = array_values($values);
 		}
 		
-		return array_merge($return_value, $values);
+		return array_merge($hook->getValue(), $values);
 	}
 	
 	/**
 	 * Export last editor information
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'export_value', 'csv_exporter'
 	 *
 	 * @retrun void|string
 	 */
-	public static function exportLastEditor($hook, $type, $return_value, $params) {
-		
+	public static function exportLastEditor(\Elgg\Hook $hook) {
+		$return_value = $hook->getValue();
 		if (!is_null($return_value)) {
 			// someone already provided output
 			return;
 		}
 		
-		$entity = elgg_extract('entity', $params);
-		if (!($entity instanceof \StaticPage)) {
+		$entity = $hook->getEntityParam();
+		if (!$entity instanceof \StaticPage) {
 			return;
 		}
 		
@@ -62,9 +56,9 @@ class CSVExporter {
 			return;
 		}
 		
-		switch (elgg_extract('exportable_value', $params)) {
+		switch ($hook->getParam('exportable_value')) {
 			case 'static_last_editor_guid':
-				return $last_editor->getGUID();
+				return $last_editor->guid;
 				break;
 			case 'static_last_editor_name':
 				return $last_editor->getDisplayName();
@@ -84,16 +78,13 @@ class CSVExporter {
 	/**
 	 * Add last revision information to static export
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'get_exportable_values', 'csv_exporter'
 	 *
 	 * @return void|array
 	 */
-	public static function addLastRevision($hook, $type, $return_value, $params) {
+	public static function addLastRevision(\Elgg\Hook $hook) {
 		
-		if (elgg_extract('subtype', $params) !== \StaticPage::SUBTYPE) {
+		if ($hook->getParam('subtype') !== \StaticPage::SUBTYPE) {
 			return;
 		}
 		
@@ -102,32 +93,29 @@ class CSVExporter {
 			elgg_echo('static:csv_exporter:last_revision:timestamp:readable') => 'static_last_revision_timestamp_readable',
 		];
 		
-		if (!(bool) elgg_extract('readable', $params)) {
+		if (!(bool) $hook->getParam('readable')) {
 			$values = array_values($values);
 		}
 		
-		return array_merge($return_value, $values);
+		return array_merge($hook->getValue(), $values);
 	}
 	
 	/**
 	 * Export last revison information
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'export_value', 'csv_exporter'
 	 *
 	 * @retrun void|string
 	 */
-	public static function exportLastRevision($hook, $type, $return_value, $params) {
+	public static function exportLastRevision(\Elgg\Hook $hook) {
 		
-		if (!is_null($return_value)) {
+		if (!is_null($hook->getValue())) {
 			// someone already provided output
 			return;
 		}
 		
-		$entity = elgg_extract('entity', $params);
-		if (!($entity instanceof \StaticPage)) {
+		$entity = $hook->getEntityParam();
+		if (!$entity instanceof \StaticPage) {
 			return;
 		}
 		
@@ -136,7 +124,7 @@ class CSVExporter {
 			return;
 		}
 		
-		switch (elgg_extract('exportable_value', $params)) {
+		switch ($hook->getParam('exportable_value')) {
 			case 'static_last_revision_timestamp':
 				return $last_revision->time_created;
 				break;
@@ -149,16 +137,13 @@ class CSVExporter {
 	/**
 	 * Add out-of-date information to static export
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'get_exportable_values', 'csv_exporter'
 	 *
 	 * @return void|array
 	 */
-	public static function addOutOfDate($hook, $type, $return_value, $params) {
+	public static function addOutOfDate(\Elgg\Hook $hook) {
 		
-		if (elgg_extract('subtype', $params) !== \StaticPage::SUBTYPE) {
+		if ($hook->getParam('subtype') !== \StaticPage::SUBTYPE) {
 			return;
 		}
 		
@@ -170,36 +155,33 @@ class CSVExporter {
 			elgg_echo('static:csv_exporter:out_of_date:state') => 'static_out_of_date_state',
 		];
 		
-		if (!(bool) elgg_extract('readable', $params)) {
+		if (!(bool) $hook->getParam('readable')) {
 			$values = array_values($values);
 		}
 		
-		return array_merge($return_value, $values);
+		return array_merge($hook->getValue(), $values);
 	}
 	
 	/**
 	 * Export out-of-date information
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'export_value', 'csv_exporter'
 	 *
 	 * @retrun void|string
 	 */
-	public static function exportOutOfDate($hook, $type, $return_value, $params) {
+	public static function exportOutOfDate(\Elgg\Hook $hook) {
 		
-		if (!is_null($return_value)) {
+		if (!is_null($hook->getValue())) {
 			// someone already provided output
 			return;
 		}
 		
-		$entity = elgg_extract('entity', $params);
-		if (!($entity instanceof \StaticPage)) {
+		$entity = $hook->getEntityParam();
+		if (!$entity instanceof \StaticPage) {
 			return;
 		}
 		
-		switch (elgg_extract('exportable_value', $params)) {
+		switch ($hook->getParam('exportable_value')) {
 			case 'static_out_of_date_state':
 				return $entity->isOutOfDate() ? 'yes' : 'no';
 				break;
@@ -209,16 +191,13 @@ class CSVExporter {
 	/**
 	 * Add parent and main pages to export
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'get_exportable_values', 'csv_exporter'
 	 *
 	 * @return void|array
 	 */
-	public static function addParentPages($hook, $type, $return_value, $params) {
+	public static function addParentPages(\Elgg\Hook $hook) {
 		
-		if (elgg_extract('subtype', $params) !== \StaticPage::SUBTYPE) {
+		if ($hook->getParam('subtype') !== \StaticPage::SUBTYPE) {
 			return;
 		}
 		
@@ -231,36 +210,33 @@ class CSVExporter {
 			elgg_echo('static:csv_exporter:main:url') => 'static_main_url',
 		];
 		
-		if (!(bool) elgg_extract('readable', $params)) {
+		if (!(bool) $hook->getParam('readable')) {
 			$values = array_values($values);
 		}
 		
-		return array_merge($return_value, $values);
+		return array_merge($hook->getValue(), $values);
 	}
 	
 	/**
 	 * Export parent and main pages
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'export_value', 'csv_exporter'
 	 *
 	 * @retrun void|string
 	 */
-	public static function exportParentPages($hook, $type, $return_value, $params) {
+	public static function exportParentPages(\Elgg\Hook $hook) {
 		
-		if (!is_null($return_value)) {
+		if (!is_null($hook->getValue())) {
 			// someone already provided output
 			return;
 		}
 		
-		$entity = elgg_extract('entity', $params);
-		if (!($entity instanceof \StaticPage)) {
+		$entity = $hook->getEntityParam();
+		if (!$entity instanceof \StaticPage) {
 			return;
 		}
 		
-		switch (elgg_extract('exportable_value', $params)) {
+		switch ($hook->getParam('exportable_value')) {
 			case 'static_parent_title':
 				$parent = $entity->getParentPage();
 				if (empty($parent)) {

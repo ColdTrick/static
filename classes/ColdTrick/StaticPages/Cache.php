@@ -10,33 +10,29 @@ class Cache {
 	/**
 	 * Resets the menu cache for static pages on update and create of an entity
 	 *
-	 * @param string      $event  'create|delete|update'
-	 * @param string      $type   'object'
-	 * @param \ElggObject $entity the entity about to be changed
+	 * @param \Elgg\Event $event 'create|delete|update', 'object'
 	 *
 	 * @return void
 	 */
-	public static function resetMenuCache($event, $type, \ElggObject $entity) {
-	
-		if (!($entity instanceof \StaticPage)) {
+	public static function resetMenuCache(\Elgg\Event $event) {
+		$entity = $event->getObject();
+		if (!$entity instanceof \StaticPage) {
 			return;
 		}
 	
-		$root_entity = $entity->getRootPage()->clearMenuCache();
+		$entity->getRootPage()->clearMenuCache();
 	}
 
 	/**
 	 * Resets the menu cache for static pages on update and create of an entity
 	 *
-	 * @param string            $event        'create|delete'
-	 * @param string            $type         'relationship'
-	 * @param \ElggRelationship $relationship the relationship
+	 * @param \Elgg\Event $event 'create|delete', 'relationship'
 	 *
 	 * @return void
 	 */
-	public static function resetMenuCacheFromRelationship($event, $type, \ElggRelationship $relationship) {
-	
-		if (!($relationship instanceof \ElggRelationship)) {
+	public static function resetMenuCacheFromRelationship(\Elgg\Event $event) {
+		$relationship = $event->getObject();
+		if (!$relationship instanceof \ElggRelationship) {
 			return;
 		}
 		
@@ -45,7 +41,7 @@ class Cache {
 		}
 		
 		$root_page = get_entity($relationship->guid_two);
-		if (!($root_page instanceof \StaticPage)) {
+		if (!$root_page instanceof \StaticPage) {
 			return;
 		}
 		
@@ -55,29 +51,24 @@ class Cache {
 	/**
 	 * Resets all cache on the static pages
 	 *
-	 * @param string $event  'cache:flush'
-	 * @param string $type   'system'
-	 * @param mixed  $entity the entity about to be removed
+	 * @param \Elgg\Event $event 'cache:flush', 'system'
 	 *
 	 * @return void
 	 */
-	public static function resetAllCache($event, $type, $entity) {
+	public static function resetAllCache(\Elgg\Event $event) {
 		
 		// this could take a while
 		set_time_limit(0);
-		
-		// fetch all top pages
-		$options = [
-			'type' => 'object',
-			'subtype' => \StaticPage::SUBTYPE,
-			'limit' => false,
-			'relationship' => 'subpage_of',
-			'batch' => true,
-		];
-	
-		// ignore access
-		elgg_call(ELGG_IGNORE_ACCESS, function() use ($options) {
-			$batch = elgg_get_entities($options);
+
+		elgg_call(ELGG_IGNORE_ACCESS, function() {
+			// fetch all top pages
+			$batch = elgg_get_entities([
+				'type' => 'object',
+				'subtype' => \StaticPage::SUBTYPE,
+				'limit' => false,
+				'relationship' => 'subpage_of',
+				'batch' => true,
+			]);
 			foreach ($batch as $entity) {
 				// reset cache for the pages
 				$file = new \ElggFile();
