@@ -101,8 +101,6 @@ if ($parent_changed) {
 	}
 }
 
-$ia = elgg_set_ignore_access(true);
-
 // validate friendly title for existing entities if changed
 if (!$new_entity && ($entity->friendly_title !== $friendly_title)) {
 	$friendly_title = static_make_friendly_title($friendly_title, $guid);
@@ -111,28 +109,29 @@ if (!$new_entity && ($entity->friendly_title !== $friendly_title)) {
 	}
 }
 
-// save all the content
-$entity->title = $title;
-$entity->description = $description;
-$entity->access_id = $access_id;
+elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $title, $description, $access_id, $parent_guid, $friendly_title, $enable_comments, $moderators) {
+	// save all the content
+	$entity->title = $title;
+	$entity->description = $description;
+	$entity->access_id = $access_id;
+	
+	$entity->parent_guid = $parent_guid;
+	$entity->friendly_title = $friendly_title;
+	$entity->enable_comments = $enable_comments;
+	$entity->moderators = $moderators;
+	
+	$entity->save();
+	
+	// icon
+	if (get_input('icon_remove')) {
+		$entity->deleteIcon();
+	} else {
+		$entity->saveIconFromUploadedFile('icon');
+	}
+	
+	$entity->annotate('static_revision', $description);
+});
 
-$entity->parent_guid = $parent_guid;
-$entity->friendly_title = $friendly_title;
-$entity->enable_comments = $enable_comments;
-$entity->moderators = $moderators;
-
-$entity->save();
-
-// icon
-if (get_input('icon_remove')) {
-	$entity->deleteIcon();
-} else {
-	$entity->saveIconFromUploadedFile('icon');
-}
-
-$entity->annotate('static_revision', $description);
-
-elgg_set_ignore_access($ia);
 elgg_clear_sticky_form('static');
 
 return elgg_ok_response('', elgg_echo('static:action:edit:success'), $entity->getURL());

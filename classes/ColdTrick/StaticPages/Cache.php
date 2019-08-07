@@ -120,42 +120,41 @@ class Cache {
 		$static_items[$root_entity->guid] = $menu_item;
 			
 		// add all sub menu items so they are cacheable
-		$ia = elgg_set_ignore_access(true);
-		$submenu_entities = elgg_get_entities([
-			'type' => 'object',
-			'subtype' => \StaticPage::SUBTYPE,
-			'relationship_guid' => $root_entity->guid,
-			'relationship' => 'subpage_of',
-			'limit' => false,
-			'inverse_relationship' => true,
-			'batch' => true,
-		]);
-		foreach ($submenu_entities as $submenu_item) {
-				
-			if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
-				continue;
-			}
-				
-			$priority = (int) $submenu_item->order;
-			if (empty($priority)) {
-				$priority = (int) $submenu_item->time_created;
-			}
-			
-			$menu_item = \ElggMenuItem::factory([
-				'name' => $submenu_item->guid,
-				'rel' => $submenu_item->guid,
-				'href' => $submenu_item->getURL(),
-				'text' => $submenu_item->title,
-				'priority' => $priority,
-				'parent_name' => $submenu_item->parent_guid,
-				'section' => 'static',
+		elgg_call(ELGG_IGNORE_ACCESS, function() use ($root_entity, &$static_items) {
+			$submenu_entities = elgg_get_entities([
+				'type' => 'object',
+				'subtype' => \StaticPage::SUBTYPE,
+				'relationship_guid' => $root_entity->guid,
+				'relationship' => 'subpage_of',
+				'limit' => false,
+				'inverse_relationship' => true,
+				'batch' => true,
 			]);
-			$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
-			
-			$static_items[$submenu_item->guid] = $menu_item;
-		}
-			
-		elgg_set_ignore_access($ia);
+			foreach ($submenu_entities as $submenu_item) {
+					
+				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
+					continue;
+				}
+					
+				$priority = (int) $submenu_item->order;
+				if (empty($priority)) {
+					$priority = (int) $submenu_item->time_created;
+				}
+				
+				$menu_item = \ElggMenuItem::factory([
+					'name' => $submenu_item->guid,
+					'rel' => $submenu_item->guid,
+					'href' => $submenu_item->getURL(),
+					'text' => $submenu_item->title,
+					'priority' => $priority,
+					'parent_name' => $submenu_item->parent_guid,
+					'section' => 'static',
+				]);
+				$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
+				
+				$static_items[$submenu_item->guid] = $menu_item;
+			}
+		});
 		
 		$file = new \ElggFile();
 		$file->owner_guid = $root_entity->guid;

@@ -74,27 +74,21 @@ class StaticPage extends \ElggObject {
 		}
 		
 		// ignore access, so moderators cleanup everything correctly
-		$ia = elgg_set_ignore_access(true);
-		
-		$guid = $this->guid;
-		
-		$result = parent::delete($recursive);
-		if ($result === false || $recursive !== true) {
-			// restore access
-			elgg_set_ignore_access($ia);
+		return elgg_call(ELGG_IGNORE_ACCESS, function() use ($recursive) {
 			
-			return $result;
-		}
+			$result = parent::delete($recursive);
+			if ($result === false || $recursive !== true) {
+				return $result;
+			}
 		
-		// remove sub pages
-		elgg_call(ELGG_IGNORE_ACCESS, function() use ($guid, $recursive) {
+			// remove sub pages
 			/* @var $batch \ElggBatch */
 			$batch = elgg_get_entities([
 				'type' => 'object',
 				'subtype' => self::SUBTYPE,
 				'metadata_name_value_pairs' => [
 					'name' => 'parent_guid',
-					'value' => $guid,
+					'value' => $this->guid,
 				],
 				'limit' => false,
 				'batch' => true,
@@ -105,9 +99,9 @@ class StaticPage extends \ElggObject {
 			foreach ($batch as $entity) {
 				$entity->delete($recursive);
 			}
+			
+			return $result;
 		});
-		
-		return $result;
 	}
 
 	/**

@@ -61,21 +61,20 @@ class MigrateStatic extends Migrate {
 		}
 		
 		// update all children (assuming only top level pages can be moved)
-		$ia = elgg_set_ignore_access(true);
-		$batch = new \ElggBatch('elgg_get_entities', [
-			'type' => 'object',
-			'subtype' => \StaticPage::SUBTYPE,
-			'relationship_guid' => $this->object->getGUID(),
-			'relationship' => 'subpage_of',
-			'limit' => false,
-			'inverse_relationship' => true,
-		]);
-		
-		foreach ($batch as $entity) {
-			$migrate = new MigrateStatic($entity);
-			$migrate->changeContainer($new_container_guid);
-		}
-						
-		elgg_set_ignore_access($ia);
+		elgg_call(ELGG_IGNORE_ACCESS, function() use ($new_container_guid) {
+			$batch = new \ElggBatch('elgg_get_entities', [
+				'type' => 'object',
+				'subtype' => \StaticPage::SUBTYPE,
+				'relationship_guid' => $this->object->guid,
+				'relationship' => 'subpage_of',
+				'limit' => false,
+				'inverse_relationship' => true,
+			]);
+			
+			foreach ($batch as $entity) {
+				$migrate = new MigrateStatic($entity);
+				$migrate->changeContainer($new_container_guid);
+			}
+		});
 	}
 }
