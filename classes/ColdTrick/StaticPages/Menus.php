@@ -9,19 +9,16 @@ use Elgg\Menu\MenuItems;
  */
 class Menus {
 
-
 	/**
 	 * Orders the items in the static page menu
 	 *
-	 * @param string          $hook         'prepare'
-	 * @param string          $type         'menu:page'
-	 * @param \ElggMenuItem[] $return_value the menu items
-	 * @param array           $params       supplied params
+	 * @param \Elgg\Hook $hook 'prepare', 'menu:page'
 	 *
 	 * @return \ElggMenuItem[]
 	 */
-	public static function pageMenuPrepare($hook, $type, $return_value, $params) {
+	public static function pageMenuPrepare(\Elgg\Hook $hook) {
 		
+		$return_value = $hook->getValue();
 		$static = elgg_extract('static', $return_value);
 		if (!$static instanceof \Elgg\Menu\MenuSection) {
 			return;
@@ -64,15 +61,12 @@ class Menus {
 	/**
 	 * Registers the static menu items for use on th edit page
 	 *
-	 * @param string          $hook         'register'
-	 * @param string          $type         'menu:static_edit'
-	 * @param \ElggMenuItem[] $return_value the menu items
-	 * @param array           $params       supplied params
+	 * @param \Elgg\Hook $hook 'register', 'menu:static_edit'
 	 *
 	 * @return \ElggMenuItem[]
 	 */
-	public static function registerStaticEditMenuItems($hook, $type, $return_value, $params) {
-		$root_entity = elgg_extract('root_entity', $params);
+	public static function registerStaticEditMenuItems(\Elgg\Hook $hook) {
+		$root_entity = $hook->getParam('root_entity');
 		if (empty($root_entity)) {
 			return;
 		}
@@ -88,18 +82,16 @@ class Menus {
 	/**
 	 * Add menu items to the admin page menu
 	 *
-	 * @param string          $hook         'register'
-	 * @param string          $type         'menu:page'
-	 * @param \ElggMenuItem[] $return_value the menu items
-	 * @param array           $params       supplied params
+	 * @param \Elgg\Hook $hook 'register', 'menu:page'
 	 *
 	 * @return \ElggMenuItem[]
 	 */
-	public static function registerAdminPageMenuItems($hook, $type, $return_value, $params) {
+	public static function registerAdminPageMenuItems(\Elgg\Hook $hook) {
 		if (!elgg_in_context('admin') || !elgg_is_admin_logged_in()) {
 			return;
 		}
 		
+		$return_value = $hook->getValue();
 		$return_value[] = \ElggMenuItem::factory([
 			'name' => 'static_all',
 			'href' => elgg_generate_url('collection:object:static:all'),
@@ -114,16 +106,13 @@ class Menus {
 	/**
 	 * Add menu items to the owner block menu
 	 *
-	 * @param string          $hook         'register'
-	 * @param string          $type         'menu:owner_block'
-	 * @param \ElggMenuItem[] $return_value the menu items
-	 * @param array           $params       supplied params
+	 * @param \Elgg\Hook $hook 'register', 'menu:owner_block'
 	 *
 	 * @return \ElggMenuItem[]
 	 */
-	public static function ownerBlockMenuRegister($hook, $type, $return_value, $params) {
+	public static function ownerBlockMenuRegister(\Elgg\Hook $hook) {
 
-		$owner = elgg_extract('entity', $params);
+		$owner = $hook->getEntityParam();
 		if (!$owner instanceof \ElggGroup) {
 			return;
 		}
@@ -132,6 +121,7 @@ class Menus {
 			return;
 		}
 		
+		$return_value = $hook->getValue();
 		$return_value[] = \ElggMenuItem::factory([
 			'name' => 'static',
 			'text' => elgg_echo('static:groups:owner_block'),
@@ -146,20 +136,19 @@ class Menus {
 	/**
 	 * Add menu items to the filter menu
 	 *
-	 * @param string          $hook         'register'
-	 * @param string          $type         'menu:filter'
-	 * @param \ElggMenuItem[] $return_value the menu items
-	 * @param array           $params       supplied params
+	 * @param \Elgg\Hook $hook 'register', 'menu:filter'
 	 *
 	 * @return \ElggMenuItem[]
 	 */
-	public static function filterMenuRegister($hook, $type, $return_value, $params) {
+	public static function filterMenuRegister(\Elgg\Hook $hook) {
 		
 		if (!static_out_of_date_enabled()) {
 			return;
 		}
 		
 		$page_owner = elgg_get_page_owner_entity();
+		$return_value = $hook->getValue();
+		
 		if ($page_owner instanceof \ElggGroup) {
 			$return_value[] = \ElggMenuItem::factory([
 				'name' => 'all',

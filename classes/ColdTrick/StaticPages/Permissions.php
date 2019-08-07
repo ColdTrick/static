@@ -10,21 +10,18 @@ class Permissions {
 	/**
 	 * Allow moderators to edit static pages and their children
 	 *
-	 * @param string $hook         'permissions_check'
-	 * @param string $type         'object'
-	 * @param bool   $return_value can the user edit this entity
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'permissions_check', 'object'
 	 *
 	 * @return bool
 	 */
-	public static function objectPermissionsCheck($hook, $type, $return_value, $params) {
-		if ($return_value) {
+	public static function objectPermissionsCheck(\Elgg\Hook $hook) {
+		if ($hook->getValue()) {
 			// already have access, no need to add
 			return;
 		}
 	
-		$entity = elgg_extract('entity', $params);
-		$user = elgg_extract('user', $params);
+		$entity = $hook->getEntityParam();
+		$user = $hook->getUserParam();
 	
 		if (!$entity instanceof \StaticPage || !$user instanceof \ElggUser) {
 			return;
@@ -66,29 +63,26 @@ class Permissions {
 	/**
 	 * Allow moderators to write static pages
 	 *
-	 * @param string $hook         'container_permissions_check'
-	 * @param string $type         'object'
-	 * @param bool   $return_value can the user write to this container
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'container_permissions_check', 'object'
 	 *
 	 * @return bool
 	 */
-	public static function containerPermissionsCheck($hook, $type, $return_value, $params) {
+	public static function containerPermissionsCheck(\Elgg\Hook $hook) {
 	
-		if ($type !== 'object' || !is_array($params)) {
+		if ($hook->getType() !== 'object') {
+			return;
+		}
+
+		if ($hook->getParam('subtype') !== 'static') {
 			return;
 		}
 		
-		$container = elgg_extract('container', $params);
-		$subtype = elgg_extract('subtype', $params);
-		$user = elgg_extract('user', $params);
-			
-		if ($subtype !== 'static') {
-			return;
-		}
-				
+		$container = $hook->getParam('container');
+		$return_value = $hook->getValue();
 		if (elgg_instanceof($container, 'group') && !$container->canEdit()) {
 			$return_value = false;
+			
+			$user = $hook->getUserParam();
 			if ($user) {
 				$return_value = static_is_moderator_in_container($container, $user);
 			}

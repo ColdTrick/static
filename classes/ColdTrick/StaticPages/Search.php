@@ -10,20 +10,18 @@ class Search {
 	/**
 	 * Adds static pages to the search advanced autocomplete dropdown
 	 *
-	 * @param string $hook         'autocomplete'
-	 * @param string $type         'search_advanced'
-	 * @param array  $return_value current search results
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
 	 *
 	 * @return array
 	 */
-	public static function searchAdvancedAutocomplete($hook, $type, $return_value, $params) {
+	public static function searchAdvancedAutocomplete(\Elgg\Hook $hook) {
 	
-		$query = elgg_extract('query', $params);
+		$query = $hook->getParam('query');
 		if (empty($query)) {
 			return;
 		}
 		
+		$params = $hook->getParams();
 		$params['type'] = 'object';
 		$params['subtype'] = \StaticPage::SUBTYPE;
 	
@@ -40,6 +38,7 @@ class Search {
 			$static_count = elgg_search($params);
 		}
 
+		$return_value = $hook->getValue();
 		$return_value[] = [
 			'type' => 'placeholder',
 			'content' => elgg_format_element('label', [], elgg_echo('item:object:static') . ' (' . $static_count . ')'),

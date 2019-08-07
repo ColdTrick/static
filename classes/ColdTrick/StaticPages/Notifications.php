@@ -12,16 +12,13 @@ class Notifications {
 	/**
 	 * Add the last editor to a comment nofitication
 	 *
-	 * @param string $hook         'get'
-	 * @param string $type         'subscriptions'
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'get', 'subscriptions'
 	 *
 	 * @return void|array
 	 */
-	public static function addLastEditorOnComment($hook, $type, $return_value, $params) {
+	public static function addLastEditorOnComment(\Elgg\Hook $hook) {
 		
-		$event = elgg_extract('event', $params);
+		$event = $hook->getParam();
 		if (!$event instanceof SubscriptionNotificationEvent) {
 			// only delayed notifications
 			return;
@@ -48,6 +45,7 @@ class Notifications {
 			return;
 		}
 		
+		$return_value = $hook->getValue();
 		if (isset($return_value[$last_editor->guid])) {
 			// already in the list
 			return;

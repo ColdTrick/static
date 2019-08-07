@@ -9,17 +9,13 @@ class MigrateStatic extends Migrate {
 	/**
 	 * Add static to the supported types for EntityTools
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param mixed  $params       supplied params
+	 * @param \Elgg\Hook $hook 'supported_types', 'entity_tools'
 	 *
 	 * @return array
 	 */
-	public static function supportedSubtypes($hook, $type, $return_value, $params) {
-		
+	public static function supportedSubtypes(\Elgg\Hook $hook) {
+		$return_value = $hook->getValue();
 		$return_value[\StaticPage::SUBTYPE] = self::class;
-
 		return $return_value;
 	}
 	

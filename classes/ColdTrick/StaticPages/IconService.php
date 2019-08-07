@@ -7,25 +7,22 @@ class IconService {
 	/**
 	 * Set the correct filename for an icon
 	 *
-	 * @param string    $hook         the name of the hook
-	 * @param string    $type         the type of the hook
-	 * @param \ElggIcon $return_value the current supported entity types
-	 * @param array     $params       supplied params
+	 * @param \Elgg\Hook $hook 'entity:icon:file', 'object'
 	 *
 	 * @return void|\ElggIcon
 	 */
-	public static function getIconFile($hook, $type, $return_value, $params) {
+	public static function getIconFile(\Elgg\Hook $hook) {
 		
-		$entity = elgg_extract('entity', $params);
-		if (!($entity instanceof \StaticPage)) {
+		$entity = $hook->getEntityParam();
+		if (!$entity instanceof \StaticPage) {
 			return;
 		}
 		
-		$size = elgg_extract('size', $params);
+		$size = $hook->getParam('size');
 		$prefix = 'thumb';
 		
+		$return_value = $hook->getValue();
 		$return_value->setFilename("{$prefix}{$size}.jpg");
-		
 		return $return_value;
 	}
 }
