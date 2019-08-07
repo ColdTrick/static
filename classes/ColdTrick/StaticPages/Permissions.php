@@ -79,7 +79,7 @@ class Permissions {
 		
 		$container = $hook->getParam('container');
 		$return_value = $hook->getValue();
-		if (elgg_instanceof($container, 'group') && !$container->canEdit()) {
+		if ($container instanceof \ElggGroup && !$container->canEdit()) {
 			$return_value = false;
 			
 			$user = $hook->getUserParam();
