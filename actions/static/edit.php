@@ -40,7 +40,7 @@ $parent = elgg_call(ELGG_IGNORE_ACCESS, function () use ($parent_guid){
 
 if (!$parent instanceof StaticPage) {
 	$parent_guid = 0;
-	unset($parent);
+	$parent = false;
 }
 
 $entity = false;
@@ -87,7 +87,7 @@ if ($parent_guid !== $entity->parent_guid) {
 	remove_entity_relationships($entity->guid, 'subpage_of');
 }
 	
-if (($new_entity || $parent_changed) && $parent) {
+if (($new_entity || $parent_changed) && $parent instanceof \StaticPage) {
 	// add new tree relationship
 	$entity->addRelationship($parent->getRootPage()->guid, 'subpage_of');
 }
