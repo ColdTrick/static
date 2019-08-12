@@ -18,7 +18,7 @@ class Notifications {
 	 */
 	public static function addLastEditorOnComment(\Elgg\Hook $hook) {
 		
-		$event = $hook->getParam();
+		$event = $hook->getParam('event');
 		if (!$event instanceof SubscriptionNotificationEvent) {
 			// only delayed notifications
 			return;
