@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.0.3 (2019-08-22):
+
+- several small chores/fixes
+
 6.0.2 (2019-07-11):
 
 - fixed: no longer call unexisting entity_tools class function
