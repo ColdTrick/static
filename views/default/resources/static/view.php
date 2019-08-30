@@ -73,27 +73,26 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity) {
 
 elgg_push_breadcrumb($entity->getDisplayName());
 
-$ia = elgg_set_ignore_access($entity->canEdit());
+$ignore_access = $entity->canEdit() ? ELGG_IGNORE_ACCESS : 0;
 
-// build content
 $title = $entity->getDisplayName();
 
-$body = elgg_view_entity($entity, [
-	'full_view' => true,
-]);
-
-// build sub pages menu
-static_setup_page_menu($entity);
-
-// build page
-$page = elgg_view_layout('default', [
-	'title' => $title,
-	'content' => $body,
-	'filter' => false,
-	'entity' => $entity,
-]);
-
-elgg_set_ignore_access($ia);
+$page = elgg_call($ignore_access, function() use ($entity, $title) {
+		
+	$body = elgg_view_entity($entity, [
+		'full_view' => true,
+	]);
+	
+	// build sub pages menu
+	static_setup_page_menu($entity);
+	
+	return elgg_view_layout('default', [
+		'title' => $title,
+		'content' => $body,
+		'filter' => false,
+		'entity' => $entity,
+	]);
+});
 
 // draw page
 echo elgg_view_page($title, $page);

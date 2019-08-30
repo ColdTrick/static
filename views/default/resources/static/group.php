@@ -18,24 +18,20 @@ elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $group);
 
 $can_write = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
 
-if ($can_write) {
-	$ia = elgg_set_ignore_access(true);
-}
+$ignore_access = $can_write ? ELGG_IGNORE_ACCESS : 0;
 
-$body = elgg_list_entities([
-	'type' => 'object',
-	'subtype' => StaticPage::SUBTYPE,
-	'metadata_name_value_pairs' => [
-		'parent_guid' => 0,
-	],
-	'container_guid' => $group->guid,
-	'order_by_metadata' => ['title' => 'ASC'],
-	'no_results' => elgg_echo('static:admin:empty'),
-]);
-
-if ($can_write) {
-	elgg_set_ignore_access($ia);
-}
+$body = elgg_call($ignore_access, function() use ($group) {
+	return elgg_list_entities([
+		'type' => 'object',
+		'subtype' => StaticPage::SUBTYPE,
+		'metadata_name_value_pairs' => [
+			'parent_guid' => 0,
+		],
+		'container_guid' => $group->guid,
+		'order_by_metadata' => ['title' => 'ASC'],
+		'no_results' => elgg_echo('static:admin:empty'),
+	]);
+});
 
 if ($can_write) {
 	elgg_register_title_button('static', 'add', 'object', StaticPage::SUBTYPE);

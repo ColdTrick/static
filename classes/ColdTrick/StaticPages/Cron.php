@@ -29,99 +29,98 @@ class Cron {
 		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 		
 		$compare_ts = $time - ($days * 24 * 60 * 60);
-		$users = [];
 		
-		$options = [
-			'type' => 'object',
-			'subtype' => \StaticPage::SUBTYPE,
-			'limit' => false,
-			'modified_time_upper' => $compare_ts,
-			'modified_time_lower' => $compare_ts - (24 * 60 * 60),
-			'order_by' => new OrderByClause('e.time_updated', 'DESC'),
-			'batch' => true,
-		];
-		
-		// ignore access
-		$ia = elgg_set_ignore_access(true);
-		
-		$batch = elgg_get_entities($options);
-		/* @var $entity \StaticPage */
-		foreach ($batch as $entity) {
+		$users = elgg_call(ELGG_IGNORE_ACCESS, function() use ($compare_ts) {
+			$users = [];
 			
-			// allows a hook to influence entities being notified
-			if (!$entity->isOutOfDate()) {
-				continue;
-			}
+			$options = [
+				'type' => 'object',
+				'subtype' => \StaticPage::SUBTYPE,
+				'limit' => false,
+				'modified_time_upper' => $compare_ts,
+				'modified_time_lower' => $compare_ts - (24 * 60 * 60),
+				'order_by' => new OrderByClause('e.time_updated', 'DESC'),
+				'batch' => true,
+			];
 			
-			$last_editor = $entity->getLastEditor();
-			if (empty($last_editor)) {
-				continue;
-			}
-			
-			// make sure we need to notify this user
-			$recipient = self::checkRecipient($entity, $last_editor);
-			if (!($recipient instanceof \ElggUser)) {
-				continue;
-			}
-			
-			if (!isset($users[$recipient->getGUID()])) {
-				$users[$recipient->getGUID()] = [
-					'new' => [],
+			$batch = elgg_get_entities($options);
+			/* @var $entity \StaticPage */
+			foreach ($batch as $entity) {
+				
+				// allows a hook to influence entities being notified
+				if (!$entity->isOutOfDate()) {
+					continue;
+				}
+				
+				$last_editor = $entity->getLastEditor();
+				if (empty($last_editor)) {
+					continue;
+				}
+				
+				// make sure we need to notify this user
+				$recipient = self::checkRecipient($entity, $last_editor);
+				if (!($recipient instanceof \ElggUser)) {
+					continue;
+				}
+				
+				if (!isset($users[$recipient->getGUID()])) {
+					$users[$recipient->getGUID()] = [
+						'new' => [],
+					];
+				}
+				
+				$users[$recipient->getGUID()]['new'][] = [
+					'title' => $entity->getDisplayName(),
+					'url' => $entity->getURL(),
 				];
 			}
 			
-			$users[$recipient->getGUID()]['new'][] = [
-				'title' => $entity->getDisplayName(),
-				'url' => $entity->getURL(),
-			];
-		}
-		
-		// check for reminders
-		$number_of_reminders = (int) elgg_get_plugin_setting('out_of_date_reminder_repeat', 'static');
-		$reminder_interval = (int) elgg_get_plugin_setting('out_of_date_reminder_interval', 'static');
-		if ($number_of_reminders > 0 && $reminder_interval > 0) {
-			
-			for ($i = 1; $i <= $number_of_reminders; $i++) {
-				$compare_ts = $compare_ts - ($reminder_interval * 24 * 60 * 60);
-				$options['modified_time_upper'] = $compare_ts;
-				$options['modified_time_lower'] = $compare_ts - (24 * 60 * 60);
+			// check for reminders
+			$number_of_reminders = (int) elgg_get_plugin_setting('out_of_date_reminder_repeat', 'static');
+			$reminder_interval = (int) elgg_get_plugin_setting('out_of_date_reminder_interval', 'static');
+			if ($number_of_reminders > 0 && $reminder_interval > 0) {
 				
-				$batch = elgg_get_entities($options);
-				/* @var $entity \StaticPage */
-				foreach ($batch as $entity) {
+				for ($i = 1; $i <= $number_of_reminders; $i++) {
+					$compare_ts = $compare_ts - ($reminder_interval * 24 * 60 * 60);
+					$options['modified_time_upper'] = $compare_ts;
+					$options['modified_time_lower'] = $compare_ts - (24 * 60 * 60);
 					
-					// allows a hook to influence entities being notified
-					if (!$entity->isOutOfDate()) {
-						continue;
-					}
-					
-					$last_editor = $entity->getLastEditor();
-					if (empty($last_editor)) {
-						continue;
-					}
-					
-					// make sure we need to notify this user
-					$recipient = self::checkRecipient($entity, $last_editor);
-					if (!($recipient instanceof \ElggUser)) {
-						continue;
-					}
-					
-					if (!isset($users[$recipient->getGUID()])) {
-						$users[$recipient->getGUID()] = [
-							'reminders' => [],
+					$batch = elgg_get_entities($options);
+					/* @var $entity \StaticPage */
+					foreach ($batch as $entity) {
+						
+						// allows a hook to influence entities being notified
+						if (!$entity->isOutOfDate()) {
+							continue;
+						}
+						
+						$last_editor = $entity->getLastEditor();
+						if (empty($last_editor)) {
+							continue;
+						}
+						
+						// make sure we need to notify this user
+						$recipient = self::checkRecipient($entity, $last_editor);
+						if (!($recipient instanceof \ElggUser)) {
+							continue;
+						}
+						
+						if (!isset($users[$recipient->getGUID()])) {
+							$users[$recipient->getGUID()] = [
+								'reminders' => [],
+							];
+						}
+						
+						$users[$recipient->getGUID()]['reminders'][$i][] = [
+							'title' => $entity->getDisplayName(),
+							'url' => $entity->getURL(),
 						];
 					}
-					
-					$users[$recipient->getGUID()]['reminders'][$i][] = [
-						'title' => $entity->getDisplayName(),
-						'url' => $entity->getURL(),
-					];
 				}
 			}
-		}
-		
-		// restore access
-		elgg_set_ignore_access($ia);
+			
+			return $users;
+		});
 		
 		if (empty($users)) {
 			echo 'Done with Static out-of-date' . PHP_EOL;

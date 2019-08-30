@@ -18,20 +18,14 @@ function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
 	elgg_require_js('static/sidebar_menu');
 	
 	$page_owner = elgg_get_page_owner_entity();
-	$can_write = false;
+	$ignore_access = 0;
 	if ($page_owner) {
-		$can_write = $page_owner->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
+		$ignore_access = $page_owner->canWriteToContainer(0, 'object', StaticPage::SUBTYPE) ? ELGG_IGNORE_ACCESS : 0;
 	}
 	
-	if ($can_write) {
-		$ia = elgg_set_ignore_access(true);
-	}
-	
-	$root_entity = $entity->getRootPage();
-	
-	if ($can_write) {
-		elgg_set_ignore_access($ia);
-	}
+	$root_entity = elgg_call($ignore_access, function() use ($entity) {
+		return $entity->getRootPage();
+	});
 	
 	if (!$root_entity instanceof \StaticPage) {
 		return;
@@ -49,23 +43,20 @@ function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
 	}
 	
 	// fetch all menu items the user has access to
-	if ($can_write) {
-		$ia = elgg_set_ignore_access(true);
-	}
-	$allowed_guids = elgg_get_entities([
-		'type' => 'object',
-		'subtype' => StaticPage::SUBTYPE,
-		'relationship_guid' => $root_entity->guid,
-		'relationship' => 'subpage_of',
-		'limit' => false,
-		'inverse_relationship' => true,
-		'callback' => function($row) {
-			return (int) $row->guid;
-		},
-	]);
-	if ($can_write) {
-		elgg_set_ignore_access($ia);
-	}
+	$allowed_guids = elgg_call($ignore_access, function() use($root_entity) {
+		return elgg_get_entities([
+			'type' => 'object',
+			'subtype' => StaticPage::SUBTYPE,
+			'relationship_guid' => $root_entity->guid,
+			'relationship' => 'subpage_of',
+			'limit' => false,
+			'inverse_relationship' => true,
+			'callback' => function($row) {
+				return (int) $row->guid;
+			},
+		]);
+	});
+
 	$allowed_guids[] = $root_entity->guid;
 	
 	$manages_guids = null;
@@ -80,10 +71,10 @@ function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
 			}
 			
 			if ($manages_guids) {
-				$ia = elgg_set_ignore_access(true);
 				// need to get without access otherwise we can not check for canEdit()
-				$tmp_entity = get_entity($item->rel);
-				elgg_set_ignore_access($ia);
+				$tmp_entity = elgg_call(ELGG_IGNORE_ACCESS, function() use ($item) {
+					return get_entity($item->rel);
+				});
 				
 				if (!$tmp_entity instanceof ElggObject) {
 					continue;
@@ -255,30 +246,25 @@ function static_get_parent_options($parent_guid = null, $depth = 0) {
 		$parent_guid = 0;
 	}
 
-	$can_write = $parent->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
-	if ($can_write) {
-		$ia = elgg_set_ignore_access(true);
-	}
-		
-	// more memory friendly
-	$parent_entities = elgg_get_entities([
-		'type' => 'object',
-		'subtype' => StaticPage::SUBTYPE,
-		'metadata_name_value_pair' => [
-			'parent_guid' => $parent_guid,
-		],
-		'limit' => false,
-		'batch' => true,
-	]);
-	foreach ($parent_entities as $parent) {
-		$result[$parent->guid] = trim(str_repeat('-', $depth) . ' ' . $parent->title);
-		
-		$result += static_get_parent_options($parent->guid, $depth + 1);
-	}
+	$ignore_access = $parent->canWriteToContainer(0, 'object', StaticPage::SUBTYPE) ? ELGG_IGNORE_ACCESS : 0;
 	
-	if ($can_write) {
-		elgg_set_ignore_access($ia);
-	}
+	elgg_call($ignore_access, function () use ($parent_guid, &$result, $depth) {
+		// more memory friendly
+		$parent_entities = elgg_get_entities([
+			'type' => 'object',
+			'subtype' => StaticPage::SUBTYPE,
+			'metadata_name_value_pair' => [
+				'parent_guid' => $parent_guid,
+			],
+			'limit' => false,
+			'batch' => true,
+		]);
+		foreach ($parent_entities as $parent) {
+			$result[$parent->guid] = trim(str_repeat('-', $depth) . ' ' . $parent->title);
+			
+			$result += static_get_parent_options($parent->guid, $depth + 1);
+		}
+	});
 	
 	return $result;
 }
