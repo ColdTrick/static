@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.0.4 (2019-09-04):
+
+- fixed: replaced all deprecated set_ignore_access functions
+
 6.0.3 (2019-08-22):
 
 - several small chores/fixes
