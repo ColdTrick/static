@@ -70,7 +70,7 @@ class Menus {
 		if (empty($root_entity)) {
 			return;
 		}
-		$return_value = Cache::getMenuItemsCache($root_entity);
+		$return_value = $root_entity->getMenuCache();
 		if (empty($return_value)) {
 			// no items in cache so generate menu + add them to the cache
 			$return_value = Cache::generateMenuItemsCache($root_entity);

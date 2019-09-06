@@ -49,39 +49,6 @@ class Cache {
 	}
 	
 	/**
-	 * Resets all cache on the static pages
-	 *
-	 * @param \Elgg\Event $event 'cache:flush', 'system'
-	 *
-	 * @return void
-	 */
-	public static function resetAllCache(\Elgg\Event $event) {
-		
-		// this could take a while
-		set_time_limit(0);
-
-		elgg_call(ELGG_IGNORE_ACCESS, function() {
-			// fetch all top pages
-			$batch = elgg_get_entities([
-				'type' => 'object',
-				'subtype' => \StaticPage::SUBTYPE,
-				'limit' => false,
-				'relationship' => 'subpage_of',
-				'batch' => true,
-			]);
-			foreach ($batch as $entity) {
-				// reset cache for the pages
-				$file = new \ElggFile();
-				$file->owner_guid = $entity->guid;
-				$file->setFilename('static_menu_item_cache');
-				if ($file->exists()) {
-					$file->delete();
-				}
-			}
-		});
-	}
-	
-	/**
 	 * Caches menu items for a given entity and returns an array of the menu items
 	 *
 	 * @param \StaticPage $root_entity Root entity to fetch the menu items for
@@ -156,33 +123,8 @@ class Cache {
 			}
 		});
 		
-		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->guid;
-		$file->setFilename('static_menu_item_cache');
-		$file->open('write');
-		$file->write(serialize($static_items));
-		$file->close();
-	
-		return $static_items;
-	}
+		$root_entity->saveMenuCache($static_items);
 
-	/**
-	 * Reads cached menu items from file for give root entity
-	 *
-	 * @param \ElggEntity $root_entity root entity to fetch the cache from
-	 *
-	 * @return array
-	 */
-	public static function getMenuItemsCache(\ElggEntity $root_entity) {
-		$static_items = [];
-	
-		$file = new \ElggFile();
-		$file->owner_guid = $root_entity->guid;
-		$file->setFilename('static_menu_item_cache');
-		if ($file->exists()) {
-			$static_items = unserialize($file->grabFile());
-		}
-	
 		return $static_items;
 	}
 }

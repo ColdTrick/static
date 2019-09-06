@@ -32,7 +32,7 @@ function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
 	}
 	
 	// check for availability in cache
-	$static_items = \ColdTrick\StaticPages\Cache::getMenuItemsCache($root_entity);
+	$static_items = $root_entity->getMenuCache();
 	if (empty($static_items)) {
 		// no items in cache so generate menu + add them to the cache
 		$static_items = \ColdTrick\StaticPages\Cache::generateMenuItemsCache($root_entity);

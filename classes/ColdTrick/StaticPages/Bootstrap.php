@@ -37,7 +37,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 		elgg_register_event_handler('delete', 'object', '\ColdTrick\StaticPages\Cache::resetMenuCache');
 		elgg_register_event_handler('create', 'relationship', '\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship');
 		elgg_register_event_handler('delete', 'relationship', '\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship');
-		elgg_register_event_handler('cache:flush', 'system', '\ColdTrick\StaticPages\Cache::resetAllCache');;
 	}
 	
 	protected function registerHooks() {

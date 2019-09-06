@@ -1,6 +1,7 @@
 <?php
 
 use Elgg\Database\Clauses\OrderByClause;
+use Imagine\Filter\Basic\Save;
 
 class StaticPage extends \ElggObject {
 	
@@ -110,12 +111,28 @@ class StaticPage extends \ElggObject {
 	 * @return void
 	 */
 	public function clearMenuCache() {
-		$file = new \ElggFile();
-		$file->owner_guid = $this->guid;
-		$file->setFilename('static_menu_item_cache');
-		if ($file->exists()) {
-			$file->delete();
-		}
+		elgg_delete_system_cache("static_menu_item_cache_{$this->guid}");
+	}
+
+	/**
+	 * Save the menu cache for this entity
+	 *
+	 * @param mixed $contents contents to save
+	 *
+	 * @return void
+	 */
+	public function saveMenuCache($contents) {
+		error_log('saving static cache');
+		elgg_save_system_cache("static_menu_item_cache_{$this->guid}", $contents);
+	}
+
+	/**
+	 * Returns the menu cache for this entity
+	 *
+	 * @return mixed
+	 */
+	public function getMenuCache() {
+		return elgg_load_system_cache("static_menu_item_cache_{$this->guid}");
 	}
 	
 	/**

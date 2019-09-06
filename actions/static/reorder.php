@@ -31,7 +31,6 @@ elgg_call(ELGG_IGNORE_ACCESS, function () use ($guids, $guid) {
 	}
 });
 
-// clear menu cache
 $parent->getRootPage()->clearMenuCache();
 
 return elgg_ok_response();
