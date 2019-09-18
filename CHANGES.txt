@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.1 (2019-09-18):
+
+- changed: use system cache for storing menu item cache
+
 6.0.4 (2019-09-04):
 
 - fixed: replaced all deprecated set_ignore_access functions
