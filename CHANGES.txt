@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.1.1 (2019-09-30):
+
+- several small chores/fixes
+
 6.1 (2019-09-18):
 
 - changed: use system cache for storing menu item cache
