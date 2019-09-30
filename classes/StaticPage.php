@@ -122,7 +122,6 @@ class StaticPage extends \ElggObject {
 	 * @return void
 	 */
 	public function saveMenuCache($contents) {
-		error_log('saving static cache');
 		elgg_save_system_cache("static_menu_item_cache_{$this->guid}", $contents);
 	}
 
