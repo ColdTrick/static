@@ -57,6 +57,7 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($title_text, $vars) {
 	$body = elgg_view_form('static/edit', [
 		'class' => 'elgg-form-alt',
 		'enctype' => 'multipart/form-data',
+		'prevent_double_submit' => true,
 	], $body_vars);
 
 	return elgg_view_layout('default', [
