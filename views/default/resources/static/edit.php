@@ -6,10 +6,12 @@ elgg_gatekeeper();
 
 $title_text = elgg_echo('static:edit');
 
-$body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($title_text, $vars) {
+$body = '';
+$sidebar = '';
+
+elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 	
 	$guid = (int) elgg_extract('guid', $vars);
-	$sidebar = '';
 	$body_vars = [];
 	$page_owner = elgg_get_page_owner_entity();
 	$site = elgg_get_site_entity();
@@ -59,12 +61,9 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($title_text, $vars) {
 		'enctype' => 'multipart/form-data',
 		'prevent_double_submit' => true,
 	], $body_vars);
-
-	return elgg_view_layout('default', [
-		'title' => $title_text,
-		'content' => $body,
-		'sidebar' => $sidebar,
-	]);
 });
 
-echo elgg_view_page($title_text, $body);
+echo elgg_view_page($title_text, [
+	'content' => $body,
+	'sidebar' => $sidebar,
+]);

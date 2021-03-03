@@ -27,6 +27,11 @@ class Permissions {
 			return;
 		}
 		
+		// allowed if you are the last editor
+		if ($entity->getLastEditor()->guid === $user->guid) {
+			return true;
+		}
+		
 		// check if the owner is a group
 		$owner = $entity->getOwnerEntity();
 		if ($owner instanceof \ElggGroup) {

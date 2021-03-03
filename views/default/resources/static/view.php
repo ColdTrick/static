@@ -77,22 +77,19 @@ $ignore_access = $entity->canEdit() ? ELGG_IGNORE_ACCESS : 0;
 
 $title = $entity->getDisplayName();
 
-$page = elgg_call($ignore_access, function() use ($entity, $title) {
-		
-	$body = elgg_view_entity($entity, [
-		'full_view' => true,
-	]);
-	
+
+$body = elgg_call($ignore_access, function() use ($entity, $title) {
 	// build sub pages menu
 	static_setup_page_menu($entity);
-	
-	return elgg_view_layout('default', [
-		'title' => $title,
-		'content' => $body,
-		'filter' => false,
-		'entity' => $entity,
+		
+	return elgg_view_entity($entity, [
+		'full_view' => true,
 	]);
 });
 
 // draw page
-echo elgg_view_page($title, $page);
+echo elgg_view_page($title, [
+	'content' => $body,
+	'filter' => false,
+	'entity' => $entity,
+]);
