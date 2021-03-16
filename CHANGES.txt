@@ -1,6 +1,11 @@
 Version history
 ===============
 
+6.2.1 (2021-03-16):
+
+- fixed: allow last editors to always edit content
+- fixed: make sure owner can also see private content in out of date list
+
 6.2 (2020-05-26):
 
 - added: entity tools support for site owned content
