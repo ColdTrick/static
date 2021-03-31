@@ -1,13 +1,16 @@
 <?php
 /**
- * This file was created by Translation Editor v7.0-beta
- * On 2018-12-14 16:19
+ * This file was created by Translation Editor v8.0
+ * On 2021-03-31 16:49
  */
 
 return array (
+  'static:menu:filter:last_editor' => 'Laatste editor',
+  'static:menu:owner_block:last_editor' => 'Statische pagina\'s laatste editor',
+  'static:last_editor:title' => 'Statische pagina\'s laatste editor: %s',
   'collection:object:static' => 'Statische pagina\'s',
-  'add:object:static' => "Voeg statische pagina toe",
-  'river:object:static:comment' => "%s reageerde op de statische pagina %s",
+  'add:object:static' => 'Voeg statische pagina toe',
+  'river:object:static:comment' => '%s reageerde op de statische pagina %s',
   'static:csv_exporter:parent:title' => 'Bovenliggende paginatitel',
   'static:csv_exporter:parent:guid' => 'Bovenliggende pagina GUID',
   'static:csv_exporter:parent:url' => 'Bovenliggende pagina URL',

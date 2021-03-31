@@ -104,11 +104,11 @@ class Menus {
 	}
 	
 	/**
-	 * Add menu items to the owner block menu
+	 * Add menu items to the owner block menu of groups
 	 *
 	 * @param \Elgg\Hook $hook 'register', 'menu:owner_block'
 	 *
-	 * @return \ElggMenuItem[]
+	 * @return void|MenuItems
 	 */
 	public static function ownerBlockMenuRegister(\Elgg\Hook $hook) {
 
@@ -134,20 +134,72 @@ class Menus {
 	}
 	
 	/**
+	 * Add menu items to the owner block menu of users
+	 *
+	 * @param \Elgg\Hook $hook 'register', 'menu:owner_block'
+	 *
+	 * @return void|MenuItems
+	 */
+	public static function userOwnerBlockMenuRegister(\Elgg\Hook $hook) {
+
+		$owner = $hook->getEntityParam();
+		if (!$owner instanceof \ElggUser || !$owner->canEdit()) {
+			return;
+		}
+		
+		$return_value = $hook->getValue();
+		$return_value[] = \ElggMenuItem::factory([
+			'name' => 'last_editor',
+			'text' => elgg_echo('static:menu:owner_block:last_editor'),
+			'href' => elgg_generate_url('collection:object:static:user:last_editor', [
+				'username' => $owner->username,
+			]),
+			'is_trusted' => true,
+		]);
+	
+		return $return_value;
+	}
+	
+	/**
 	 * Add menu items to the filter menu
 	 *
-	 * @param \Elgg\Hook $hook 'register', 'menu:filter'
+	 * @param \Elgg\Hook $hook 'register', 'menu:filter:static'
 	 *
-	 * @return \ElggMenuItem[]
+	 * @return void|MenuItems
 	 */
 	public static function filterMenuRegister(\Elgg\Hook $hook) {
+		
+		if (!elgg_is_logged_in()) {
+			return;
+		}
+		
+		/* @var $return_value MenuItems */
+		$return_value = $hook->getValue();
+		$page_owner = elgg_get_page_owner_entity();
+		
+		if (!$page_owner instanceof \ElggGroup) {
+			$return_value[] = \ElggMenuItem::factory([
+				'name' => 'all',
+				'text' => elgg_echo('all'),
+				'href' => elgg_generate_url('collection:object:static:all'),
+				'is_trusted' => true,
+				'priority' => 100,
+			]);
+			
+			$return_value[] = \ElggMenuItem::factory([
+				'name' => 'last_editor',
+				'text' => elgg_echo('static:menu:filter:last_editor'),
+				'href' => elgg_generate_url('collection:object:static:user:last_editor', [
+					'username' => elgg_get_logged_in_user_entity()->username,
+				]),
+				'is_trusted' => true,
+				'priority' => 150,
+			]);
+		}
 		
 		if (!static_out_of_date_enabled()) {
 			return;
 		}
-		
-		$page_owner = elgg_get_page_owner_entity();
-		$return_value = $hook->getValue();
 		
 		if ($page_owner instanceof \ElggGroup) {
 			$return_value[] = \ElggMenuItem::factory([
@@ -171,14 +223,6 @@ class Menus {
 					'priority' => 250,
 				]);
 			}
-		} else {
-			$return_value[] = \ElggMenuItem::factory([
-				'name' => 'all',
-				'text' => elgg_echo('all'),
-				'href' => elgg_generate_url('collection:object:static:all'),
-				'is_trusted' => true,
-				'priority' => 100,
-			]);
 		}
 		
 		$user = elgg_get_logged_in_user_entity();

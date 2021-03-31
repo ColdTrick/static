@@ -69,6 +69,14 @@ return [
 				UserPageOwnerCanEditGatekeeper::class,
 			],
 		],
+		'collection:object:static:user:last_editor' => [
+			'path' => '/static/last_editor/{username}',
+			'resource' => 'static/last_editor',
+			'middleware' => [
+				Gatekeeper::class,
+				UserPageOwnerCanEditGatekeeper::class,
+			],
+		],
 		'collection:object:static:out_of_date' => [
 			'path' => '/static/out_of_date',
 			'resource' => 'static/out_of_date',

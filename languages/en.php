@@ -38,6 +38,11 @@ return [
 		
 	'static:revisions' => "Revisions",
 	
+	// last editor
+	'static:menu:filter:last_editor' => "Last editor",
+	'static:menu:owner_block:last_editor' => "Static pages last editor",
+	'static:last_editor:title' => "Static pages last editor: %s",
+	
 	// out of date
 	'static:menu:filter:out_of_date' => "All out-of-date content",
 	'static:menu:filter:out_of_date:mine' => "My out-of-date content",
