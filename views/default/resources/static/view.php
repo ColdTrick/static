@@ -75,10 +75,7 @@ elgg_push_breadcrumb($entity->getDisplayName());
 
 $ignore_access = $entity->canEdit() ? ELGG_IGNORE_ACCESS : 0;
 
-$title = $entity->getDisplayName();
-
-
-$body = elgg_call($ignore_access, function() use ($entity, $title) {
+$body = elgg_call($ignore_access, function() use ($entity) {
 	// build sub pages menu
 	static_setup_page_menu($entity);
 		
@@ -88,7 +85,7 @@ $body = elgg_call($ignore_access, function() use ($entity, $title) {
 });
 
 // draw page
-echo elgg_view_page($title, [
+echo elgg_view_page($entity->getDisplayName(), [
 	'content' => $body,
 	'filter' => false,
 	'entity' => $entity,

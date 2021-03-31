@@ -2,10 +2,6 @@
 
 use Elgg\EntityPermissionsException;
 
-elgg_gatekeeper();
-
-$title_text = elgg_echo('static:edit');
-
 $body = '';
 $sidebar = '';
 
@@ -63,7 +59,8 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 	], $body_vars);
 });
 
-echo elgg_view_page($title_text, [
+// draw page
+echo elgg_view_page(elgg_echo('static:edit'), [
 	'content' => $body,
 	'sidebar' => $sidebar,
 ]);

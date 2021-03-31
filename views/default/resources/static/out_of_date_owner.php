@@ -1,21 +1,15 @@
 <?php
 
-use Elgg\EntityPermissionsException;
 use Elgg\PageNotFoundException;
 use Elgg\Database\Clauses\OrderByClause;
 use Elgg\Database\Clauses\WhereClause;
-
-elgg_gatekeeper();
-elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'user');
+use Elgg\Values;
 
 if (!static_out_of_date_enabled()) {
 	throw new PageNotFoundException();
 }
 
 $page_owner = elgg_get_page_owner_entity();
-if (!$page_owner->canEdit()) {
-	throw new EntityPermissionsException();
-}
 
 elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
 
@@ -28,7 +22,7 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 	return elgg_list_entities([
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
-		'modified_time_upper' => time() - ($days * 24 * 60 * 60),
+		'modified_time_upper' => Values::normalizeTime("-{$days} days"),
 		'wheres' => [
 			new WhereClause("e.guid IN (
 				SELECT revs.entity_guid
@@ -53,13 +47,10 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 	]);
 });
 
-// build page
-$page_data = elgg_view_layout('default', [
-	'title' => $title_text,
+// draw page
+echo elgg_view_page($title_text, [
 	'content' => $body,
 	'sidebar' => false,
 	'filter_id' => 'static',
+	'filter_value' => 'out_of_date_mine',
 ]);
-
-// draw page
-echo elgg_view_page($title_text, $page_data);
