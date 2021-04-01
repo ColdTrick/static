@@ -188,7 +188,7 @@ class Menus {
 			
 			$return_value[] = \ElggMenuItem::factory([
 				'name' => 'last_editor',
-				'text' => elgg_echo('static:menu:filter:last_editor'),
+				'text' => elgg_echo('mine'),
 				'href' => elgg_generate_url('collection:object:static:user:last_editor', [
 					'username' => elgg_get_logged_in_user_entity()->username,
 				]),

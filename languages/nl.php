@@ -5,9 +5,8 @@
  */
 
 return array (
-  'static:menu:filter:last_editor' => 'Laatste editor',
-  'static:menu:owner_block:last_editor' => 'Statische pagina\'s laatste editor',
-  'static:last_editor:title' => 'Statische pagina\'s laatste editor: %s',
+  'static:menu:owner_block:last_editor' => 'Statische pagina\'s',
+  'static:last_editor:title' => 'Statische pagina\'s: %s',
   'collection:object:static' => 'Statische pagina\'s',
   'add:object:static' => 'Voeg statische pagina toe',
   'river:object:static:comment' => '%s reageerde op de statische pagina %s',
