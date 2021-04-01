@@ -45,6 +45,7 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 		'order_by' => [
 			new OrderByClause('e.time_updated', 'DESC'),
 		],
+		'no_results' => elgg_echo('static:admin:empty'),
 	]);
 });
 
