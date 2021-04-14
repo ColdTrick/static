@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.3 (2021-04-14):
+
+- added: overview page where the user is the last editor
+
 6.2.1 (2021-03-16):
 
 - fixed: allow last editors to always edit content
