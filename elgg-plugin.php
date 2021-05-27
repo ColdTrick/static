@@ -23,7 +23,6 @@ return [
 	],
 	'actions' => [
 		'static/edit' => [],
-		'static/delete' => [],
 		'static/reorder' => [],
 		'static/mark_not_out_of_date' => [],
 	],

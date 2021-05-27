@@ -111,16 +111,7 @@ $form_body .= elgg_view('input/hidden', [
 
 echo $form_body;
 
-$footer = '';
-if ($entity) {
-	$footer .= elgg_view('output/url', [
-		'href' => 'action/static/delete?guid=' . $entity->getGUID(),
-		'text' => elgg_echo('delete'),
-		'class' => 'elgg-button elgg-button-delete float-alt',
-		'confirm' => true,
-	]);
-}
-$footer .= elgg_view('input/submit', ['value' => elgg_echo('save')]);
+$footer = elgg_view('input/submit', ['value' => elgg_echo('save')]);
 
 elgg_set_form_footer($footer);
 
