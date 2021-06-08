@@ -1,6 +1,10 @@
 Version history
 ===============
 
+6.4 (2021-06-08):
+
+- removed: action/static delete has been removed from the system
+
 6.3 (2021-04-14):
 
 - added: overview page where the user is the last editor
