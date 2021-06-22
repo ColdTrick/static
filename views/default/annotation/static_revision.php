@@ -4,7 +4,7 @@
 $annotation = elgg_extract('annotation', $vars);
 
 $owner = $annotation->getOwnerEntity();
-if (!$owner instanceof ElggEntity) {
+if (!$owner instanceof \ElggEntity) {
 	return true;
 }
 

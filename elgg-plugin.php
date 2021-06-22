@@ -9,6 +9,9 @@ use Elgg\Router\Middleware\UserPageOwnerCanEditGatekeeper;
 require_once(dirname(__FILE__) . '/lib/functions.php');
 
 return [
+	'plugin' => [
+		'version' => '6.4',
+	],
 	'bootstrap' => Bootstrap::class,
 	'settings' => [
 		'enable_groups' => 'no',
@@ -97,5 +100,130 @@ return [
 				Gatekeeper::class,
 			],
 		],
+	],
+	'events' => [
+		'create' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+			'relationship' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship' => [],
+			],
+		],
+		'delete' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+			'relationship' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship' => [],
+			],
+		],
+		'update' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+		],
+	],
+	'hooks' => [
+		'autocomplete' => [
+			'search_advanced' => [
+				'\ColdTrick\StaticPages\Search::searchAdvancedAutocomplete' => [],
+			],
+		],
+		'container_permissions_check' => [
+			'all' => [
+				'\ColdTrick\StaticPages\Permissions::containerPermissionsCheck' => [],
+			],
+		],
+		'cron' => [
+			'daily' => [
+				'\ColdTrick\StaticPages\Cron::outOfDateNotification' => [],
+			],
+		],
+		'entity:icon:file' => [
+			'object' => [
+				'\ColdTrick\StaticPages\IconService::getIconFile' => [],
+			],
+		],
+		'entity:url' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Widgets::widgetURL' => [],
+			],
+		],
+		'export_value' => [
+			'csv_exporter' => [
+				'\ColdTrick\StaticPages\CSVExporter::exportLastEditor' => [],
+				'\ColdTrick\StaticPages\CSVExporter::exportLastRevision' => [],
+				'\ColdTrick\StaticPages\CSVExporter::exportOutOfDate' => [],
+				'\ColdTrick\StaticPages\CSVExporter::exportParentPages' => [],
+			],
+		],
+		'get_exportable_values' => [
+			'csv_exporter' => [
+				'\ColdTrick\StaticPages\CSVExporter::addLastEditor' => [],
+				'\ColdTrick\StaticPages\CSVExporter::addLastRevision' => [],
+				'\ColdTrick\StaticPages\CSVExporter::addOutOfDate' => [],
+				'\ColdTrick\StaticPages\CSVExporter::addParentPages' => [],
+			],
+		],
+		'group_tool_widgets' => [
+			'widget_manager' => [
+				'\ColdTrick\StaticPages\Widgets::groupToolWidgets' => [],
+			],
+		],
+		'likes:is_likable' => [
+			'object:' . \StaticPage::SUBTYPE => [
+				'\Elgg\Values::getTrue' => [],
+			],
+		],
+		'permissions_check' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Permissions::objectPermissionsCheck' => [],
+			],
+		],
+		'register' => [
+			'menu:entity' => [
+				'\ColdTrick\StaticPages\Menus::changeDeleteItem' => [],
+			],
+			'menu:filter:static' => [
+				'\ColdTrick\StaticPages\Menus::filterMenuRegister' => [],
+			],
+			'menu:owner_block' => [
+				'\ColdTrick\StaticPages\Menus::ownerBlockMenuRegister' => [],
+				'\ColdTrick\StaticPages\Menus::userOwnerBlockMenuRegister' => [],
+			],
+			'menu:page' => [
+				'\ColdTrick\StaticPages\Menus::registerAdminPageMenuItems' => [],
+			],
+			'menu:static_edit' => [
+				'\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems' => [],
+			],
+			'menu:title:object:static' => [
+				\Elgg\Notifications\RegisterSubscriptionMenuItemsHandler::class => [],
+			],
+		],
+		'response' => [
+			'all' => [
+				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
+			],
+		],
+		'to:object' => [
+			'entity' => [
+				'\ColdTrick\StaticPages\Elasticsearch::exportChangeOwner' => [],
+			],
+		],
+		'view_vars' => [
+			'forms/entity_tools/update_entities' => [
+				'\ColdTrick\StaticPages\EntityTools::limitTopPages' => [],
+			],
+		],
+	],
+	'view_extensions' => [
+		'css/elgg' => [
+			'css/static/site.css' => [],
+		],
+	],
+	'view_options' => [
+		'static/ajax/menu_static_edit' => ['ajax' => true],
 	],
 ];

@@ -63,13 +63,13 @@ class Cron {
 					continue;
 				}
 				
-				if (!isset($users[$recipient->getGUID()])) {
-					$users[$recipient->getGUID()] = [
+				if (!isset($users[$recipient->guid])) {
+					$users[$recipient->guid] = [
 						'new' => [],
 					];
 				}
 				
-				$users[$recipient->getGUID()]['new'][] = [
+				$users[$recipient->guid]['new'][] = [
 					'title' => $entity->getDisplayName(),
 					'url' => $entity->getURL(),
 				];
@@ -101,17 +101,17 @@ class Cron {
 						
 						// make sure we need to notify this user
 						$recipient = self::checkRecipient($entity, $last_editor);
-						if (!($recipient instanceof \ElggUser)) {
+						if (!$recipient instanceof \ElggUser) {
 							continue;
 						}
 						
-						if (!isset($users[$recipient->getGUID()])) {
-							$users[$recipient->getGUID()] = [
+						if (!isset($users[$recipient->guid])) {
+							$users[$recipient->guid] = [
 								'reminders' => [],
 							];
 						}
 						
-						$users[$recipient->getGUID()]['reminders'][$i][] = [
+						$users[$recipient->guid]['reminders'][$i][] = [
 							'title' => $entity->getDisplayName(),
 							'url' => $entity->getURL(),
 						];
@@ -155,7 +155,7 @@ class Cron {
 		];
 		
 		$notify_user = elgg_trigger_plugin_hook('out_of_date:user', 'static', $params, $recipient);
-		if (!($notify_user instanceof \ElggUser)) {
+		if (!$notify_user instanceof \ElggUser) {
 			return false;
 		}
 		
@@ -234,7 +234,6 @@ class Cron {
 			// build notification
 			$subject = elgg_echo('static:out_of_date:notification:subject');
 			$message = elgg_echo('static:out_of_date:notification:message', [
-				$user->getDisplayName(),
 				$list,
 				elgg_normalize_url(elgg_generate_url('collection:object:static:user:out_of_date', [
 					'username' => $user->username,
@@ -242,7 +241,7 @@ class Cron {
 			]);
 			
 			// send notification
-			notify_user($user->getGUID(), $site->getGUID(), $subject, $message, [], 'email');
+			notify_user($user->guid, $site->guid, $subject, $message, [], 'email');
 		}
 	}
 }

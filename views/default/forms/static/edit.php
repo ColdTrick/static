@@ -11,10 +11,10 @@ $content_access_id = ACCESS_DEFAULT;
 $friendly_title = ELGG_ENTITIES_ANY_VALUE;
 $content_enable_comments = 'no';
 $content_moderators = ELGG_ENTITIES_NO_VALUE;
-$content_owner_guid = $owner->getGUID();
+$content_owner_guid = $owner->guid;
 
 if ($entity) {
-	$content_guid = $entity->getGUID();
+	$content_guid = $entity->guid;
 	$content_title = $entity->title;
 	$content_description = $entity->description;
 	$content_access_id = $entity->access_id;

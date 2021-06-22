@@ -1,8 +1,8 @@
 <?php
 
-use Elgg\PageNotFoundException;
 use Elgg\Database\Clauses\OrderByClause;
 use Elgg\Values;
+use Elgg\Exceptions\Http\PageNotFoundException;
 
 if (!static_out_of_date_enabled()) {
 	throw new PageNotFoundException();

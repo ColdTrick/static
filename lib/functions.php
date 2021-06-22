@@ -13,7 +13,7 @@ use Elgg\Database\QueryBuilder;
  *
  * @return void
  */
-function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
+function static_setup_page_menu(\StaticPage $entity, string $menu_name = 'page'): void {
 	
 	elgg_require_js('static/sidebar_menu');
 	
@@ -95,7 +95,7 @@ function static_setup_page_menu(\StaticPage $entity, $menu_name = 'page') {
  *
  * @return bool
  */
-function static_check_moderator_in_list(array $guids) {
+function static_check_moderator_in_list(array $guids): bool {
 	if (empty($guids)) {
 		return false;
 	}
@@ -138,12 +138,8 @@ function static_check_moderator_in_list(array $guids) {
  *
  * @return boolean
  */
-function static_is_moderator_in_container(ElggEntity $container_entity, ElggUser $user) {
-	
-	if (empty($container_entity) || empty($user)) {
-		return false;
-	}
-	
+function static_is_moderator_in_container(\ElggEntity $container_entity, \ElggUser $user): bool {
+		
 	$md = elgg_get_metadata([
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
@@ -178,7 +174,7 @@ function static_is_moderator_in_container(ElggEntity $container_entity, ElggUser
  *
  * @return array in format array(guid => ElggUser)
  */
-function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
+function static_get_parent_moderators(\ElggObject $entity, bool $guid_only = false): array {
 	
 	if (!$entity instanceof \StaticPage) {
 		return [];
@@ -192,13 +188,13 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
 	
 	elgg_call(ELGG_IGNORE_ACCESS, function () use ($entity, $guid_only, &$result) {
 		$parent = $entity->getParentPage();
-		if (!$parent instanceof StaticPage) {
-			return [];
+		if (!$parent instanceof \StaticPage) {
+			return;
 		}
 		
 		$moderators = $parent->moderators;
 		if (empty($moderators)) {
-			return [];
+			return;
 		}
 		
 		if (!is_array($moderators)) {
@@ -233,7 +229,7 @@ function static_get_parent_moderators(ElggObject $entity, $guid_only = false) {
  *
  * @return array
  */
-function static_get_parent_options($parent_guid = null, $depth = 0) {
+function static_get_parent_options($parent_guid = null, int $depth = 0): array {
 	$result = [];
 	
 	if ($parent_guid === null) {
@@ -241,7 +237,7 @@ function static_get_parent_options($parent_guid = null, $depth = 0) {
 	}
 	
 	$parent = get_entity($parent_guid);
-	if ($parent instanceof ElggSite || $parent instanceof ElggGroup) {
+	if ($parent instanceof \ElggSite || $parent instanceof \ElggGroup) {
 		$result[0] = elgg_echo('static:new:parent:top_level');
 		$parent_guid = 0;
 	}
@@ -259,6 +255,7 @@ function static_get_parent_options($parent_guid = null, $depth = 0) {
 			'limit' => false,
 			'batch' => true,
 		]);
+		
 		foreach ($parent_entities as $parent) {
 			$result[$parent->guid] = trim(str_repeat('-', $depth) . ' ' . $parent->title);
 			
@@ -277,7 +274,7 @@ function static_get_parent_options($parent_guid = null, $depth = 0) {
  *
  * @return bool|string false when not unique, string otherwise
  */
-function static_make_friendly_title($friendly_title, $entity_guid = 0) {
+function static_make_friendly_title(string $friendly_title, int $entity_guid = 0) {
 	
 	if (empty($friendly_title)) {
 		return false;
@@ -324,7 +321,7 @@ function static_make_friendly_title($friendly_title, $entity_guid = 0) {
  *
  * @return bool true if available, false otherwise
  */
-function static_is_friendly_title_available($friendly_title, $entity_guid = 0) {
+function static_is_friendly_title_available(string $friendly_title, int $entity_guid = 0): bool {
 	
 	if (empty($friendly_title)) {
 		return false;
@@ -349,7 +346,6 @@ function static_is_friendly_title_available($friendly_title, $entity_guid = 0) {
 			'value' => $friendly_title,
 		],
 		'metadata_case_sensitive' => false,
-		'count' => true,
 	];
 	
 	if (!empty($entity_guid)) {
@@ -357,12 +353,10 @@ function static_is_friendly_title_available($friendly_title, $entity_guid = 0) {
 			return $qb->compare("{$main_alias}.guid", '!=', $entity_guid, ELGG_VALUE_GUID);
 		};
 	}
-	
-	$count = elgg_call(ELGG_IGNORE_ACCESS, function() use ($options){
-		return elgg_get_entities($options);
+		
+	return elgg_call(ELGG_IGNORE_ACCESS, function() use ($options){
+		return empty(elgg_count_entities($options));
 	});
-	
-	return empty($count);
 }
 
 /**
@@ -370,22 +364,8 @@ function static_is_friendly_title_available($friendly_title, $entity_guid = 0) {
  *
  * @return bool
  */
-function static_out_of_date_enabled() {
-	static $result;
-	
-	if (isset($result)) {
-		return $result;
-	}
-	
-	$result = false;
-	
-	// check the plugin settings
-	$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
-	if ($days > 0) {
-		$result = true;
-	}
-	
-	return $result;
+function static_out_of_date_enabled(): bool {
+	return (int) elgg_get_plugin_setting('out_of_date_days', 'static') > 0;
 }
 
 /**
@@ -396,13 +376,12 @@ function static_out_of_date_enabled() {
  *
  * @return bool
  */
-function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
+function static_check_children_tree(\ElggObject $entity, int $tree_guid = 0): bool {
 	
 	if (!$entity instanceof StaticPage) {
 		return false;
 	}
 	
-	$tree_guid = (int) $tree_guid;
 	if ($tree_guid < 1) {
 		$tree_guid = $entity->guid;
 	}
@@ -419,6 +398,7 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
 			'limit' => false,
 			'batch' => true,
 		]);
+		
 		/* @var $static StaticPage */
 		foreach ($batch as $static) {
 			
@@ -443,7 +423,7 @@ function static_check_children_tree(ElggObject $entity, $tree_guid = 0) {
  *
  * @return bool
  */
-function static_group_enabled(ElggGroup $group = null) {
+function static_group_enabled(\ElggGroup $group = null): bool {
 	static $plugin_setting;
 
 	if (!isset($plugin_setting)) {
@@ -460,7 +440,7 @@ function static_group_enabled(ElggGroup $group = null) {
 		return false;
 	}
 
-	if (!$group instanceof ElggGroup) {
+	if (!$group instanceof \ElggGroup) {
 		return $plugin_setting;
 	}
 

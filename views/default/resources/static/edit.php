@@ -1,6 +1,6 @@
 <?php
 
-use Elgg\EntityPermissionsException;
+use Elgg\Exceptions\Http\EntityPermissionsException;
 
 $body = '';
 $sidebar = '';
@@ -63,4 +63,5 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 echo elgg_view_page(elgg_echo('static:edit'), [
 	'content' => $body,
 	'sidebar' => $sidebar,
+	'filter_id' => 'static/edit',
 ]);

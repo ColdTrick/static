@@ -48,9 +48,7 @@ return array (
   'static:out_of_date:owner:title' => 'Verouderde content van: %s',
   'static:out_of_date:none' => 'Geen verouderde content gevonden',
   'static:out_of_date:notification:subject' => 'Je statische content is verouderd',
-  'static:out_of_date:notification:message' => 'Hallo %s,
-
-Een aantal van je statische pagina\'s zijn verouderd. Controleer of de informatie nog actueel en/of nuttig is.
+  'static:out_of_date:notification:message' => 'HEen aantal van je statische pagina\'s zijn verouderd. Controleer of de informatie nog actueel en/of nuttig is.
 
 %s
 
@@ -61,7 +59,7 @@ Klik hier voor een complete lijst van de verouderde content
   'static:groups:title' => 'Beheer groep statische pagina\'s',
   'static:groups:owner_block' => 'Groep statische pagina\'s',
   'static:groups:tool_option' => 'Schakel statische pagina\'s in',
-  'static:action:edit:error:title_description' => 'Geen een Titel en Omschrijving op',
+  'static:action:edit:error:title_description' => 'Geef een Titel en Omschrijving op',
   'static:action:edit:error:friendly_title' => 'De permalink is al in gebruik, kies een andere',
   'static:action:edit:success' => 'Succesvol opgeslagen',
   'static:edit' => 'Maak/Bewerk een statische pagina',

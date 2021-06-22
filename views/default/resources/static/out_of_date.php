@@ -1,14 +1,14 @@
 <?php
 
-use Elgg\PageNotFoundException;
 use Elgg\Database\Clauses\OrderByClause;
 use Elgg\Values;
+use Elgg\Exceptions\Http\PageNotFoundException;
 
 if (!static_out_of_date_enabled()) {
 	throw new PageNotFoundException();
 }
 
-elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
+elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE);
 
 $days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 $include_groups = (int) get_input('include_groups', 0);
@@ -34,7 +34,7 @@ $body = elgg_view('input/form', [
 
 $body .= elgg_list_entities([
 	'type' => 'object',
-	'subtype' => StaticPage::SUBTYPE,
+	'subtype' => \StaticPage::SUBTYPE,
 	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->guid,
 	'modified_time_upper' => Values::normalizeTime("-{$days} days"),
 	'order_by' => new OrderByClause('e.time_updated', 'DESC'),

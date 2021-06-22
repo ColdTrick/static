@@ -3,7 +3,7 @@
 use Elgg\Database\Clauses\OrderByClause;
 
 $entity = elgg_extract('entity', $vars);
-if (!$entity instanceof StaticPage) {
+if (!$entity instanceof \StaticPage) {
 	return;
 }
 

@@ -3,7 +3,7 @@
  * List the main static pages of this group
  */
 
-use Elgg\PageNotFoundException;
+use Elgg\Exceptions\Http\PageNotFoundException;
 
 elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'group');
 

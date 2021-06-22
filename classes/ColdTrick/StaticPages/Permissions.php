@@ -36,7 +36,7 @@ class Permissions {
 		$owner = $entity->getOwnerEntity();
 		if ($owner instanceof \ElggGroup) {
 			// if you can edit the group, you can edit the static page
-			if ($owner->canEdit($user->getGUID())) {
+			if ($owner->canEdit($user->guid)) {
 				return true;
 			}
 		}
@@ -50,7 +50,7 @@ class Permissions {
 				$moderators = [$moderators];
 			}
 	
-			if (in_array($user->getGUID(), $moderators)) {
+			if (in_array($user->guid, $moderators)) {
 				return true;
 			}
 		}
@@ -59,7 +59,7 @@ class Permissions {
 		if ($parent_guid) {
 			$moderators = static_get_parent_moderators($entity, true);
 	
-			if (in_array($user->getGUID(), $moderators)) {
+			if (in_array($user->guid, $moderators)) {
 				return true;
 			}
 		}

@@ -37,7 +37,7 @@ class Menus {
 	 *
 	 * @return array
 	 */
-	private static function orderMenu($menu_items) {
+	protected static function orderMenu($menu_items) {
 		
 		if (!is_array($menu_items)) {
 			return $menu_items;

@@ -1,9 +1,5 @@
-define(function(require) {
-	
-	var $ = require('jquery');
-	var Ajax = require('elgg/Ajax');
-	
-	var out_of_date = function(event) {
+define(['jquery', 'elgg/Ajax'], function($, Ajax) {
+	$(document).on('click', '#static-out-of-date-touch-link', function(event) {
 		event.preventDefault();
 		
 		if ((typeof event.result !== 'undefined') && (event.result === false)) {
@@ -19,7 +15,5 @@ define(function(require) {
 		});
 		
 		return false;
-	};
-	
-	$(document).on('click', '#static-out-of-date-touch-link', out_of_date);
+	});
 });

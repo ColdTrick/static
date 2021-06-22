@@ -1,7 +1,7 @@
 <?php
 
-use Elgg\EntityNotFoundException;
-use Elgg\EntityPermissionsException;
+use Elgg\Exceptions\Http\EntityNotFoundException;
+use Elgg\Exceptions\Http\EntityPermissionsException;
 
 $guid = (int) elgg_extract('guid', $vars);
 

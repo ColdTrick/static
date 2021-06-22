@@ -58,9 +58,7 @@ return [
 	'static:out_of_date:notification:section:new' => "Newly out-of-date content",
 	'static:out_of_date:notification:section:reminder' => "Reminder %s for out-of-date content",
 	'static:out_of_date:notification:subject' => "Your static content is out-of-date",
-	'static:out_of_date:notification:message' => "Hi %s,
-
-Some of your static content pages are out-of-date. Please have a look if the information is still current/useful.
+	'static:out_of_date:notification:message' => "Some of your static content pages are out-of-date. Please have a look if the information is still current/useful.
 
 %s
 

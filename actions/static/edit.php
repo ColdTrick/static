@@ -25,7 +25,7 @@ if (empty($friendly_title)) {
 }
 
 $owner = get_entity($owner_guid);
-if (!$owner instanceof ElggGroup) {
+if (!$owner instanceof \ElggGroup) {
 	$owner = elgg_get_site_entity();
 }
 
@@ -38,7 +38,7 @@ $parent = elgg_call(ELGG_IGNORE_ACCESS, function () use ($parent_guid){
 	return get_entity($parent_guid);
 });
 
-if (!$parent instanceof StaticPage) {
+if (!$parent instanceof \StaticPage) {
 	$parent_guid = 0;
 	$parent = false;
 }
@@ -49,7 +49,7 @@ if ($guid) {
 		return get_entity($guid);
 	});
 
-	if (!$entity instanceof StaticPage || !$entity->canEdit()) {
+	if (!$entity instanceof \StaticPage || !$entity->canEdit()) {
 		return elgg_error_response();
 	}
 }
@@ -133,5 +133,8 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $title, $description, $ac
 });
 
 elgg_clear_sticky_form('static');
+
+// Need to subscribe for future updates as owner is not a user
+$entity->addSubscription();
 
 return elgg_ok_response('', elgg_echo('static:action:edit:success'), $entity->getURL());
