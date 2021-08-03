@@ -172,7 +172,7 @@ return [
 			],
 		],
 		'likes:is_likable' => [
-			'object:' . \StaticPage::SUBTYPE => [
+			'object:static' => [
 				'\Elgg\Values::getTrue' => [],
 			],
 		],
