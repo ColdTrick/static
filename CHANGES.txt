@@ -1,6 +1,10 @@
 Version history
 ===============
 
+7.0 (2021-09-27):
+
+- changed: updated for Elgg 4
+
 6.4 (2021-06-08):
 
 - removed: action/static delete has been removed from the system
