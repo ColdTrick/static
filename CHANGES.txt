@@ -1,6 +1,10 @@
 Version history
 ===============
 
+7.0.1 (2021-10-27):
+
+- fixed: use route generation instead of fixed url
+
 7.0 (2021-09-27):
 
 - changed: updated for Elgg 4
