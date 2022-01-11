@@ -34,10 +34,7 @@ class StaticPage extends \ElggObject {
 		$url = elgg_normalize_url($url);
 		
 		// allow other to change the url
-		$params = [
-			'entity' => $this,
-		];
-		$url = elgg_trigger_plugin_hook('entity:url', $this->getType(), $params, $url);
+		$url = elgg_trigger_plugin_hook('entity:url', $this->getType(), ['entity' => $this], $url);
 		
 		// normalize the url
 		return elgg_normalize_url($url);
@@ -51,13 +48,6 @@ class StaticPage extends \ElggObject {
 		
 		if ($this->enable_comments !== 'yes') {
 			return false;
-		}
-		
-		if (empty($user_guid)) {
-			$user_guid = elgg_get_logged_in_user_guid();
-		}
-		if (!isset($default)) {
-			$default = !empty($user_guid);
 		}
 		
 		return parent::canComment($user_guid, $default);
@@ -253,5 +243,4 @@ class StaticPage extends \ElggObject {
 		
 		return (bool) elgg_trigger_plugin_hook('out_of_date:state', 'static', $params, $result);
 	}
-	
 }

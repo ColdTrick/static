@@ -21,7 +21,11 @@ return [
 			'type' => 'object',
 			'subtype' => 'static',
 			'class' => StaticPage::class,
-			'searchable' => true,
+			'capabilities' => [
+				'commentable' => true,
+				'searchable' => true,
+				'likable' => true,
+			],
 		],
 	],
 	'actions' => [
@@ -169,11 +173,6 @@ return [
 		'group_tool_widgets' => [
 			'widget_manager' => [
 				'\ColdTrick\StaticPages\Widgets::groupToolWidgets' => [],
-			],
-		],
-		'likes:is_likable' => [
-			'object:static' => [
-				'\Elgg\Values::getTrue' => [],
 			],
 		],
 		'permissions_check' => [
