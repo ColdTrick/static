@@ -50,7 +50,9 @@ class PageHandler {
 			
 			return elgg_ok_response($content);
 		} catch (HttpException $exception) {
-			return new ErrorResponse($exception->getMessage(), $exception->getCode());
+			$response = new ErrorResponse($exception->getMessage(), $exception->getCode());
+			$response->setException($exception);
+			return $response;
 		}
 	}
 }

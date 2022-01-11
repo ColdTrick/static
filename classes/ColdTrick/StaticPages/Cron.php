@@ -235,9 +235,9 @@ class Cron {
 			$subject = elgg_echo('static:out_of_date:notification:subject');
 			$message = elgg_echo('static:out_of_date:notification:message', [
 				$list,
-				elgg_normalize_url(elgg_generate_url('collection:object:static:user:out_of_date', [
+				elgg_generate_url('collection:object:static:user:out_of_date', [
 					'username' => $user->username,
-				])),
+				]),
 			]);
 			
 			// send notification

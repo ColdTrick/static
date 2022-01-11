@@ -42,7 +42,12 @@ class Search {
 		$return_value[] = [
 			'type' => 'placeholder',
 			'content' => elgg_format_element('label', [], elgg_echo('item:object:static') . ' (' . $static_count . ')'),
-			'href' => elgg_normalize_url('search?entity_subtype=static&entity_type=object&search_type=entities&q=' . $query),
+			'href' => elgg_generate_url('default:search', [
+				'entity_type' => 'object',
+				'entity_subtype' => \StaticPage::SUBTYPE,
+				'search_type' => 'entities',
+				'q' => $query,
+			]),
 		];
 
 		foreach ($entities as $entity) {

@@ -13,7 +13,9 @@ if (!$entity instanceof StaticPage) {
 }
 
 if (!has_access_to_entity($entity) && !$entity->canEdit()) {
-	throw new EntityPermissionsException();
+	$ex = new EntityPermissionsException();
+	$ex->setParams(['entity' => $entity]);
+	throw $ex;
 }
 
 // since static has 'magic' URLs make sure context is correct
