@@ -5,7 +5,7 @@ elgg_make_sticky_form('static');
 $guid = (int) get_input('guid');
 $owner_guid = (int) get_input('owner_guid'); // site or group
 $parent_guid = (int) get_input('parent_guid');
-$title = get_input('title');
+$title = get_input('title', '');
 
 $friendly_title = get_input('friendly_title', $title);
 $friendly_title = static_make_friendly_title($friendly_title, $guid);
