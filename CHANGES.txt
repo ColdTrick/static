@@ -1,6 +1,10 @@
 Version history
 ===============
 
+8.0 (2022-02-16):
+
+- changed: updated entity configuration for new capabilities
+
 7.0.2 (2021-11-17):
 
 - fixed: pass correct information to error page
