@@ -243,4 +243,19 @@ class StaticPage extends \ElggObject {
 		
 		return (bool) elgg_trigger_plugin_hook('out_of_date:state', 'static', $params, $result);
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	public function toObject(array $params = []) {
+		$object = parent::toObject($params);
+		
+		$last_editor = $this->getLastEditor();
+		if ($last_editor instanceof \ElggUser) {
+			// Change to owner of the static page, to allow the last editor to find it even if private (for example in search)
+			$object->owner_guid = $last_editor->guid;
+		}
+		
+		return $object;
+	}
 }

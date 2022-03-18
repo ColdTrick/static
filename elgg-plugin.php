@@ -206,11 +206,6 @@ return [
 				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
 			],
 		],
-		'to:object' => [
-			'entity' => [
-				'\ColdTrick\StaticPages\Elasticsearch::exportChangeOwner' => [],
-			],
-		],
 		'view_vars' => [
 			'forms/entity_tools/update_entities' => [
 				'\ColdTrick\StaticPages\EntityTools::limitTopPages' => [],
