@@ -9,22 +9,6 @@ if (!$entity->isOutOfDate()) {
 	return;
 }
 
-$message = elgg_echo('static:out_of_date:message');
-if ($entity->canEdit()) {
-	$message .= elgg_view('output/url', [
-		'icon' => 'exclamation-triangle',
-		'text' => elgg_echo('static:out_of_date:message:mark'),
-		'href' => elgg_generate_action_url('static/mark_not_out_of_date', [
-			'guid' => $entity->guid,
-		]),
-		'confirm' => true,
-		'class' => 'mls',
-		'id' => 'static-out-of-date-touch-link',
-	]);
-	
-	elgg_require_js('static/out_of_date');
-}
-
 // message is first shown to editors only
 if (!$entity->canEdit()) {
 	$reminder_days = (int) elgg_get_plugin_setting('out_of_date_reminder_interval', 'static');
@@ -41,7 +25,23 @@ if (!$entity->canEdit()) {
 	}
 }
 
-echo elgg_view_message('warning', $message, [
+$link = '';
+if ($entity->canEdit()) {
+	$link .= elgg_view('output/url', [
+		'icon' => 'exclamation-triangle',
+		'text' => elgg_echo('static:out_of_date:message:mark'),
+		'href' => elgg_generate_action_url('static/mark_not_out_of_date', [
+			'guid' => $entity->guid,
+		]),
+		'confirm' => true,
+		'id' => 'static-out-of-date-touch-link',
+	]);
+	
+	elgg_require_js('static/out_of_date');
+}
+
+echo elgg_view_message('warning', elgg_echo('static:out_of_date:message'), [
 	'class' => 'static-out-of-date-message',
 	'title' => false,
+	'link' => $link,
 ]);
