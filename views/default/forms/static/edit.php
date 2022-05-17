@@ -57,6 +57,7 @@ $form_body .= elgg_view('entity/edit/icon', [
 	'entity' => $entity,
 	'entity_type' => 'object',
 	'entity_subtype' => StaticPage::SUBTYPE,
+	'cropper_enabled' => true,
 ]);
 
 $form_body .= elgg_view_field([
