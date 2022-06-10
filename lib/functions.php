@@ -23,13 +23,7 @@ function static_setup_page_menu(\StaticPage $entity, string $menu_name = 'page')
 		$ignore_access = $page_owner->canWriteToContainer(0, 'object', StaticPage::SUBTYPE) ? ELGG_IGNORE_ACCESS : 0;
 	}
 	
-	$root_entity = elgg_call($ignore_access, function() use ($entity) {
-		return $entity->getRootPage();
-	});
-	
-	if (!$root_entity instanceof \StaticPage) {
-		return;
-	}
+	$root_entity = $entity->getRootPage();
 	
 	// check for availability in cache
 	$static_items = $root_entity->getMenuCache();

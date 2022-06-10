@@ -147,12 +147,15 @@ class StaticPage extends \ElggObject {
 	public function getRootPage() {
 		
 		// first created relationship is the root entity
-		$relations = $this->getEntitiesFromRelationship([
-			'type' => 'object',
-			'subtype' => StaticPage::SUBTYPE,
-			'relationship' => 'subpage_of',
-			'limit' => 1,
-		]);
+		$relations = elgg_call(ELGG_IGNORE_ACCESS, function () {
+			return $this->getEntitiesFromRelationship([
+				'type' => 'object',
+				'subtype' => StaticPage::SUBTYPE,
+				'relationship' => 'subpage_of',
+				'limit' => 1,
+			]);
+		});
+		
 		if (!empty($relations)) {
 			return $relations[0];
 		}
@@ -173,12 +176,14 @@ class StaticPage extends \ElggObject {
 			return false;
 		}
 		
-		$parent_entity = get_entity($parent_guid);
-		if (!$parent_entity instanceof \StaticPage) {
-			return false;
-		}
-		
-		return $parent_entity;
+		return elgg_call(ELGG_IGNORE_ACCESS, function() use ($parent_guid) {
+			$parent_entity = get_entity($parent_guid);
+			if (!$parent_entity instanceof \StaticPage) {
+				return false;
+			}
+			
+			return $parent_entity;
+		});
 	}
 	
 	/**
