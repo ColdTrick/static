@@ -73,4 +73,6 @@ Klik hier voor een complete lijst van de verouderde content
   'static:admin:empty' => 'Geen statische pagina\'s gemaakt',
   'static:all' => 'Beheer statische pagina\'s',
   'static:new:permalink' => 'Permalink',
+  'static:upgrade:2022061401:title' => 'Hernoem iconen van statische pagina\'s',
+  'static:upgrade:2022061401:description' => 'Hernoem de iconen van statische pagina\'s naar de standaard iconen',
 );

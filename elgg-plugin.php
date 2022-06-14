@@ -28,6 +28,9 @@ return [
 			],
 		],
 	],
+	'upgrades' => [
+		'ColdTrick\StaticPages\Upgrades\RenameIcons',
+	],
 	'actions' => [
 		'static/edit' => [],
 		'static/reorder' => [],
@@ -142,11 +145,6 @@ return [
 		'cron' => [
 			'daily' => [
 				'\ColdTrick\StaticPages\Cron::outOfDateNotification' => [],
-			],
-		],
-		'entity:icon:file' => [
-			'object' => [
-				'\ColdTrick\StaticPages\IconService::getIconFile' => [],
 			],
 		],
 		'entity:url' => [
