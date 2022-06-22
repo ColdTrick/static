@@ -1,6 +1,11 @@
 Version history
 ===============
 
+9.1 (2022-06-22):
+
+- changed: migrated custom icon location to default entity icons
+- fixed: always ignore access to fetch correct parent and root page
+
 9.0 (2022-06-01):
 
 - changed: updated for Elgg 4.2
