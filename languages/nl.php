@@ -24,7 +24,7 @@ return array (
   'static:settings:out_of_date:reminder_interval:help' => 'Voer het aantal dagen in waarna opnieuw wordt gecontroleerd of content nog steeds \'verouderd\' is. Indien dit is ingesteld, wordt de melding bij de content uitgesteld voor diegene die niet de content mag bewerken. 0 of leeg voor geen herinneringen.',
   'static:settings:out_of_date:reminder_repeat' => 'Aantal keer dat er moet worden herinnerd',
   'static:settings:out_of_date:reminder_repeat:help' => 'Vul hier een nummer in indien de herinneringsmail meerdere keren moet worden verzonden. 0 betekend geen herinneringen.',
-  'static:edit:menu:parent:direct_child' => 'Direct onder toppagina',
+  'static:edit:menu:parent:direct_child' => 'Direct onder de hoofdpagina',
   'static:out_of_date:message' => 'De content van deze pagina is mogelijk verouderd. Het kan zijn dat het niet meer relevant is.',
   'static:out_of_date:message:mark' => 'Deze pagina is up-to-date.',
   'static:out_of_date:notification:section:new' => 'Recent verouderde content',
@@ -48,7 +48,7 @@ return array (
   'static:out_of_date:owner:title' => 'Verouderde content van: %s',
   'static:out_of_date:none' => 'Geen verouderde content gevonden',
   'static:out_of_date:notification:subject' => 'Je statische content is verouderd',
-  'static:out_of_date:notification:message' => 'HEen aantal van je statische pagina\'s zijn verouderd. Controleer of de informatie nog actueel en/of nuttig is.
+  'static:out_of_date:notification:message' => 'Een aantal van je statische pagina\'s zijn verouderd. Controleer of de informatie nog actueel en/of nuttig is.
 
 %s
 
