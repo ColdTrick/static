@@ -1,6 +1,10 @@
 Version history
 ===============
 
+9.1.1 (2022-07-12):
+
+- several small chores/fixes
+
 9.1 (2022-06-22):
 
 - changed: migrated custom icon location to default entity icons
