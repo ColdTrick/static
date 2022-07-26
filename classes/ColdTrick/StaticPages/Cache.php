@@ -99,7 +99,7 @@ class Cache {
 			]);
 			foreach ($submenu_entities as $submenu_item) {
 					
-				if (!has_access_to_entity($submenu_item) && !$submenu_item->canEdit()) {
+				if (!$submenu_item->hasAccess() && !$submenu_item->canEdit()) {
 					continue;
 				}
 					

@@ -22,7 +22,10 @@ echo elgg_call($ignore_access, function () use ($group) {
 		],
 		'limit' => false,
 		'container_guid' => $group->guid,
-		'order_by_metadata' => ['title' => 'ASC'],
+		'sort_by' => [
+			'property' => 'title',
+			'direction' => 'asc',
+		],
 	]);
 	
 	if (empty($entities)) {

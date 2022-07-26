@@ -397,10 +397,10 @@ function static_check_children_tree(\ElggObject $entity, int $tree_guid = 0): bo
 		foreach ($batch as $static) {
 			
 			// remove old tree
-			remove_entity_relationships($static->guid, 'subpage_of');
+			$static->removeAllRelationships('subpage_of');
 			
 			// add new tree
-			add_entity_relationship($static->guid, 'subpage_of', $tree_guid);
+			$static->addRelationship($tree_guid, 'subpage_of');
 			
 			// check children
 			static_check_children_tree($static, $tree_guid);

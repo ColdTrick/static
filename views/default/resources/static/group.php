@@ -30,7 +30,10 @@ $body = elgg_call($ignore_access, function() use ($group) {
 			'parent_guid' => 0,
 		],
 		'container_guid' => $group->guid,
-		'order_by_metadata' => ['title' => 'ASC'],
+		'sort_by' => [
+			'property' => 'title',
+			'direction' => 'asc',
+		],
 		'no_results' => elgg_echo('static:admin:empty'),
 	]);
 });

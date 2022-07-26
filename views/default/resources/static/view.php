@@ -12,7 +12,7 @@ if (!$entity instanceof StaticPage) {
 	throw new EntityNotFoundException();
 }
 
-if (!has_access_to_entity($entity) && !$entity->canEdit()) {
+if (!$entity->hasAccess() && !$entity->canEdit()) {
 	$ex = new EntityPermissionsException();
 	$ex->setParams(['entity' => $entity]);
 	throw $ex;

@@ -84,7 +84,7 @@ if ($parent_guid !== $entity->parent_guid) {
 	$parent_changed = true;
 	
 	// remove old tree relationships
-	remove_entity_relationships($entity->guid, 'subpage_of');
+	$entity->removeAllRelationships('subpage_of');
 }
 	
 if (($new_entity || $parent_changed) && $parent instanceof \StaticPage) {

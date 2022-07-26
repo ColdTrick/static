@@ -17,7 +17,10 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
 			'parent_guid' => 0,
 		],
 		'container_guid' => $site->guid,
-		'order_by_metadata' => ['title' => 'ASC'],
+		'sort_by' => [
+			'property' => 'title',
+			'direction' => 'asc',
+		],
 		'no_results' => elgg_echo('static:admin:empty'),
 	]);
 });
