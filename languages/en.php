@@ -30,8 +30,8 @@ return [
 	
 	'static:groups:title' => "Manage group static pages",
 	'static:groups:owner_block' => "Group static pages",
-	'static:groups:tool_option' => "Enable static pages",
-	'static:group_tool_option:description' => "Create static pages for the group. These can only be managed by the group owners/admins.",
+	'groups:tool:static' => "Enable static pages",
+	'groups:tool:static:description' => "Create static pages for the group. These can only be managed by the group owners/admins.",
 
 	'add:object:static' => "Add static page",
 	'static:add:subpage' => "Create a subpage",
