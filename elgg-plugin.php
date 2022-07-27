@@ -204,6 +204,11 @@ return [
 				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
 			],
 		],
+		'supported_types' => [
+			'entity_tools' => [
+				'\ColdTrick\StaticPages\MigrateStatic::supportedSubtypes' => [],
+			],
+		],
 		'view_vars' => [
 			'forms/entity_tools/update_entities' => [
 				'\ColdTrick\StaticPages\EntityTools::limitTopPages' => [],
