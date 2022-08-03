@@ -25,4 +25,4 @@ if (empty($options)) {
 	return;
 }
 
-echo elgg_format_element('select', ['name' => 'parent_guid', 'class' => 'static-edit-sub-parent-select elgg-input-dropdown'], $options);
+echo elgg_format_element('select', ['name' => 'parent_guid', 'class' => 'static-edit-sub-parent-select elgg-input-select'], $options);
