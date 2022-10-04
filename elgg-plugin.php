@@ -147,6 +147,11 @@ return [
 				'\ColdTrick\StaticPages\Cron::outOfDateNotification' => [],
 			],
 		],
+		'deadlink_owner' => [
+			'admin_tools' => [
+				'\ColdTrick\StaticPages\AdminTools::deadLinkOwner' => [],
+			],
+		],
 		'entity:url' => [
 			'object' => [
 				'\ColdTrick\StaticPages\Widgets::widgetURL' => [],
