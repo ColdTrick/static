@@ -28,7 +28,8 @@ class Permissions {
 		}
 		
 		// allowed if you are the last editor
-		if ($entity->getLastEditor()->guid === $user->guid) {
+		$last_editor = $entity->getLastEditor();
+		if ($last_editor instanceof \ElggUser && $last_editor->guid === $user->guid) {
 			return true;
 		}
 		
