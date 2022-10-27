@@ -1,6 +1,10 @@
 Version history
 ===============
 
+10.1.1 (2022-10-27):
+
+- several small chores/fixes
+
 10.1 (2022-10-07):
 
 - added: support for admin tools dead link detection
