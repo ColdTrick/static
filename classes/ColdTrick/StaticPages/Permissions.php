@@ -95,4 +95,49 @@ class Permissions {
 		}
 		return $return_value;
 	}
+	
+	/**
+	 * Allow moderators to delete (private) static pages
+	 *
+	 * @param \Elgg\Hook $hook 'action:validate', 'entity/delete'
+	 *
+	 * @return void
+	 */
+	public static function allowDeletingPrivateEntity(\Elgg\Hook $hook) {
+	
+		$entity_guid = (int) get_input('guid');
+		if (empty($entity_guid)) {
+			return;
+		}
+		
+		$entity = elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity_guid) {
+			return get_entity($entity_guid);
+		});
+			
+		if (!$entity instanceof \StaticPage) {
+			return;
+		}
+		
+		if (!$entity->canEdit()) {
+			return;
+		}
+		
+		// the entity delete action might not be able to get privately owned static pages
+		elgg_register_plugin_hook_handler('get_sql', 'access', function(\Elgg\Hook $hook) use ($entity_guid) {
+			$result = $hook->getValue();
+			/**
+			 * @var QueryBuilder $qb
+			 */
+			$qb = $hook->getParam('query_builder');
+			$table_alias = $hook->getParam('table_alias');
+			$guid_column = $hook->getParam('guid_column');
+			
+			$alias = function ($column) use ($table_alias) {
+				return $table_alias ? "{$table_alias}.{$column}" : $column;
+			};
+			
+			$result['ors']['special_static_access'] = $qb->compare($alias($guid_column), '=', $entity_guid);
+			return $result;
+		});
+	}
 }

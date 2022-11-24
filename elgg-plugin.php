@@ -132,6 +132,11 @@ return [
 		],
 	],
 	'hooks' => [
+		'action:validate' => [
+			'entity/delete' => [
+				'\ColdTrick\StaticPages\Permissions::allowDeletingPrivateEntity' => [],
+			],
+		],
 		'autocomplete' => [
 			'search_advanced' => [
 				'\ColdTrick\StaticPages\Search::searchAdvancedAutocomplete' => [],

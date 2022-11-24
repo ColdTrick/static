@@ -19,9 +19,11 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 
 	if ($guid) {
 		$entity = get_entity($guid);
-		if ($entity instanceof StaticPage && !$entity->canEdit()) {
-			throw new EntityPermissionsException();
-		}
+		elgg_call(ELGG_ENFORCE_ACCESS, function() use ($entity) {
+			if ($entity instanceof StaticPage && !$entity->canEdit()) {
+				throw new EntityPermissionsException();
+			}
+		});
 		
 		if ($entity instanceof StaticPage) {
 			// edit
