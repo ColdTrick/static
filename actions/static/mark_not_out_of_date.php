@@ -5,7 +5,10 @@ if (empty($guid)) {
 	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
-$entity = get_entity($guid);
+// needed so editors (normal users) get mark private pages as not out of date
+$entity = elgg_call(ELGG_IGNORE_ACCESS, function() use ($guid) {
+	return get_entity($guid);
+});
 if (!$entity instanceof \StaticPage || !$entity->canEdit()) {
 	return elgg_error_response(elgg_echo('actionunauthorized'));
 }
