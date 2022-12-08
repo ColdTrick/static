@@ -1,6 +1,11 @@
 Version history
 ===============
 
+10.1.2 (2022-12-08):
+
+- fixed: give correct access to moderators to edit/delete entities
+- fixed: normal users were unable to mark private pages as not out of date
+
 10.1.1 (2022-10-27):
 
 - several small chores/fixes
