@@ -22,5 +22,9 @@ class Bootstrap extends DefaultPluginBootstrap {
 				'context' => ['groups'],
 			]);
 		}
+		
+		if (elgg_is_active_plugin('entity_tools')) {
+			elgg_register_plugin_hook_handler('supported_types', 'entity_tools', '\ColdTrick\StaticPages\MigrateStatic::supportedSubtypes');
+		}
 	}
 }
