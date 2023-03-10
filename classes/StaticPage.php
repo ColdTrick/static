@@ -3,13 +3,15 @@
 use Elgg\Database\Clauses\OrderByClause;
 use Imagine\Filter\Basic\Save;
 
+/**
+ * StaticPage entity
+ */
 class StaticPage extends \ElggObject {
 	
 	const SUBTYPE = 'static';
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see ElggObject::initializeAttributes()
+	 * {@inheritdoc}
 	 */
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
@@ -18,46 +20,35 @@ class StaticPage extends \ElggObject {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see ElggEntity::getURL()
+	 * {@inheritdoc}
 	 */
-	public function getURL() {
+	public function getURL(): string {
 		
-		// custom url (eg. /my-static-page)
-		$url = $this->friendly_title;
-		if (!$url) {
-			// basic url
-			$url = elgg_generate_entity_url($this, 'view');
-		}
-		
-		// normalize the url
-		$url = elgg_normalize_url($url);
-		
+		// custom url (eg. /my-static-page) or basic url
+		$url = $this->friendly_title ?: elgg_generate_entity_url($this, 'view');
+
 		// allow other to change the url
-		$url = elgg_trigger_plugin_hook('entity:url', $this->getType(), ['entity' => $this], $url);
+		$url = elgg_trigger_event_results('entity:url', $this->getType(), ['entity' => $this], elgg_normalize_url($url));
 		
-		// normalize the url
 		return elgg_normalize_url($url);
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see ElggObject::canComment()
+	 * {@inheritdoc}
 	 */
-	public function canComment($user_guid = 0, $default = null) {
+	public function canComment(int $user_guid = 0): bool {
 		
 		if ($this->enable_comments !== 'yes') {
 			return false;
 		}
 		
-		return parent::canComment($user_guid, $default);
+		return parent::canComment($user_guid);
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 * @see ElggEntity::delete()
+	 * {@inheritdoc}
 	 */
-	public function delete($recursive = true) {
+	public function delete(bool $recursive = true): bool {
 		
 		// do this here so we can ignore access later
 		if (!$this->canDelete()) {
@@ -100,7 +91,7 @@ class StaticPage extends \ElggObject {
 	 *
 	 * @return void
 	 */
-	public function clearMenuCache() {
+	public function clearMenuCache(): void {
 		elgg_delete_system_cache("static_menu_item_cache_{$this->guid}");
 	}
 
@@ -111,7 +102,7 @@ class StaticPage extends \ElggObject {
 	 *
 	 * @return void
 	 */
-	public function saveMenuCache($contents) {
+	public function saveMenuCache($contents): void {
 		elgg_save_system_cache("static_menu_item_cache_{$this->guid}", $contents);
 	}
 
@@ -126,17 +117,11 @@ class StaticPage extends \ElggObject {
 	
 	/**
 	 * Returns a friendly title
+	 *
+	 * @return string
 	 */
-	public function getFriendlyTitle() {
-		$result = $this->friendly_title;
-		if ($result) {
-			return $result;
-		}
-		
-		// this sometimes happens, prefill with new friendly title
-		$result = static_make_friendly_title($this->title);
-		
-		return $result;
+	public function getFriendlyTitle(): string {
+		return $this->friendly_title ?: static_make_friendly_title($this->title);
 	}
 	
 	/**
@@ -144,7 +129,7 @@ class StaticPage extends \ElggObject {
 	 *
 	 * @return \StaticPage
 	 */
-	public function getRootPage() {
+	public function getRootPage(): \StaticPage {
 		
 		// first created relationship is the root entity
 		$relations = elgg_call(ELGG_IGNORE_ACCESS, function () {
@@ -156,12 +141,7 @@ class StaticPage extends \ElggObject {
 			]);
 		});
 		
-		if (!empty($relations)) {
-			return $relations[0];
-		}
-		
-		// no relations so toppage
-		return $this;
+		return $relations ? $relations[0] : $this;
 	}
 	
 	/**
@@ -219,20 +199,17 @@ class StaticPage extends \ElggObject {
 				'order_by' => new OrderByClause('time_created', 'DESC'),
 			]);
 		});
-		if (empty($revisions)) {
-			return false;
-		}
 		
-		return $revisions[0];
+		return $revisions ? $revisions[0] : false;
 	}
 	
 	/**
 	 * Is the page out-of-date
-	 * This can be influenced using a hook
+	 * This can be influenced using an event
 	 *
 	 * @return bool
 	 */
-	public function isOutOfDate() {
+	public function isOutOfDate(): bool {
 		
 		if (!static_out_of_date_enabled()) {
 			return false;
@@ -241,16 +218,13 @@ class StaticPage extends \ElggObject {
 		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 		$compare_ts = time() - ($days * 24 * 60 * 60);
 		
-		$params = [
-			'entity' => $this,
-		];
 		$result = ($this->time_updated < $compare_ts);
 		
-		return (bool) elgg_trigger_plugin_hook('out_of_date:state', 'static', $params, $result);
+		return (bool) elgg_trigger_event_results('out_of_date:state', 'static', ['entity' => $this], $result);
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 * {@inheritdoc}
 	 */
 	public function toObject(array $params = []) {
 		$object = parent::toObject($params);

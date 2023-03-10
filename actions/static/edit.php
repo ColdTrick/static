@@ -122,11 +122,10 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $title, $description, $ac
 	
 	$entity->save();
 	
-	// icon
-	if (get_input('icon_remove')) {
-		$entity->deleteIcon();
+	if (get_input('header_remove')) {
+		$entity->deleteIcon('header');
 	} else {
-		$entity->saveIconFromUploadedFile('icon');
+		$entity->saveIconFromUploadedFile('header', 'header');
 	}
 	
 	$entity->annotate('static_revision', $description);

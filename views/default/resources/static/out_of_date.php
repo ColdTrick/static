@@ -41,7 +41,6 @@ $body .= elgg_list_entities([
 	'no_results' => elgg_echo('static:out_of_date:none'),
 ]);
 
-// draw page
 echo elgg_view_page(elgg_echo('static:out_of_date:title'), [
 	'content' => $body,
 	'sidebar' => false,

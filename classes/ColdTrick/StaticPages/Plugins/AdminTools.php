@@ -1,18 +1,21 @@
 <?php
 
-namespace ColdTrick\StaticPages;
+namespace ColdTrick\StaticPages\Plugins;
 
+/**
+ * Support for admin tools plugin
+ */
 class AdminTools {
 	
 	/**
 	 * Set the correct owner for static content
 	 *
-	 * @param \Elgg\Hook $hook 'deadlink_owner', 'admin_tools'
+	 * @param \Elgg\Event $event 'deadlink_owner', 'admin_tools'
 	 *
 	 * @return null|\ElggUser
 	 */
-	public static function deadLinkOwner(\Elgg\Hook $hook): ?\ElggUser {
-		$entity = $hook->getEntityParam();
+	public static function deadLinkOwner(\Elgg\Event $event): ?\ElggUser {
+		$entity = $event->getEntityParam();
 		if (!$entity instanceof \StaticPage) {
 			return null;
 		}

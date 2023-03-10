@@ -86,7 +86,6 @@ $body = elgg_call($ignore_access, function() use ($entity) {
 	]);
 });
 
-// draw page
 echo elgg_view_page($entity->getDisplayName(), [
 	'content' => $body,
 	'filter' => false,

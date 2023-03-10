@@ -8,7 +8,7 @@ define(['jquery', 'elgg/Ajax', 'jquery-ui/widgets/sortable'], function($, Ajax) 
 		revert: true,
 		tolerance: 'pointer',
 		containment: '.elgg-menu[data-menu-section="static"]',
-		start:  function(event, ui) {
+		start: function(event, ui) {
 			$(ui.item).find(' > a').addClass('dragged');
 		},
 		update: function(event, ui) {

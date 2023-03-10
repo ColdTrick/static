@@ -53,14 +53,9 @@ class Cache {
 	 *
 	 * @param \StaticPage $root_entity Root entity to fetch the menu items for
 	 *
-	 * @return array|false
+	 * @return array
 	 */
-	public static function generateMenuItemsCache(\StaticPage $root_entity) {
-		
-		if (!($root_entity instanceof \StaticPage)) {
-			return false;
-		}
-		
+	public static function generateMenuItemsCache(\StaticPage $root_entity): array {
 		$static_items = [];
 	
 		$priority = (int) $root_entity->order;
@@ -80,9 +75,10 @@ class Cache {
 		if ($root_entity->canEdit()) {
 			$root_menu_options['itemClass'] = ['static-sortable'];
 		}
+		
 		// add main menu items
 		$menu_item = \ElggMenuItem::factory($root_menu_options);
-		$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $root_entity], $menu_item);
+		$menu_item = elgg_trigger_event_results('menu_item', 'static', ['entity' => $root_entity], $menu_item);
 		
 		$static_items[$root_entity->guid] = $menu_item;
 			
@@ -97,8 +93,8 @@ class Cache {
 				'inverse_relationship' => true,
 				'batch' => true,
 			]);
+			
 			foreach ($submenu_entities as $submenu_item) {
-					
 				if (!$submenu_item->hasAccess() && !$submenu_item->canEdit()) {
 					continue;
 				}
@@ -117,7 +113,7 @@ class Cache {
 					'parent_name' => $submenu_item->parent_guid,
 					'section' => 'static',
 				]);
-				$menu_item = elgg_trigger_plugin_hook('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
+				$menu_item = elgg_trigger_event_results('menu_item', 'static', ['entity' => $submenu_item], $menu_item);
 				
 				$static_items[$submenu_item->guid] = $menu_item;
 			}

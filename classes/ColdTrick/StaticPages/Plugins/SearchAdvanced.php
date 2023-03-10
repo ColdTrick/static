@@ -1,27 +1,27 @@
 <?php
 
-namespace ColdTrick\StaticPages;
+namespace ColdTrick\StaticPages\Plugins;
 
 /**
- * Search
+ * SearchAdvanced
  */
-class Search {
+class SearchAdvanced {
 	
 	/**
 	 * Adds static pages to the search advanced autocomplete dropdown
 	 *
-	 * @param \Elgg\Hook $hook 'autocomplete', 'search_advanced'
+	 * @param \Elgg\Event $event 'autocomplete', 'search_advanced'
 	 *
 	 * @return array
 	 */
-	public static function searchAdvancedAutocomplete(\Elgg\Hook $hook) {
+	public static function searchAdvancedAutocomplete(\Elgg\Event $event) {
 	
-		$query = $hook->getParam('query');
+		$query = $event->getParam('query');
 		if (empty($query)) {
 			return;
 		}
 		
-		$params = $hook->getParams();
+		$params = $event->getParams();
 		$params['type'] = 'object';
 		$params['subtype'] = \StaticPage::SUBTYPE;
 	
@@ -38,7 +38,7 @@ class Search {
 			$static_count = elgg_search($params);
 		}
 
-		$return_value = $hook->getValue();
+		$return_value = $event->getValue();
 		$return_value[] = [
 			'type' => 'placeholder',
 			'content' => elgg_format_element('label', [], elgg_echo('item:object:static') . ' (' . $static_count . ')'),

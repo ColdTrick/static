@@ -85,7 +85,7 @@ function static_setup_page_menu(\StaticPage $entity, string $menu_name = 'page')
 /**
  * Checks if the user is a moderator of any item in the given list of guids
  *
- * @param array $guids
+ * @param array $guids guids to check
  *
  * @return bool
  */
@@ -223,7 +223,7 @@ function static_get_parent_moderators(\ElggObject $entity, bool $guid_only = fal
  *
  * @return array
  */
-function static_get_parent_options($parent_guid = null, int $depth = 0): array {
+function static_get_parent_options(int $parent_guid = null, int $depth = 0): array {
 	$result = [];
 	
 	if ($parent_guid === null) {
@@ -324,7 +324,7 @@ function static_is_friendly_title_available(string $friendly_title, int $entity_
 	// check handler
 	$dummy_request = _elgg_services()->request->create($friendly_title);
 	try {
-		$match = _elgg_services()->urlMatcher->match($dummy_request->getPathInfo());
+		_elgg_services()->urlMatcher->match($dummy_request->getPathInfo());
 		
 		return false;
 	} catch (Exception $e) {
@@ -359,22 +359,18 @@ function static_is_friendly_title_available(string $friendly_title, int $entity_
  * @return bool
  */
 function static_out_of_date_enabled(): bool {
-	return (int) elgg_get_plugin_setting('out_of_date_days', 'static') > 0;
+	return elgg_get_plugin_setting('out_of_date_days', 'static') > 0;
 }
 
 /**
  * Make sure all the children are in the correct tree
  *
- * @param ElggObject $entity    the entity to check the children from
- * @param int        $tree_guid the correct tree guid (will default to the given entity)
+ * @param \StaticPage $entity    the entity to check the children from
+ * @param int         $tree_guid the correct tree guid (will default to the given entity)
  *
- * @return bool
+ * @return void
  */
-function static_check_children_tree(\ElggObject $entity, int $tree_guid = 0): bool {
-	
-	if (!$entity instanceof StaticPage) {
-		return false;
-	}
+function static_check_children_tree(\StaticPage $entity, int $tree_guid = 0): void {
 	
 	if ($tree_guid < 1) {
 		$tree_guid = $entity->guid;
@@ -395,7 +391,6 @@ function static_check_children_tree(\ElggObject $entity, int $tree_guid = 0): bo
 		
 		/* @var $static StaticPage */
 		foreach ($batch as $static) {
-			
 			// remove old tree
 			$static->removeAllRelationships('subpage_of');
 			
@@ -406,14 +401,12 @@ function static_check_children_tree(\ElggObject $entity, int $tree_guid = 0): bo
 			static_check_children_tree($static, $tree_guid);
 		}
 	});
-	
-	return true;
 }
 
 /**
  * Check if group support is enabled
  *
- * @param ElggGroup $group (optional) check if the group has this enabled
+ * @param \ElggGroup $group (optional) check if the group has this enabled
  *
  * @return bool
  */
@@ -421,15 +414,9 @@ function static_group_enabled(\ElggGroup $group = null): bool {
 	static $plugin_setting;
 
 	if (!isset($plugin_setting)) {
-		$plugin_setting = false;
-
-		$setting = elgg_get_plugin_setting('enable_groups', 'static');
-		if ($setting === 'yes') {
-			$plugin_setting = true;
-		}
+		$plugin_setting = elgg_get_plugin_setting('enable_groups', 'static') === 'yes';
 	}
-
-	// shortcut
+	
 	if (!$plugin_setting) {
 		return false;
 	}

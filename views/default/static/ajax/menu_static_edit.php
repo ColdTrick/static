@@ -1,5 +1,5 @@
 <?php
-$root_entity = get_entity(get_input('guid'));
+$root_entity = get_entity((int) get_input('guid'));
 
 echo elgg_view_menu('static_edit', [
 	'sort_by' => 'priority',

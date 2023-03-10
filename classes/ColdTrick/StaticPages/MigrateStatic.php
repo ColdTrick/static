@@ -4,48 +4,34 @@ namespace ColdTrick\StaticPages;
 
 use ColdTrick\EntityTools\Migrate;
 
+/**
+ * Entity tools migration class
+ */
 class MigrateStatic extends Migrate {
 	
 	/**
-	 * Add static to the supported types for EntityTools
-	 *
-	 * @param \Elgg\Hook $hook 'supported_types', 'entity_tools'
-	 *
-	 * @return array
-	 */
-	public static function supportedSubtypes(\Elgg\Hook $hook) {
-		$return_value = $hook->getValue();
-		$return_value[\StaticPage::SUBTYPE] = self::class;
-		return $return_value;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @see \ColdTrick\EntityTools\Migrate::canBackDate()
+	 * {@inheritdoc}
 	 */
 	public function canBackDate() {
 		return true;
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 * @see \ColdTrick\EntityTools\Migrate::canChangeOwner()
+	 * {@inheritdoc}
 	 */
 	public function canChangeOwner() {
 		return false;
 	}
 	
 	/**
-	 * {@inheritDoc}
-	 * @see \ColdTrick\EntityTools\Migrate::canChangeContainer()
+	 * {@inheritdoc}
 	 */
 	public function canChangeContainer() {
 		return true;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * @see \ColdTrick\EntityTools\Migrate::changeContainer()
+	 * {@inheritdoc}
 	 */
 	public function changeContainer($new_container_guid) {
 		// do all the default stuff

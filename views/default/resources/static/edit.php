@@ -15,6 +15,7 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 		elgg_set_page_owner_guid($site->guid);
 		$page_owner = $site;
 	}
+	
 	$body_vars['owner'] = $page_owner;
 
 	if ($guid) {

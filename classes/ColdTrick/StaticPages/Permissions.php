@@ -10,18 +10,18 @@ class Permissions {
 	/**
 	 * Allow moderators to edit static pages and their children
 	 *
-	 * @param \Elgg\Hook $hook 'permissions_check', 'object'
+	 * @param \Elgg\Event $event 'permissions_check', 'object'
 	 *
 	 * @return bool
 	 */
-	public static function objectPermissionsCheck(\Elgg\Hook $hook) {
-		if ($hook->getValue()) {
+	public static function objectPermissionsCheck(\Elgg\Event $event) {
+		if ($event->getValue()) {
 			// already have access, no need to add
 			return;
 		}
 	
-		$entity = $hook->getEntityParam();
-		$user = $hook->getUserParam();
+		$entity = $event->getEntityParam();
+		$user = $event->getUserParam();
 	
 		if (!$entity instanceof \StaticPage || !$user instanceof \ElggUser) {
 			return;
@@ -69,41 +69,42 @@ class Permissions {
 	/**
 	 * Allow moderators to write static pages
 	 *
-	 * @param \Elgg\Hook $hook 'container_permissions_check', 'object'
+	 * @param \Elgg\Event $event 'container_permissions_check', 'object'
 	 *
 	 * @return bool
 	 */
-	public static function containerPermissionsCheck(\Elgg\Hook $hook) {
+	public static function containerPermissionsCheck(\Elgg\Event $event) {
 	
-		if ($hook->getType() !== 'object') {
+		if ($event->getType() !== 'object') {
 			return;
 		}
 
-		if ($hook->getParam('subtype') !== 'static') {
+		if ($event->getParam('subtype') !== 'static') {
 			return;
 		}
 		
-		$container = $hook->getParam('container');
-		$return_value = $hook->getValue();
+		$container = $event->getParam('container');
+		$return_value = $event->getValue();
 		if ($container instanceof \ElggGroup && !$container->canEdit()) {
 			$return_value = false;
 			
-			$user = $hook->getUserParam();
+			$user = $event->getUserParam();
 			if ($user) {
 				$return_value = static_is_moderator_in_container($container, $user);
 			}
 		}
+		
 		return $return_value;
 	}
 	
 	/**
 	 * Allow moderators to delete (private) static pages
 	 *
-	 * @param \Elgg\Hook $hook 'action:validate', 'entity/delete'
+	 * @param \Elgg\Event $event 'action:validate', 'entity/delete'
 	 *
 	 * @return void
 	 */
-	public static function allowDeletingPrivateEntity(\Elgg\Hook $hook) {
+	public static function allowDeletingPrivateEntity(\Elgg\Event $event) {
 	
 		$entity_guid = (int) get_input('guid');
 		if (empty($entity_guid)) {
@@ -123,14 +124,14 @@ class Permissions {
 		}
 		
 		// the entity delete action might not be able to get privately owned static pages
-		elgg_register_plugin_hook_handler('get_sql', 'access', function(\Elgg\Hook $hook) use ($entity_guid) {
-			$result = $hook->getValue();
+		elgg_register_event_handler('get_sql', 'access', function(\Elgg\Event $event) use ($entity_guid) {
+			$result = $event->getValue();
 			/**
 			 * @var QueryBuilder $qb
 			 */
-			$qb = $hook->getParam('query_builder');
-			$table_alias = $hook->getParam('table_alias');
-			$guid_column = $hook->getParam('guid_column');
+			$qb = $event->getParam('query_builder');
+			$table_alias = $event->getParam('table_alias');
+			$guid_column = $event->getParam('guid_column');
 			
 			$alias = function ($column) use ($table_alias) {
 				return $table_alias ? "{$table_alias}.{$column}" : $column;

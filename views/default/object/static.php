@@ -11,17 +11,6 @@ if (elgg_extract('full_view', $vars)) {
 	// out of date message
 	$body = elgg_view('static/out_of_date', $vars);
 	
-	// icon
-	if ($entity->hasIcon('large')) {
-		$body .= elgg_view_entity_icon($entity, 'large', [
-			'href' => false,
-			'class' => 'float-alt',
-			'img_attr' => [
-				'data-highres-url' => $entity->getIconURL(['size' => 'master']),
-			],
-		]);
-	}
-	
 	// description
 	$body .= elgg_view('output/longtext', ['value' => $entity->description]);
 

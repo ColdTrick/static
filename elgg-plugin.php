@@ -29,7 +29,7 @@ return [
 		],
 	],
 	'upgrades' => [
-		'ColdTrick\StaticPages\Upgrades\RenameIcons',
+		'ColdTrick\StaticPages\Upgrades\MoveHeaderIcons',
 	],
 	'actions' => [
 		'static/edit' => [],
@@ -109,12 +109,37 @@ return [
 		],
 	],
 	'events' => [
+		'action:validate' => [
+			'entity/delete' => [
+				'\ColdTrick\StaticPages\Permissions::allowDeletingPrivateEntity' => [],
+			],
+		],
+		'autocomplete' => [
+			'search_advanced' => [
+				'\ColdTrick\StaticPages\Plugins\SearchAdvanced::searchAdvancedAutocomplete' => [],
+			],
+		],
+		'container_permissions_check' => [
+			'all' => [
+				'\ColdTrick\StaticPages\Permissions::containerPermissionsCheck' => [],
+			],
+		],
 		'create' => [
 			'object' => [
 				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
 			],
 			'relationship' => [
 				'\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship' => [],
+			],
+		],
+		'cron' => [
+			'daily' => [
+				'\ColdTrick\StaticPages\Cron::outOfDateNotification' => [],
+			],
+		],
+		'deadlink_owner' => [
+			'admin_tools' => [
+				'\ColdTrick\StaticPages\Plugins\AdminTools::deadLinkOwner' => [],
 			],
 		],
 		'delete' => [
@@ -125,38 +150,6 @@ return [
 				'\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship' => [],
 			],
 		],
-		'update' => [
-			'object' => [
-				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
-			],
-		],
-	],
-	'hooks' => [
-		'action:validate' => [
-			'entity/delete' => [
-				'\ColdTrick\StaticPages\Permissions::allowDeletingPrivateEntity' => [],
-			],
-		],
-		'autocomplete' => [
-			'search_advanced' => [
-				'\ColdTrick\StaticPages\Search::searchAdvancedAutocomplete' => [],
-			],
-		],
-		'container_permissions_check' => [
-			'all' => [
-				'\ColdTrick\StaticPages\Permissions::containerPermissionsCheck' => [],
-			],
-		],
-		'cron' => [
-			'daily' => [
-				'\ColdTrick\StaticPages\Cron::outOfDateNotification' => [],
-			],
-		],
-		'deadlink_owner' => [
-			'admin_tools' => [
-				'\ColdTrick\StaticPages\AdminTools::deadLinkOwner' => [],
-			],
-		],
 		'entity:url' => [
 			'object' => [
 				'\ColdTrick\StaticPages\Widgets::widgetURL' => [],
@@ -164,18 +157,18 @@ return [
 		],
 		'export_value' => [
 			'csv_exporter' => [
-				'\ColdTrick\StaticPages\CSVExporter::exportLastEditor' => [],
-				'\ColdTrick\StaticPages\CSVExporter::exportLastRevision' => [],
-				'\ColdTrick\StaticPages\CSVExporter::exportOutOfDate' => [],
-				'\ColdTrick\StaticPages\CSVExporter::exportParentPages' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportLastEditor' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportLastRevision' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportOutOfDate' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportParentPages' => [],
 			],
 		],
 		'get_exportable_values' => [
 			'csv_exporter' => [
-				'\ColdTrick\StaticPages\CSVExporter::addLastEditor' => [],
-				'\ColdTrick\StaticPages\CSVExporter::addLastRevision' => [],
-				'\ColdTrick\StaticPages\CSVExporter::addOutOfDate' => [],
-				'\ColdTrick\StaticPages\CSVExporter::addParentPages' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::addLastEditor' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::addLastRevision' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::addOutOfDate' => [],
+				'\ColdTrick\StaticPages\Plugins\CSVExporter::addParentPages' => [],
 			],
 		],
 		'group_tool_widgets' => [
@@ -186,6 +179,11 @@ return [
 		'permissions_check' => [
 			'object' => [
 				'\ColdTrick\StaticPages\Permissions::objectPermissionsCheck' => [],
+			],
+		],
+		'prepare' => [
+			'menu:page' => [
+				'\ColdTrick\StaticPages\Menus::pageMenuPrepare' => [],
 			],
 		],
 		'register' => [
@@ -199,8 +197,8 @@ return [
 				'\ColdTrick\StaticPages\Menus::ownerBlockMenuRegister' => [],
 				'\ColdTrick\StaticPages\Menus::userOwnerBlockMenuRegister' => [],
 			],
-			'menu:page' => [
-				'\ColdTrick\StaticPages\Menus::registerAdminPageMenuItems' => [],
+			'menu:admin_header' => [
+				'\ColdTrick\StaticPages\Menus::registerAdminHeaderMenuItems' => [],
 			],
 			'menu:static_edit' => [
 				'\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems' => [],
@@ -214,9 +212,19 @@ return [
 				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
 			],
 		],
+		'supported_types' => [
+			'entity_tools' => [
+				'\ColdTrick\StaticPages\Plugins\EntityTools::supportedSubtypes' => [],
+			],
+		],
+		'update' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+		],
 		'view_vars' => [
 			'forms/entity_tools/update_entities' => [
-				'\ColdTrick\StaticPages\EntityTools::limitTopPages' => [],
+				'\ColdTrick\StaticPages\Plugins\EntityTools::limitTopPages' => [],
 			],
 		],
 	],

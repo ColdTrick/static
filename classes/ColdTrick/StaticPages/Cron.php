@@ -12,11 +12,11 @@ class Cron {
 	/**
 	 * Notify users about out-of-date content
 	 *
-	 * @param \Elgg\Hook $hook 'cron', 'daily'
+	 * @param \Elgg\Event $event 'cron', 'daily'
 	 *
 	 * @return void
 	 */
-	public static function outOfDateNotification(\Elgg\Hook $hook) {
+	public static function outOfDateNotification(\Elgg\Event $event) {
 		
 		if (!static_out_of_date_enabled()) {
 			return;
@@ -25,7 +25,7 @@ class Cron {
 		echo 'Starting Static out-of-date' . PHP_EOL;
 		elgg_log('Starting Static out-of-date', 'NOTICE');
 		
-		$time = $hook->getParam('time', time());
+		$time = $event->getParam('time', time());
 		$days = (int) elgg_get_plugin_setting('out_of_date_days', 'static');
 		
 		$compare_ts = $time - ($days * 24 * 60 * 60);
@@ -46,8 +46,7 @@ class Cron {
 			$batch = elgg_get_entities($options);
 			/* @var $entity \StaticPage */
 			foreach ($batch as $entity) {
-				
-				// allows a hook to influence entities being notified
+				// allows an event to influence entities being notified
 				if (!$entity->isOutOfDate()) {
 					continue;
 				}
@@ -79,7 +78,6 @@ class Cron {
 			$number_of_reminders = (int) elgg_get_plugin_setting('out_of_date_reminder_repeat', 'static');
 			$reminder_interval = (int) elgg_get_plugin_setting('out_of_date_reminder_interval', 'static');
 			if ($number_of_reminders > 0 && $reminder_interval > 0) {
-				
 				for ($i = 1; $i <= $number_of_reminders; $i++) {
 					$compare_ts = $compare_ts - ($reminder_interval * 24 * 60 * 60);
 					$options['modified_time_upper'] = $compare_ts;
@@ -88,8 +86,7 @@ class Cron {
 					$batch = elgg_get_entities($options);
 					/* @var $entity \StaticPage */
 					foreach ($batch as $entity) {
-						
-						// allows a hook to influence entities being notified
+						// allows an event to influence entities being notified
 						if (!$entity->isOutOfDate()) {
 							continue;
 						}
@@ -154,7 +151,7 @@ class Cron {
 			'recipient' => $recipient,
 		];
 		
-		$notify_user = elgg_trigger_plugin_hook('out_of_date:user', 'static', $params, $recipient);
+		$notify_user = elgg_trigger_event_results('out_of_date:user', 'static', $params, $recipient);
 		if (!$notify_user instanceof \ElggUser) {
 			return false;
 		}
@@ -177,7 +174,6 @@ class Cron {
 		
 		$site = elgg_get_site_entity();
 		foreach ($notification_information as $user_guid => $info) {
-			
 			// get recipient
 			$user = get_user($user_guid);
 			if (empty($user)) {
@@ -201,9 +197,7 @@ class Cron {
 			// add reminder intervals
 			$remiders = (array) elgg_extract('reminders', $info, []);
 			if (!empty($remiders)) {
-				
 				foreach ($remiders as $reminder => $pages) {
-					
 					if (empty($pages)) {
 						continue;
 					}
@@ -245,4 +239,3 @@ class Cron {
 		}
 	}
 }
- 

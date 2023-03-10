@@ -13,17 +13,17 @@ class PageHandler {
 	/**
 	 * Check if requested page is a static page
 	 *
-	 * @param \Elgg\Hook $hook 'response', 'all'
+	 * @param \Elgg\Event $event 'response', 'all'
 	 *
 	 * @return array
 	 */
-	public static function respondAll(\Elgg\Hook $hook) {
+	public static function respondAll(\Elgg\Event $event) {
 	
-		if ($hook->getValue()->getStatusCode() !== 404) {
+		if ($event->getValue()->getStatusCode() !== 404) {
 			return;
 		}
 		
-		list($path_type, $identifier) = explode(':', $hook->getType());
+		list($path_type, $identifier) = explode(':', $event->getType());
 		if ($path_type !== 'path') {
 			return;
 		}

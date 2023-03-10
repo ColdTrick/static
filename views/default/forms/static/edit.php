@@ -24,7 +24,6 @@ if ($entity) {
 	$content_enable_comments = $entity->enable_comments;
 	$content_moderators = $entity->moderators;
 	$content_owner_guid = $entity->getOwnerGUID();
-	
 } else {
 	if (!empty($parent_guid)) {
 		$parent = get_entity($parent_guid);
@@ -53,11 +52,10 @@ if (!empty($entity)) {
 	]);
 }
 
-$form_body .= elgg_view('entity/edit/icon', [
+$form_body .= elgg_view('entity/edit/header', [
 	'entity' => $entity,
 	'entity_type' => 'object',
 	'entity_subtype' => StaticPage::SUBTYPE,
-	'cropper_enabled' => true,
 ]);
 
 $form_body .= elgg_view_field([

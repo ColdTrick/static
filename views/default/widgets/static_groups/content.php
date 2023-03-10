@@ -3,7 +3,7 @@
 /* @var $widget ElggWidget */
 $widget = elgg_extract('entity', $vars);
 $group = $widget->getOwnerEntity();
-if (!$group instanceof ElggGroup) {
+if (!$group instanceof \ElggGroup) {
 	return;
 }
 
@@ -41,6 +41,7 @@ echo elgg_call($ignore_access, function () use ($group) {
 	
 		$ordered_entities[$order] = elgg_view('object/static/widget', ['entity' => $entity]);
 	}
+	
 	ksort($ordered_entities);
 	return implode($ordered_entities);
 });

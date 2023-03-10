@@ -11,7 +11,6 @@ $page_owner = elgg_get_page_owner_entity();
 
 elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
 
-// build page elements
 $title = elgg_echo('static:last_editor:title', [$page_owner->getDisplayName()]);
 
 $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
@@ -49,7 +48,6 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 	]);
 });
 
-// draw page
 echo elgg_view_page($title, [
 	'content' => $body,
 	'filter_id' => 'static',

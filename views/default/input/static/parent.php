@@ -2,10 +2,11 @@
 
 $name = elgg_extract('name', $vars);
 $owner = elgg_extract('owner', $vars);
-if (!$owner instanceof ElggEntity) {
+if (!$owner instanceof \ElggEntity) {
 	return;
 }
-elgg_require_js('static/edit');
+
+elgg_require_js('input/static/parent');
 
 $parent_guid = (int) elgg_extract('value', $vars, $owner->guid);
 

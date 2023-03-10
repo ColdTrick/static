@@ -47,7 +47,6 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 	]);
 });
 
-// draw page
 echo elgg_view_page($title_text, [
 	'content' => $body,
 	'sidebar' => false,

@@ -8,7 +8,6 @@ use Elgg\Exceptions\Http\PageNotFoundException;
 elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'group');
 
 $group = elgg_get_page_owner_entity();
-
 if (!static_group_enabled($group)) {
 	throw new PageNotFoundException();
 }
@@ -17,7 +16,7 @@ elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $group);
 
 $can_write = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
 if ($can_write) {
-	elgg_register_title_button('static', 'add', 'object', StaticPage::SUBTYPE);
+	elgg_register_title_button('add', 'object', StaticPage::SUBTYPE);
 }
 
 $ignore_access = $can_write ? ELGG_IGNORE_ACCESS : 0;
@@ -38,7 +37,6 @@ $body = elgg_call($ignore_access, function() use ($group) {
 	]);
 });
 
-// draw page
 echo elgg_view_page(elgg_echo('static:groups:title'), [
 	'content' => $body,
 	'filter_id' => 'static',

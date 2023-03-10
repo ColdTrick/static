@@ -2,13 +2,11 @@
 
 $site = elgg_get_site_entity();
 if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', StaticPage::SUBTYPE)) {
-	elgg_register_title_button('static', 'add', 'object', StaticPage::SUBTYPE);
+	elgg_register_title_button('add', 'object', StaticPage::SUBTYPE);
 }
 
-// breadcrumb
 elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
 
-// build page elements
 $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
 	return elgg_list_entities([
 		'type' => 'object',
@@ -25,7 +23,6 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
 	]);
 });
 
-// draw page
 echo elgg_view_page(elgg_echo('static:all'), [
 	'content' => $body,
 	'sidebar' => false,
