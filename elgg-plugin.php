@@ -1,6 +1,7 @@
 <?php
 
 use ColdTrick\StaticPages\Bootstrap;
+use Elgg\Blog\GroupToolContainerLogicCheck;
 use Elgg\Router\Middleware\Gatekeeper;
 use Elgg\Router\Middleware\GroupPageOwnerCanEditGatekeeper;
 use Elgg\Router\Middleware\AdminGatekeeper;
@@ -117,6 +118,11 @@ return [
 		'autocomplete' => [
 			'search_advanced' => [
 				'\ColdTrick\StaticPages\Plugins\SearchAdvanced::searchAdvancedAutocomplete' => [],
+			],
+		],
+		'container_logic_check' => [
+			'object' => [
+				\ColdTrick\StaticPages\GroupToolContainerLogicCheck::class => [],
 			],
 		],
 		'container_permissions_check' => [
