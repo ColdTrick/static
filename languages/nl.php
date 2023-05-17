@@ -1,10 +1,12 @@
 <?php
 /**
- * This file was created by Translation Editor v8.0
- * On 2021-03-31 16:49
+ * This file was created by Translation Editor v11.1
+ * On 2023-05-17 15:16
  */
 
 return array (
+  'static:upgrade:2023031300:title' => 'Verplaats iconen voor statische pagina\'s naar kopafbeeldingen',
+  'static:upgrade:2023031300:description' => 'Verplaats de oude iconen voor statische pagina\'s naar de kopafbeeldingen',
   'static:menu:owner_block:last_editor' => 'Statische pagina\'s',
   'static:last_editor:title' => 'Statische pagina\'s: %s',
   'collection:object:static' => 'Statische pagina\'s',
@@ -73,6 +75,4 @@ Klik hier voor een complete lijst van de verouderde content
   'static:admin:empty' => 'Geen statische pagina\'s gemaakt',
   'static:all' => 'Beheer statische pagina\'s',
   'static:new:permalink' => 'Permalink',
-  'static:upgrade:2022061401:title' => 'Hernoem iconen van statische pagina\'s',
-  'static:upgrade:2022061401:description' => 'Hernoem de iconen van statische pagina\'s naar de standaard iconen',
 );
