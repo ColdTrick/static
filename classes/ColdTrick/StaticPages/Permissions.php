@@ -105,7 +105,6 @@ class Permissions {
 	 * @return void
 	 */
 	public static function allowDeletingPrivateEntity(\Elgg\Event $event) {
-	
 		$entity_guid = (int) get_input('guid');
 		if (empty($entity_guid)) {
 			return;
@@ -125,10 +124,14 @@ class Permissions {
 		
 		// the entity delete action might not be able to get privately owned static pages
 		elgg_register_event_handler('get_sql', 'access', function(\Elgg\Event $event) use ($entity_guid) {
+			if ($event->getParam('ignore_access')) {
+				// access is ignored, no need for additional query parts
+				return;
+			}
+			
 			$result = $event->getValue();
-			/**
-			 * @var QueryBuilder $qb
-			 */
+			
+			/* @var $qb QueryBuilder */
 			$qb = $event->getParam('query_builder');
 			$table_alias = $event->getParam('table_alias');
 			$guid_column = $event->getParam('guid_column');
@@ -138,6 +141,7 @@ class Permissions {
 			};
 			
 			$result['ors']['special_static_access'] = $qb->compare($alias($guid_column), '=', $entity_guid);
+			
 			return $result;
 		});
 	}
