@@ -29,7 +29,7 @@ if (elgg_extract('full_view', $vars)) {
 		'icon' => true,
 		'icon_entity' => $last_editor,
 		'byline_owner_entity' => $last_editor,
-		'content' => elgg_get_excerpt($entity->description),
+		'content' => elgg_get_excerpt((string) $entity->description),
 	];
 	$params = $params + $vars;
 	echo elgg_view('object/elements/summary', $params);
