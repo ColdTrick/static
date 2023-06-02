@@ -1,6 +1,14 @@
 Version history
 ===============
 
+11.0 (2023-06-02):
+
+- added: group tool container logic check
+- changed: conflict with Elgg < 5.0
+- changed: updated for Elgg 5
+- fixed: error during deletion of static page due to too much access
+- fixed: only register hook if entity_tools is active
+
 10.1.2 (2022-12-08):
 
 - fixed: give correct access to moderators to edit/delete entities
