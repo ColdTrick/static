@@ -218,6 +218,11 @@ return [
 				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
 			],
 		],
+		'seeds' => [
+			'database' => [
+				'\ColdTrick\StaticPages\Seeder::register' => [],
+			],
+		],
 		'supported_types' => [
 			'entity_tools' => [
 				'\ColdTrick\StaticPages\Plugins\EntityTools::supportedSubtypes' => [],
