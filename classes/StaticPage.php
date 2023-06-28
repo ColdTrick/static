@@ -23,9 +23,8 @@ class StaticPage extends \ElggObject {
 	 * {@inheritdoc}
 	 */
 	public function getURL(): string {
-		
 		// custom url (eg. /my-static-page) or basic url
-		$url = $this->friendly_title ?: elgg_generate_entity_url($this, 'view');
+		$url = $this->friendly_title ?: (string) elgg_generate_entity_url($this, 'view');
 
 		// allow other to change the url
 		$url = elgg_trigger_event_results('entity:url', $this->getType(), ['entity' => $this], elgg_normalize_url($url));
