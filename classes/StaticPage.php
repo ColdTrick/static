@@ -5,6 +5,12 @@ use Imagine\Filter\Basic\Save;
 
 /**
  * StaticPage entity
+ *
+ * @property string $enable_comments are comments enabled (yes|no)
+ * @property string $friendly_title  friendly title (to be used as a URL) for this page
+ * @property int[]  $moderators      an array of the user GUIDs who can edit this page (and subpages)
+ * @property int    $parent_guid     parent of this page
+ * @property int    $order           order of the page in the tree
  */
 class StaticPage extends \ElggObject {
 	
