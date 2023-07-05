@@ -1,6 +1,11 @@
 Version history
 ===============
 
+11.1 (2023-07-05):
+
+- added: database seeder
+- fixed: return correct type
+
 11.0 (2023-06-02):
 
 - added: group tool container logic check
