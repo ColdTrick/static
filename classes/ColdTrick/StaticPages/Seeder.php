@@ -46,7 +46,7 @@ class Seeder extends Seed {
 					'container_guid' => $container->guid,
 					'enable_comments' => $this->faker()->boolean() ? 'yes' : 'no',
 					'parent_guid' => 0,
-					'friendly_title' => static_make_friendly_title($this->faker()->words(3, true)),
+					'friendly_title' => static_make_friendly_title('static-' . $this->faker()->words(3, true)),
 					'order' => 0,
 				]);
 			} catch (MaxAttemptsException $e) {
