@@ -110,7 +110,7 @@ $form_body .= elgg_view('input/hidden', [
 
 echo $form_body;
 
-$footer = elgg_view('input/submit', ['value' => elgg_echo('save')]);
+$footer = elgg_view('input/submit', ['text' => elgg_echo('save')]);
 
 elgg_set_form_footer($footer);
 
