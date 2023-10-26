@@ -73,8 +73,6 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity) {
 	}
 });
 
-elgg_push_breadcrumb($entity->getDisplayName());
-
 $ignore_access = $entity->canEdit() ? ELGG_IGNORE_ACCESS : 0;
 
 $body = elgg_call($ignore_access, function() use ($entity) {

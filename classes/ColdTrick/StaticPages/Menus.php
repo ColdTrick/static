@@ -99,7 +99,7 @@ class Menus {
 			'name' => 'static_all',
 			'href' => elgg_generate_url('collection:object:static:all'),
 			'text' => elgg_echo('static:all'),
-			'parent_name' => 'administer_utilities',
+			'parent_name' => 'utilities',
 		]);
 	
 		return $return_value;

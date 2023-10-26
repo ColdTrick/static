@@ -1,7 +1,7 @@
 Static
 ======
 
-![Elgg 5.0](https://img.shields.io/badge/Elgg-5.0-green.svg)
+![Elgg 5.1](https://img.shields.io/badge/Elgg-5.1-green.svg)
 ![Lint Checks](https://github.com/ColdTrick/static/actions/workflows/lint.yml/badge.svg?event=push)
 [![Latest Stable Version](https://poser.pugx.org/coldtrick/static/v/stable.svg)](https://packagist.org/packages/coldtrick/static)
 [![License](https://poser.pugx.org/coldtrick/static/license.svg)](https://packagist.org/packages/coldtrick/static)
