@@ -98,13 +98,13 @@ class Permissions {
 	}
 	
 	/**
-	 * Allow moderators to delete (private) static pages
+	 * Allow access to (private) static pages during certain actions
 	 *
-	 * @param \Elgg\Event $event 'action:validate', 'entity/delete'
+	 * @param \Elgg\Event $event 'action:validate', 'entity/delete'|'entity_attachments/add'
 	 *
 	 * @return void
 	 */
-	public static function allowDeletingPrivateEntity(\Elgg\Event $event) {
+	public static function allowActionAccessToPrivateEntity(\Elgg\Event $event) {
 		$entity_guid = (int) get_input('guid');
 		if (empty($entity_guid)) {
 			return;

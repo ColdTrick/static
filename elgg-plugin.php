@@ -112,7 +112,10 @@ return [
 	'events' => [
 		'action:validate' => [
 			'entity/delete' => [
-				'\ColdTrick\StaticPages\Permissions::allowDeletingPrivateEntity' => [],
+				'\ColdTrick\StaticPages\Permissions::allowActionAccessToPrivateEntity' => [],
+			],
+			'entity_attachments/add' => [
+				'\ColdTrick\StaticPages\Permissions::allowActionAccessToPrivateEntity' => [],
 			],
 		],
 		'autocomplete' => [
@@ -234,6 +237,9 @@ return [
 			],
 		],
 		'view_vars' => [
+			'forms/entity_attachments/add' => [
+				'\ColdTrick\StaticPages\Plugins\EntityAttachments::loadPrivateStaticPage' => [],
+			],
 			'forms/entity_tools/update_entities' => [
 				'\ColdTrick\StaticPages\Plugins\EntityTools::limitTopPages' => [],
 			],
