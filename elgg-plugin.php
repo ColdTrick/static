@@ -246,7 +246,7 @@ return [
 		],
 	],
 	'view_extensions' => [
-		'css/elgg' => [
+		'elgg.css' => [
 			'css/static/site.css' => [],
 		],
 	],
