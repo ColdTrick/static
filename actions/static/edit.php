@@ -50,7 +50,7 @@ if ($guid) {
 	});
 
 	if (!$entity instanceof \StaticPage || !$entity->canEdit()) {
-		return elgg_error_response();
+		return elgg_error_response(elgg_echo('actionunauthorized'));
 	}
 }
 
