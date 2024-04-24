@@ -1,6 +1,10 @@
 Version history
 ===============
 
+12.0.2 (2024-04-24):
+
+- fixed: show error message on edit permissions fail
+
 12.0.1 (2024-03-14):
 
 - several small chores/fixes
