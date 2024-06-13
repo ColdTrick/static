@@ -11,7 +11,7 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 	$body_vars = [];
 	$page_owner = elgg_get_page_owner_entity();
 	$site = elgg_get_site_entity();
-	if (!$page_owner instanceof ElggGroup) {
+	if (!$page_owner instanceof \ElggGroup) {
 		elgg_set_page_owner_guid($site->guid);
 		$page_owner = $site;
 	}
@@ -21,12 +21,12 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 	if ($guid) {
 		$entity = get_entity($guid);
 		elgg_call(ELGG_ENFORCE_ACCESS, function() use ($entity) {
-			if ($entity instanceof StaticPage && !$entity->canEdit()) {
+			if ($entity instanceof \StaticPage && !$entity->canEdit()) {
 				throw new EntityPermissionsException();
 			}
 		});
 		
-		if ($entity instanceof StaticPage) {
+		if ($entity instanceof \StaticPage) {
 			// edit
 			$body_vars['entity'] = $entity;
 			
@@ -37,7 +37,7 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 			$sidebar = elgg_view('static/sidebar/revisions', [
 				'entity' => $entity,
 			]);
-		} elseif ($entity instanceof ElggGroup) {
+		} elseif ($entity instanceof \ElggGroup) {
 			// new in group
 			elgg_set_page_owner_guid($entity->guid);
 			$page_owner = elgg_get_page_owner_entity();
@@ -45,13 +45,13 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 		}
 	}
 	
-	if ($page_owner instanceof ElggGroup) {
+	if ($page_owner instanceof \ElggGroup) {
 		elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $page_owner);
 	} else {
 		elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
 	}
 	
-	if ($entity instanceof StaticPage) {
+	if ($entity instanceof \StaticPage) {
 		elgg_push_breadcrumb($entity->getDisplayName(), $entity->getURL());
 	}
 	
@@ -62,7 +62,6 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 	], $body_vars);
 });
 
-// draw page
 echo elgg_view_page(elgg_echo('static:edit'), [
 	'content' => $body,
 	'sidebar' => $sidebar,

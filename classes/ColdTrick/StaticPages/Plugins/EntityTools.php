@@ -8,17 +8,17 @@ namespace ColdTrick\StaticPages\Plugins;
 class EntityTools {
 
 	/**
-	 * Limit list of updateable entities to top pages
+	 * Limit list of updatable entities to top pages
 	 *
 	 * @param \Elgg\Event $event 'view_vars', 'forms/entity_tools/update_entities'
 	 *
 	 * @return void|array
 	 */
-	public static function limitTopPages(\Elgg\Event $event) {
+	public static function limitTopPages(\Elgg\Event $event): ?array {
 		$vars = $event->getValue();
 		$subtype = elgg_extract('subtype', $vars);
 		if ($subtype !== \StaticPage::SUBTYPE) {
-			return;
+			return null;
 		}
 		
 		$vars['entity_options'] = (array) elgg_extract('entity_options', $vars, []);
@@ -37,7 +37,7 @@ class EntityTools {
 	 *
 	 * @return array
 	 */
-	public static function supportedSubtypes(\Elgg\Event $event) {
+	public static function supportedSubtypes(\Elgg\Event $event): array {
 		$return_value = $event->getValue();
 		$return_value[\StaticPage::SUBTYPE] = \ColdTrick\StaticPages\MigrateStatic::class;
 		return $return_value;

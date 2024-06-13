@@ -1,5 +1,3 @@
 <?php
 
-$entity = elgg_extract('entity', $vars);
-
-echo $entity->title;
+echo elgg_extract('entity', $vars)?->title;

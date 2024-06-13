@@ -20,7 +20,6 @@ $checkbox = elgg_view('input/checkbox', [
 	'checked' => $include_groups ? true : false,
 	'default' => false,
 	'label' => elgg_echo('static:out_of_date:include_groups'),
-	'label_class' => 'float-alt',
 	'onchange' => '$("#static_out_of_date").submit();',
 ]);
 
@@ -30,6 +29,7 @@ $body = elgg_view('input/form', [
 	'disable_security' => true,
 	'body' => $checkbox,
 	'action' => 'static/out_of_date',
+	'class' => 'elgg-justify-right',
 ]);
 
 $body .= elgg_list_entities([

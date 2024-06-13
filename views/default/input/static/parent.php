@@ -6,7 +6,7 @@ if (!$owner instanceof \ElggEntity) {
 	return;
 }
 
-elgg_require_js('input/static/parent');
+elgg_import_esm('input/static/parent');
 
 $parent_guid = (int) elgg_extract('value', $vars, $owner->guid);
 

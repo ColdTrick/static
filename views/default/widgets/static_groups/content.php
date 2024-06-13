@@ -11,12 +11,12 @@ if (!static_group_enabled($group)) {
 	return;
 }
 
-$ignore_access = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE) ? ELGG_IGNORE_ACCESS : 0;
+$ignore_access = $group->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE) ? ELGG_IGNORE_ACCESS : 0;
 echo elgg_call($ignore_access, function () use ($group) {
 	
 	$entities = elgg_get_entities([
 		'type' => 'object',
-		'subtype' => StaticPage::SUBTYPE,
+		'subtype' => \StaticPage::SUBTYPE,
 		'metadata_name_value_pairs' => [
 			'parent_guid' => 0,
 		],

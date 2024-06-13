@@ -12,17 +12,17 @@ class Widgets {
 	 *
 	 * @param \Elgg\Event $event 'entity:url', 'object'
 	 *
-	 * @return string
+	 * @return null|string
 	 */
-	public static function widgetURL(\Elgg\Event $event) {
+	public static function widgetURL(\Elgg\Event $event): ?string {
 		$return_value = $event->getValue();
 		if (!empty($return_value)) {
-			return;
+			return null;
 		}
 		
 		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggWidget) {
-			return;
+			return null;
 		}
 		
 		switch ($entity->handler) {
@@ -41,13 +41,13 @@ class Widgets {
 	 *
 	 * @param \Elgg\Event $event 'group_tool_widgets', 'widget_manager'
 	 *
-	 * @return array
+	 * @return null|array
 	 */
-	public static function groupToolWidgets(\Elgg\Event $event) {
+	public static function groupToolWidgets(\Elgg\Event $event): ?array {
 	
 		$entity = $event->getEntityParam();
 		if (!$entity instanceof \ElggGroup) {
-			return;
+			return null;
 		}
 		
 		$return_value = $event->getValue();

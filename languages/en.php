@@ -92,7 +92,4 @@ Click here for a complete list:
 	'static:csv_exporter:main:title' => "Main page title",
 	'static:csv_exporter:main:guid' => "Main page GUID",
 	'static:csv_exporter:main:url' => "Main page URL",
-
-	'static:upgrade:2023031300:title' => "Move static icons to header images",
-	'static:upgrade:2023031300:description' => "Moves old static page icons to header images",
 ];

@@ -8,8 +8,6 @@ if (!$owner instanceof \ElggEntity) {
 	return true;
 }
 
-$output = elgg_view_entity_url($owner);
+echo elgg_view_entity_url($owner);
 
-$output .= elgg_format_element('span', ['class' => 'mls'], elgg_view_friendly_time($annotation->time_created));
-
-echo elgg_format_element('div', [], $output);
+echo elgg_format_element('span', ['class' => 'mls'], elgg_view_friendly_time($annotation->time_created));

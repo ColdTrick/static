@@ -1,7 +1,7 @@
 <?php
 
 $entity = elgg_extract('entity', $vars);
-if (!$entity instanceof StaticPage) {
+if (!$entity instanceof \StaticPage) {
 	return;
 }
 
@@ -37,7 +37,7 @@ if ($entity->canEdit()) {
 		'id' => 'static-out-of-date-touch-link',
 	]);
 	
-	elgg_require_js('static/out_of_date');
+	elgg_import_esm('static/out_of_date');
 }
 
 echo elgg_view_message('warning', elgg_echo('static:out_of_date:message'), [

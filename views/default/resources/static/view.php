@@ -8,7 +8,7 @@ $guid = (int) elgg_extract('guid', $vars);
 $entity = elgg_call(ELGG_IGNORE_ACCESS, function () use ($guid) {
 	return get_entity($guid);
 });
-if (!$entity instanceof StaticPage) {
+if (!$entity instanceof \StaticPage) {
 	throw new EntityNotFoundException();
 }
 
@@ -44,12 +44,12 @@ if ($entity->canEdit()) {
 
 // page owner (for groups)
 $owner = $entity->getOwnerEntity();
-if ($owner instanceof ElggGroup) {
+if ($owner instanceof \ElggGroup) {
 	elgg_set_page_owner_guid($owner->guid);
 	
-	elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $owner);
+	elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE, $owner);
 } else {
-	elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
+	elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE);
 }
 
 // show breadcrumb

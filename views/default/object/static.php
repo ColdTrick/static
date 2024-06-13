@@ -32,5 +32,6 @@ if (elgg_extract('full_view', $vars)) {
 		'content' => elgg_get_excerpt((string) $entity->description),
 	];
 	$params = $params + $vars;
+	
 	echo elgg_view('object/elements/summary', $params);
 }

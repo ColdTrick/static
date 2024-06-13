@@ -2,6 +2,8 @@
 
 namespace ColdTrick\StaticPages;
 
+use Elgg\Database\QueryBuilder;
+
 /**
  * Permissions
  */
@@ -12,19 +14,19 @@ class Permissions {
 	 *
 	 * @param \Elgg\Event $event 'permissions_check', 'object'
 	 *
-	 * @return bool
+	 * @return null|bool
 	 */
-	public static function objectPermissionsCheck(\Elgg\Event $event) {
+	public static function objectPermissionsCheck(\Elgg\Event $event): ?bool {
 		if ($event->getValue()) {
 			// already have access, no need to add
-			return;
+			return null;
 		}
 	
 		$entity = $event->getEntityParam();
 		$user = $event->getUserParam();
 	
 		if (!$entity instanceof \StaticPage || !$user instanceof \ElggUser) {
-			return;
+			return null;
 		}
 		
 		// allowed if you are the last editor
@@ -64,6 +66,8 @@ class Permissions {
 				return true;
 			}
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -71,16 +75,16 @@ class Permissions {
 	 *
 	 * @param \Elgg\Event $event 'container_permissions_check', 'object'
 	 *
-	 * @return bool
+	 * @return null|bool
 	 */
-	public static function containerPermissionsCheck(\Elgg\Event $event) {
+	public static function containerPermissionsCheck(\Elgg\Event $event): ?bool {
 	
 		if ($event->getType() !== 'object') {
-			return;
+			return null;
 		}
 
 		if ($event->getParam('subtype') !== 'static') {
-			return;
+			return null;
 		}
 		
 		$container = $event->getParam('container');
@@ -104,7 +108,7 @@ class Permissions {
 	 *
 	 * @return void
 	 */
-	public static function allowActionAccessToPrivateEntity(\Elgg\Event $event) {
+	public static function allowActionAccessToPrivateEntity(\Elgg\Event $event): void {
 		$entity_guid = (int) get_input('guid');
 		if (empty($entity_guid)) {
 			return;
@@ -126,7 +130,7 @@ class Permissions {
 		elgg_register_event_handler('get_sql', 'access', function(\Elgg\Event $event) use ($entity_guid) {
 			if ($event->getParam('ignore_access')) {
 				// access is ignored, no need for additional query parts
-				return;
+				return null;
 			}
 			
 			$result = $event->getValue();

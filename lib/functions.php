@@ -15,7 +15,7 @@ use Elgg\Database\QueryBuilder;
  */
 function static_setup_page_menu(\StaticPage $entity, string $menu_name = 'page'): void {
 	
-	elgg_require_js('static/sidebar_menu');
+	elgg_import_esm('static/sidebar_menu');
 	
 	$page_owner = elgg_get_page_owner_entity();
 	$ignore_access = 0;
@@ -141,6 +141,7 @@ function static_is_moderator_in_container(\ElggEntity $container_entity, \ElggUs
 		'metadata_names' => ['moderators'],
 		'limit' => false,
 	]);
+	
 	if (empty($md)) {
 		return false;
 	}
@@ -218,8 +219,8 @@ function static_get_parent_moderators(\ElggObject $entity, bool $guid_only = fal
 /**
  * Get the parent select options for the edit form
  *
- * @param int $parent_guid the current parent to check the children of (default: site)
- * @param int $depth       internal depth counter
+ * @param int|null $parent_guid the current parent to check the children of (default: site)
+ * @param int      $depth       internal depth counter
  *
  * @return array
  */
@@ -406,7 +407,7 @@ function static_check_children_tree(\StaticPage $entity, int $tree_guid = 0): vo
 /**
  * Check if group support is enabled
  *
- * @param \ElggGroup $group (optional) check if the group has this enabled
+ * @param \ElggGroup|null $group (optional) check if the group has this enabled
  *
  * @return bool
  */
@@ -421,9 +422,5 @@ function static_group_enabled(\ElggGroup $group = null): bool {
 		return false;
 	}
 
-	if (!$group instanceof \ElggGroup) {
-		return $plugin_setting;
-	}
-
-	return $group->isToolEnabled('static');
+	return $group instanceof \ElggGroup ? $group->isToolEnabled('static') : $plugin_setting;
 }

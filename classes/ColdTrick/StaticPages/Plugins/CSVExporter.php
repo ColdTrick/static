@@ -12,12 +12,12 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'get_exportable_values', 'csv_exporter'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function addLastEditor(\Elgg\Event $event) {
+	public static function addLastEditor(\Elgg\Event $event): ?array {
 		
 		if ($event->getParam('subtype') !== \StaticPage::SUBTYPE) {
-			return;
+			return null;
 		}
 		
 		$values = [
@@ -40,23 +40,23 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'export_value', 'csv_exporter'
 	 *
-	 * @return void|string
+	 * @return null|string
 	 */
-	public static function exportLastEditor(\Elgg\Event $event) {
+	public static function exportLastEditor(\Elgg\Event $event): ?string {
 		$return_value = $event->getValue();
 		if (!is_null($return_value)) {
 			// someone already provided output
-			return;
+			return null;
 		}
 		
 		$entity = $event->getEntityParam();
 		if (!$entity instanceof \StaticPage) {
-			return;
+			return null;
 		}
 		
 		$last_editor = $entity->getLastEditor();
 		if (empty($last_editor)) {
-			return;
+			return null;
 		}
 		
 		switch ($event->getParam('exportable_value')) {
@@ -76,6 +76,8 @@ class CSVExporter {
 				return $last_editor->getURL();
 				break;
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -83,12 +85,12 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'get_exportable_values', 'csv_exporter'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function addLastRevision(\Elgg\Event $event) {
+	public static function addLastRevision(\Elgg\Event $event): ?array {
 		
 		if ($event->getParam('subtype') !== \StaticPage::SUBTYPE) {
-			return;
+			return null;
 		}
 		
 		$values = [
@@ -108,23 +110,23 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'export_value', 'csv_exporter'
 	 *
-	 * @return void|string
+	 * @return null|string
 	 */
-	public static function exportLastRevision(\Elgg\Event $event) {
+	public static function exportLastRevision(\Elgg\Event $event): ?string {
 		
 		if (!is_null($event->getValue())) {
 			// someone already provided output
-			return;
+			return null;
 		}
 		
 		$entity = $event->getEntityParam();
 		if (!$entity instanceof \StaticPage) {
-			return;
+			return null;
 		}
 		
 		$last_revision = $entity->getLastRevision();
 		if (empty($last_revision)) {
-			return;
+			return null;
 		}
 		
 		switch ($event->getParam('exportable_value')) {
@@ -135,6 +137,8 @@ class CSVExporter {
 				return csv_exported_get_readable_timestamp($last_revision->time_created);
 				break;
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -142,16 +146,16 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'get_exportable_values', 'csv_exporter'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function addOutOfDate(\Elgg\Event $event) {
+	public static function addOutOfDate(\Elgg\Event $event): ?array {
 		
 		if ($event->getParam('subtype') !== \StaticPage::SUBTYPE) {
-			return;
+			return null;
 		}
 		
 		if (!static_out_of_date_enabled()) {
-			return;
+			return null;
 		}
 		
 		$values = [
@@ -170,18 +174,18 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'export_value', 'csv_exporter'
 	 *
-	 * @return void|string
+	 * @return null|string
 	 */
-	public static function exportOutOfDate(\Elgg\Event $event) {
+	public static function exportOutOfDate(\Elgg\Event $event): ?string {
 		
 		if (!is_null($event->getValue())) {
 			// someone already provided output
-			return;
+			return null;
 		}
 		
 		$entity = $event->getEntityParam();
 		if (!$entity instanceof \StaticPage) {
-			return;
+			return null;
 		}
 		
 		switch ($event->getParam('exportable_value')) {
@@ -189,6 +193,8 @@ class CSVExporter {
 				return $entity->isOutOfDate() ? 'yes' : 'no';
 				break;
 		}
+		
+		return null;
 	}
 	
 	/**
@@ -196,12 +202,12 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'get_exportable_values', 'csv_exporter'
 	 *
-	 * @return void|array
+	 * @return null|array
 	 */
-	public static function addParentPages(\Elgg\Event $event) {
+	public static function addParentPages(\Elgg\Event $event): ?array {
 		
 		if ($event->getParam('subtype') !== \StaticPage::SUBTYPE) {
-			return;
+			return null;
 		}
 		
 		$values = [
@@ -225,57 +231,38 @@ class CSVExporter {
 	 *
 	 * @param \Elgg\Event $event 'export_value', 'csv_exporter'
 	 *
-	 * @return void|string
+	 * @return null|string
 	 */
-	public static function exportParentPages(\Elgg\Event $event) {
+	public static function exportParentPages(\Elgg\Event $event): ?string {
 		
 		if (!is_null($event->getValue())) {
 			// someone already provided output
-			return;
+			return null;
 		}
 		
 		$entity = $event->getEntityParam();
 		if (!$entity instanceof \StaticPage) {
-			return;
+			return null;
 		}
 		
 		switch ($event->getParam('exportable_value')) {
 			case 'static_parent_title':
-				$parent = $entity->getParentPage();
-				if (empty($parent)) {
-					return '';
-				}
-				return $parent->getDisplayName();
+				return $entity->getParentPage()?->getDisplayName();
 			case 'static_parent_guid':
-				$parent = $entity->getParentPage();
-				if (empty($parent)) {
-					return '';
-				}
-				return $parent->guid;
+				return $entity->getParentPage()?->guid;
 			case 'static_parent_url':
-				$parent = $entity->getParentPage();
-				if (empty($parent)) {
-					return '';
-				}
-				return $parent->getURL();
+				return $entity->getParentPage()?->getURL();
 			case 'static_main_title':
 				$main = $entity->getRootPage();
-				if ($main->guid === $entity->guid) {
-					return '';
-				}
-				return $main->getDisplayName();
+				return ($main->guid === $entity->guid) ? '' : $main->getDisplayName();
 			case 'static_main_guid':
 				$main = $entity->getRootPage();
-				if ($main->guid === $entity->guid) {
-					return '';
-				}
-				return $main->guid;
+				return ($main->guid === $entity->guid) ? '' : $main->guid;
 			case 'static_main_url':
 				$main = $entity->getRootPage();
-				if ($main->guid === $entity->guid) {
-					return '';
-				}
-				return $main->getURL();
+				return ($main->guid === $entity->guid) ? '' : $main->getURL();
 		}
+		
+		return null;
 	}
 }

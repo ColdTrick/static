@@ -4,6 +4,7 @@ namespace ColdTrick\StaticPages;
 
 use Elgg\Http\ErrorResponse;
 use Elgg\Exceptions\HttpException;
+use Elgg\Http\Response;
 
 /**
  * PageHandler
@@ -15,17 +16,17 @@ class PageHandler {
 	 *
 	 * @param \Elgg\Event $event 'response', 'all'
 	 *
-	 * @return array
+	 * @return null|Response
 	 */
-	public static function respondAll(\Elgg\Event $event) {
+	public static function respondAll(\Elgg\Event $event): ?Response {
 	
 		if ($event->getValue()->getStatusCode() !== 404) {
-			return;
+			return null;
 		}
 		
 		list($path_type, $identifier) = explode(':', $event->getType());
 		if ($path_type !== 'path') {
-			return;
+			return null;
 		}
 		
 		$entities = elgg_call(ELGG_IGNORE_ACCESS, function() use ($identifier) {
@@ -37,15 +38,14 @@ class PageHandler {
 				'metadata_case_sensitive' => false,
 			]);
 		});
-		if (empty($entities)) {
-			return;
-		}
 		
-		$entity = $entities[0];
+		if (empty($entities)) {
+			return null;
+		}
 		
 		try {
 			$content = elgg_view_resource('static/view', [
-				'guid' => $entity->guid
+				'guid' => $entities[0]->guid
 			]);
 			
 			return elgg_ok_response($content);

@@ -11,7 +11,7 @@ if (!static_out_of_date_enabled()) {
 
 $page_owner = elgg_get_page_owner_entity();
 
-elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
+elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE);
 
 $title_text = elgg_echo('static:out_of_date:owner:title', [$page_owner->getDisplayName()]);
 

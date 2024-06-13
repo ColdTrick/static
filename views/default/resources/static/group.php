@@ -12,11 +12,11 @@ if (!static_group_enabled($group)) {
 	throw new PageNotFoundException();
 }
 
-elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $group);
+elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE, $group);
 
-$can_write = $group->canWriteToContainer(0, 'object', StaticPage::SUBTYPE);
+$can_write = $group->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE);
 if ($can_write) {
-	elgg_register_title_button('add', 'object', StaticPage::SUBTYPE);
+	elgg_register_title_button('add', 'object', \StaticPage::SUBTYPE);
 }
 
 $ignore_access = $can_write ? ELGG_IGNORE_ACCESS : 0;
@@ -24,7 +24,7 @@ $ignore_access = $can_write ? ELGG_IGNORE_ACCESS : 0;
 $body = elgg_call($ignore_access, function() use ($group) {
 	return elgg_list_entities([
 		'type' => 'object',
-		'subtype' => StaticPage::SUBTYPE,
+		'subtype' => \StaticPage::SUBTYPE,
 		'metadata_name_value_pairs' => [
 			'parent_guid' => 0,
 		],

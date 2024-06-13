@@ -14,7 +14,7 @@ class Cache {
 	 *
 	 * @return void
 	 */
-	public static function resetMenuCache(\Elgg\Event $event) {
+	public static function resetMenuCache(\Elgg\Event $event): void {
 		$entity = $event->getObject();
 		if (!$entity instanceof \StaticPage) {
 			return;
@@ -30,7 +30,7 @@ class Cache {
 	 *
 	 * @return void
 	 */
-	public static function resetMenuCacheFromRelationship(\Elgg\Event $event) {
+	public static function resetMenuCacheFromRelationship(\Elgg\Event $event): void {
 		$relationship = $event->getObject();
 		if (!$relationship instanceof \ElggRelationship) {
 			return;

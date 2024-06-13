@@ -16,7 +16,7 @@ class Cron {
 	 *
 	 * @return void
 	 */
-	public static function outOfDateNotification(\Elgg\Event $event) {
+	public static function outOfDateNotification(\Elgg\Event $event): void {
 		
 		if (!static_out_of_date_enabled()) {
 			return;
@@ -55,7 +55,7 @@ class Cron {
 				
 				// make sure we need to notify this user
 				$recipient = self::checkRecipient($entity, $last_editor);
-				if (!($recipient instanceof \ElggUser)) {
+				if (!$recipient instanceof \ElggUser) {
 					continue;
 				}
 				
@@ -124,19 +124,15 @@ class Cron {
 	}
 	
 	/**
-	 * Let others infuence the recipient of the out-of-date notification
+	 * Let others influence the recipient of the out-of-date notification
 	 *
 	 * @param \StaticPage $entity    for which page
 	 * @param \ElggUser   $recipient default recipient
 	 *
-	 * @return false|\ElggUser
+	 * @return null|\ElggUser
 	 */
-	protected static function checkRecipient(\StaticPage $entity, \ElggUser $recipient) {
-		
-		if (!($entity instanceof \StaticPage) || !($recipient instanceof \ElggUser)) {
-			return false;
-		}
-		
+	protected static function checkRecipient(\StaticPage $entity, \ElggUser $recipient): ?\ElggUser {
+	
 		$params = [
 			'entity' => $entity,
 			'recipient' => $recipient,
@@ -144,7 +140,7 @@ class Cron {
 		
 		$notify_user = elgg_trigger_event_results('out_of_date:user', 'static', $params, $recipient);
 		if (!$notify_user instanceof \ElggUser) {
-			return false;
+			return null;
 		}
 		
 		return $notify_user;
@@ -157,12 +153,7 @@ class Cron {
 	 *
 	 * @return void
 	 */
-	protected static function sendNotifications($notification_information) {
-		
-		if (empty($notification_information) || !is_array($notification_information)) {
-			return;
-		}
-		
+	protected static function sendNotifications(array $notification_information): void {
 		$site = elgg_get_site_entity();
 		foreach ($notification_information as $user_guid => $info) {
 			// get recipient
@@ -186,28 +177,26 @@ class Cron {
 			}
 			
 			// add reminder intervals
-			$remiders = (array) elgg_extract('reminders', $info, []);
-			if (!empty($remiders)) {
-				foreach ($remiders as $reminder => $pages) {
-					if (empty($pages)) {
-						continue;
-					}
-					
-					$list .= PHP_EOL;
-					
-					// section header
-					if (elgg_language_key_exists("static:out_of_date:notification:section:reminder:{$reminder}")) {
-						// custom header
-						$list .= elgg_echo("static:out_of_date:notification:section:reminder:{$reminder}") . PHP_EOL;
-					} else {
-						// default header
-						$list .= elgg_echo('static:out_of_date:notification:section:reminder', [$reminder]) . PHP_EOL;
-					}
-					
-					// list all pages
-					foreach ($pages as $page_info) {
-						$list .= '- ' . $page_info['title'] . ' (' . $page_info['url'] . ')' . PHP_EOL;
-					}
+			$reminders = (array) elgg_extract('reminders', $info, []);
+			foreach ($reminders as $reminder => $pages) {
+				if (empty($pages)) {
+					continue;
+				}
+				
+				$list .= PHP_EOL;
+				
+				// section header
+				if (elgg_language_key_exists("static:out_of_date:notification:section:reminder:{$reminder}")) {
+					// custom header
+					$list .= elgg_echo("static:out_of_date:notification:section:reminder:{$reminder}") . PHP_EOL;
+				} else {
+					// default header
+					$list .= elgg_echo('static:out_of_date:notification:section:reminder', [$reminder]) . PHP_EOL;
+				}
+				
+				// list all pages
+				foreach ($pages as $page_info) {
+					$list .= '- ' . $page_info['title'] . ' (' . $page_info['url'] . ')' . PHP_EOL;
 				}
 			}
 			
@@ -225,7 +214,6 @@ class Cron {
 				]),
 			]);
 			
-			// send notification
 			notify_user($user->guid, $site->guid, $subject, $message, [], 'email');
 		}
 	}

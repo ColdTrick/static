@@ -29,9 +29,6 @@ return [
 			],
 		],
 	],
-	'upgrades' => [
-		'ColdTrick\StaticPages\Upgrades\MoveHeaderIcons',
-	],
 	'actions' => [
 		'static/edit' => [],
 		'static/reorder' => [],
@@ -247,7 +244,7 @@ return [
 	],
 	'view_extensions' => [
 		'elgg.css' => [
-			'css/static/site.css' => [],
+			'static/site.css' => [],
 		],
 	],
 	'view_options' => [

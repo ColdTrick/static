@@ -5,8 +5,6 @@
  */
 
 return array (
-  'static:upgrade:2023031300:title' => 'Verplaats iconen voor statische pagina\'s naar kopafbeeldingen',
-  'static:upgrade:2023031300:description' => 'Verplaats de oude iconen voor statische pagina\'s naar de kopafbeeldingen',
   'static:menu:owner_block:last_editor' => 'Statische pagina\'s',
   'static:last_editor:title' => 'Statische pagina\'s: %s',
   'collection:object:static' => 'Statische pagina\'s',

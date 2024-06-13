@@ -14,11 +14,11 @@ class SearchAdvanced {
 	 *
 	 * @return array
 	 */
-	public static function searchAdvancedAutocomplete(\Elgg\Event $event) {
+	public static function searchAdvancedAutocomplete(\Elgg\Event $event): ?array {
 	
 		$query = $event->getParam('query');
 		if (empty($query)) {
-			return;
+			return null;
 		}
 		
 		$params = $event->getParams();
@@ -28,7 +28,7 @@ class SearchAdvanced {
 		$entities = elgg_search($params);
 	
 		if (empty($entities)) {
-			return;
+			return null;
 		}
 		
 		$static_count = count($entities);

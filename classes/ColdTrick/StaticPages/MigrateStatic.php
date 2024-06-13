@@ -12,28 +12,28 @@ class MigrateStatic extends Migrate {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function canBackDate() {
+	public function canBackDate(): bool {
 		return true;
 	}
 	
 	/**
 	 * {@inheritdoc}
 	 */
-	public function canChangeOwner() {
+	public function canChangeOwner(): bool {
 		return false;
 	}
 	
 	/**
 	 * {@inheritdoc}
 	 */
-	public function canChangeContainer() {
+	public function canChangeContainer(): bool {
 		return true;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function changeContainer($new_container_guid) {
+	public function changeContainer($new_container_guid): void {
 		// do all the default stuff
 		parent::changeContainer($new_container_guid);
 		

@@ -53,7 +53,7 @@ class StaticPage extends \ElggObject {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function delete(bool $recursive = true): bool {
+	public function delete(bool $recursive = true, bool $persistent = null): bool {
 		
 		// do this here so we can ignore access later
 		if (!$this->canDelete()) {
@@ -61,9 +61,9 @@ class StaticPage extends \ElggObject {
 		}
 		
 		// ignore access, so moderators cleanup everything correctly
-		return elgg_call(ELGG_IGNORE_ACCESS, function() use ($recursive) {
+		return elgg_call(ELGG_IGNORE_ACCESS, function() use ($recursive, $persistent) {
 			
-			$result = parent::delete($recursive);
+			$result = parent::delete($recursive, $persistent);
 			if ($result === false || $recursive !== true) {
 				return $result;
 			}
@@ -84,7 +84,7 @@ class StaticPage extends \ElggObject {
 			
 			/* @var $entity \StaticPage */
 			foreach ($batch as $entity) {
-				$entity->delete($recursive);
+				$entity->delete($recursive, $persistent);
 			}
 			
 			return $result;
@@ -152,50 +152,42 @@ class StaticPage extends \ElggObject {
 	/**
 	 * Returns the parent page of an entity
 	 *
-	 * @return \StaticPage|false
+	 * @return null|\StaticPage
 	 */
-	public function getParentPage() {
+	public function getParentPage(): ?\StaticPage {
 		
 		$parent_guid = $this->parent_guid;
 		if (empty($parent_guid)) {
-			return false;
+			return null;
 		}
 		
 		return elgg_call(ELGG_IGNORE_ACCESS, function() use ($parent_guid) {
 			$parent_entity = get_entity($parent_guid);
-			if (!$parent_entity instanceof \StaticPage) {
-				return false;
-			}
-			
-			return $parent_entity;
+			return $parent_entity instanceof \StaticPage ? $parent_entity : null;
 		});
 	}
 	
 	/**
 	 * Returns the latest editor entity for this page, or false if there is none
 	 *
-	 * @return false|\ElggUser
+	 * @return null|\ElggUser
 	 */
-	public function getLastEditor() {
+	public function getLastEditor(): ?\ElggUser {
 		$revision = $this->getLastRevision();
 		if (empty($revision)) {
-			return false;
+			return null;
 		}
 		
 		$user = $revision->getOwnerEntity();
-		if (empty($user)) {
-			return false;
-		}
-		
-		return $user;
+		return $user instanceof \ElggUser ? $user : null;
 	}
 	
 	/**
 	 * Get the last revision of a static page
 	 *
-	 * @return false|\ElggAnnotation
+	 * @return null|\ElggAnnotation
 	 */
-	public function getLastRevision() {
+	public function getLastRevision(): ?\ElggAnnotation {
 		
 		$revisions = elgg_call(ELGG_IGNORE_ACCESS, function() {
 			return $this->getAnnotations([
@@ -205,7 +197,7 @@ class StaticPage extends \ElggObject {
 			]);
 		});
 		
-		return $revisions ? $revisions[0] : false;
+		return elgg_extract(0, $revisions);
 	}
 	
 	/**

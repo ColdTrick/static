@@ -9,14 +9,14 @@ use Elgg\Database\Clauses\OrderByClause;
 
 $page_owner = elgg_get_page_owner_entity();
 
-elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
+elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE);
 
 $title = elgg_echo('static:last_editor:title', [$page_owner->getDisplayName()]);
 
 $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 	return elgg_list_entities([
 		'type' => 'object',
-		'subtype' => StaticPage::SUBTYPE,
+		'subtype' => \StaticPage::SUBTYPE,
 		'wheres' => [
 			function (QueryBuilder $qb, $main_alias) use ($page_owner) {
 				$where = new WhereClause("{$main_alias}.guid IN (
