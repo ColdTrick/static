@@ -10,7 +10,7 @@ class Cache {
 	/**
 	 * Resets the menu cache for static pages on update and create of an entity
 	 *
-	 * @param \Elgg\Event $event 'create|delete|update', 'object'
+	 * @param \Elgg\Event $event 'create:after|delete:after|update:after|restore:after|trash:after', 'object'
 	 *
 	 * @return void
 	 */

@@ -1,6 +1,7 @@
 <?php
 
 use Elgg\Database\Clauses\OrderByClause;
+use Elgg\Database\QueryBuilder;
 use Imagine\Filter\Basic\Save;
 
 /**
@@ -42,7 +43,6 @@ class StaticPage extends \ElggObject {
 	 * {@inheritdoc}
 	 */
 	public function canComment(int $user_guid = 0): bool {
-		
 		if ($this->enable_comments !== 'yes') {
 			return false;
 		}
@@ -54,15 +54,13 @@ class StaticPage extends \ElggObject {
 	 * {@inheritdoc}
 	 */
 	public function delete(bool $recursive = true, bool $persistent = null): bool {
-		
 		// do this here so we can ignore access later
 		if (!$this->canDelete()) {
 			return false;
 		}
 		
 		// ignore access, so moderators cleanup everything correctly
-		return elgg_call(ELGG_IGNORE_ACCESS, function() use ($recursive, $persistent) {
-			
+		return elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DELETED_ENTITIES | ELGG_SHOW_DISABLED_ENTITIES, function() use ($recursive, $persistent) {
 			$result = parent::delete($recursive, $persistent);
 			if ($result === false || $recursive !== true) {
 				return $result;
@@ -84,11 +82,55 @@ class StaticPage extends \ElggObject {
 			
 			/* @var $entity \StaticPage */
 			foreach ($batch as $entity) {
-				$entity->delete($recursive, $persistent);
+				if (!$entity->delete($recursive, $persistent)) {
+					$batch->reportFailure();
+					continue;
+				}
+				
+				if ($entity->isDeleted()) {
+					$entity->addRelationship($this->guid, 'deleted_with');
+				}
 			}
 			
 			return $result;
 		});
+	}
+	
+	/**
+	 * {@inheritdoc}
+	 */
+	public function restore(bool $recursive = true): bool {
+		if (!$this->canRestore()) {
+			return false;
+		}
+		
+		return parent::restore($recursive);
+	}
+	
+	/**
+	 * Can this static page be restored
+	 *
+	 * It can't be restored if the parent page is also trashed
+	 *
+	 * @return bool
+	 */
+	public function canRestore(): bool {
+		if (!$this->isDeleted()) {
+			return false;
+		}
+		
+		if (empty($this->parent_guid)) {
+			return true;
+		}
+		
+		$parent = elgg_call(ELGG_SHOW_DELETED_ENTITIES, function() {
+			return $this->getParentPage();
+		});
+		if (!$parent instanceof \StaticPage || $parent->isDeleted()) {
+			return false;
+		}
+		
+		return true;
 	}
 
 	/**
@@ -135,7 +177,6 @@ class StaticPage extends \ElggObject {
 	 * @return \StaticPage
 	 */
 	public function getRootPage(): \StaticPage {
-		
 		// first created relationship is the root entity
 		$relations = elgg_call(ELGG_IGNORE_ACCESS, function () {
 			return $this->getEntitiesFromRelationship([
@@ -155,7 +196,6 @@ class StaticPage extends \ElggObject {
 	 * @return null|\StaticPage
 	 */
 	public function getParentPage(): ?\StaticPage {
-		
 		$parent_guid = $this->parent_guid;
 		if (empty($parent_guid)) {
 			return null;
@@ -188,7 +228,6 @@ class StaticPage extends \ElggObject {
 	 * @return null|\ElggAnnotation
 	 */
 	public function getLastRevision(): ?\ElggAnnotation {
-		
 		$revisions = elgg_call(ELGG_IGNORE_ACCESS, function() {
 			return $this->getAnnotations([
 				'annotation_name' => 'static_revision',
@@ -207,7 +246,6 @@ class StaticPage extends \ElggObject {
 	 * @return bool
 	 */
 	public function isOutOfDate(): bool {
-		
 		if (!static_out_of_date_enabled()) {
 			return false;
 		}

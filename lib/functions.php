@@ -317,7 +317,6 @@ function static_make_friendly_title(string $friendly_title, int $entity_guid = 0
  * @return bool true if available, false otherwise
  */
 function static_is_friendly_title_available(string $friendly_title, int $entity_guid = 0): bool {
-	
 	if (empty($friendly_title)) {
 		return false;
 	}
@@ -349,7 +348,7 @@ function static_is_friendly_title_available(string $friendly_title, int $entity_
 		};
 	}
 		
-	return elgg_call(ELGG_IGNORE_ACCESS, function() use ($options){
+	return elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DELETED_ENTITIES | ELGG_SHOW_DISABLED_ENTITIES, function() use ($options){
 		return empty(elgg_count_entities($options));
 	});
 }
@@ -372,13 +371,12 @@ function static_out_of_date_enabled(): bool {
  * @return void
  */
 function static_check_children_tree(\StaticPage $entity, int $tree_guid = 0): void {
-	
 	if ($tree_guid < 1) {
 		$tree_guid = $entity->guid;
 	}
 	
 	// ignore access for this part
-	elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $tree_guid) {
+	elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DELETED_ENTITIES | ELGG_SHOW_DISABLED_ENTITIES, function() use ($entity, $tree_guid) {
 		$batch = elgg_get_entities([
 			'type' => 'object',
 			'subtype' => StaticPage::SUBTYPE,

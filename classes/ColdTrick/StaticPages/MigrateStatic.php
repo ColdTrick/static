@@ -47,7 +47,7 @@ class MigrateStatic extends Migrate {
 		}
 		
 		// update all children (assuming only top level pages can be moved)
-		elgg_call(ELGG_IGNORE_ACCESS, function() use ($new_container_guid) {
+		elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DELETED_ENTITIES | ELGG_SHOW_DISABLED_ENTITIES, function() use ($new_container_guid) {
 			$batch = new \ElggBatch('elgg_get_entities', [
 				'type' => 'object',
 				'subtype' => \StaticPage::SUBTYPE,

@@ -42,6 +42,12 @@ return [
 	'static:menu:owner_block:last_editor' => "Static pages",
 	'static:last_editor:title' => "Static pages: %s",
 	
+	// trashed
+	'static:menu:filter:trashed' => "Recently removed",
+	'static:trashed:no_parent' => "This page can't be restored because of a missing parent page.",
+	'static:trashed:restore_parent' => "This page can't be restored until the parent page %s has been restored.",
+	'static:trashed:restore_parent:link' => "Click here to restore the parent page",
+	
 	// out of date
 	'static:menu:filter:out_of_date' => "All out-of-date content",
 	'static:menu:filter:out_of_date:mine' => "My out-of-date content",

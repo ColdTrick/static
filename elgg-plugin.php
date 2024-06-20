@@ -26,6 +26,7 @@ return [
 				'commentable' => true,
 				'searchable' => true,
 				'likable' => true,
+				'restorable' => true,
 			],
 		],
 	],
@@ -91,6 +92,13 @@ return [
 				AdminGatekeeper::class,
 			],
 		],
+		'collection:object:static:trashed' => [
+			'path' => '/static/trashed',
+			'resource' => 'static/trashed',
+			'middleware' => [
+				AdminGatekeeper::class,
+			],
+		],
 		'collection:object:static:all' => [
 			'path' => '/static/all',
 			'resource' => 'static/all',
@@ -131,11 +139,13 @@ return [
 			],
 		],
 		'create' => [
-			'object' => [
-				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
-			],
 			'relationship' => [
 				'\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship' => [],
+			],
+		],
+		'create:after' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
 			],
 		],
 		'cron' => [
@@ -149,11 +159,13 @@ return [
 			],
 		],
 		'delete' => [
-			'object' => [
-				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
-			],
 			'relationship' => [
 				'\ColdTrick\StaticPages\Cache::resetMenuCacheFromRelationship' => [],
+			],
+		],
+		'delete:after' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
 			],
 		],
 		'entity:url' => [
@@ -196,6 +208,9 @@ return [
 			'menu:entity' => [
 				'\ColdTrick\StaticPages\Menus::changeDeleteItem' => [],
 			],
+			'menu:entity:trash' => [
+				'\ColdTrick\StaticPages\Menus\EntityTrash::removeRestoreItem' => [],
+			],
 			'menu:filter:static' => [
 				'\ColdTrick\StaticPages\Menus::filterMenuRegister' => [],
 			],
@@ -218,6 +233,11 @@ return [
 				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
 			],
 		],
+		'restore:after' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+		],
 		'seeds' => [
 			'database' => [
 				'\ColdTrick\StaticPages\Seeder::register' => [],
@@ -228,7 +248,12 @@ return [
 				'\ColdTrick\StaticPages\Plugins\EntityTools::supportedSubtypes' => [],
 			],
 		],
-		'update' => [
+		'trash:after' => [
+			'object' => [
+				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+		],
+		'update:after' => [
 			'object' => [
 				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
 			],

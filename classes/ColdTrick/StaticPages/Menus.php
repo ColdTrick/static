@@ -174,7 +174,6 @@ class Menus {
 				'name' => 'all',
 				'text' => elgg_echo('all'),
 				'href' => elgg_generate_url('collection:object:static:all'),
-				'is_trusted' => true,
 				'priority' => 100,
 			]);
 			
@@ -184,9 +183,17 @@ class Menus {
 				'href' => elgg_generate_url('collection:object:static:user:last_editor', [
 					'username' => elgg_get_logged_in_user_entity()->username,
 				]),
-				'is_trusted' => true,
 				'priority' => 150,
 			]);
+			
+			if (elgg_is_admin_logged_in()) {
+				$return_value[] = \ElggMenuItem::factory([
+					'name' => 'trashed',
+					'text' => elgg_echo('static:menu:filter:trashed'),
+					'href' => elgg_generate_url('collection:object:static:trashed'),
+					'priority' => 200,
+				]);
+			}
 		}
 		
 		if (!static_out_of_date_enabled()) {
