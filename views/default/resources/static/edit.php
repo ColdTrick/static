@@ -55,11 +55,7 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 		elgg_push_breadcrumb($entity->getDisplayName(), $entity->getURL());
 	}
 	
-	$body = elgg_view_form('static/edit', [
-		'class' => 'elgg-form-alt',
-		'enctype' => 'multipart/form-data',
-		'prevent_double_submit' => true,
-	], $body_vars);
+	$body = elgg_view_form('static/edit', ['sticky_enabled' => true], $body_vars);
 });
 
 echo elgg_view_page(elgg_echo('static:edit'), [

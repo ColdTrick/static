@@ -1,6 +1,8 @@
 <?php
 
 use ColdTrick\StaticPages\Bootstrap;
+use ColdTrick\StaticPages\FieldsHandler;
+use ColdTrick\StaticPages\Forms\PrepareFields;
 use Elgg\Blog\GroupToolContainerLogicCheck;
 use Elgg\Router\Middleware\Gatekeeper;
 use Elgg\Router\Middleware\GroupPageOwnerCanEditGatekeeper;
@@ -179,6 +181,16 @@ return [
 				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportLastRevision' => [],
 				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportOutOfDate' => [],
 				'\ColdTrick\StaticPages\Plugins\CSVExporter::exportParentPages' => [],
+			],
+		],
+		'fields' => [
+			'object:static' => [
+				FieldsHandler::class => [],
+			],
+		],
+		'form:prepare:fields' => [
+			'static/edit' => [
+				PrepareFields::class => [],
 			],
 		],
 		'get_exportable_values' => [

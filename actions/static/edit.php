@@ -1,27 +1,41 @@
 <?php
 
-elgg_make_sticky_form('static');
-
 $guid = (int) get_input('guid');
 $owner_guid = (int) get_input('owner_guid'); // site or group
 $parent_guid = (int) get_input('parent_guid');
-$title = get_input('title', '');
 
-$friendly_title = get_input('friendly_title', $title);
-$friendly_title = static_make_friendly_title($friendly_title, $guid);
-
-$description = get_input('description');
-$access_id = (int) get_input('access_id', ACCESS_PUBLIC);
-
-$enable_comments = get_input('enable_comments');
-$moderators = get_input('moderators');
-
-if (empty($title) || empty($description)) {
-	return elgg_error_response(elgg_echo('static:action:edit:error:title_description'));
-}
-
-if (empty($friendly_title)) {
-	return elgg_error_response(elgg_echo('static:action:edit:error:friendly_title'));
+$values = [];
+$fields = elgg()->fields->get('object', \StaticPage::SUBTYPE);
+foreach ($fields as $field) {
+	$value = null;
+	
+	$name = elgg_extract('name', $field);
+	switch ($name) {
+		case 'title':
+			$value = elgg_get_title_input();
+			break;
+		case 'friendly_title':
+			$value = get_input($name, elgg_get_title_input());
+			$value = static_make_friendly_title($value, $guid);
+			break;
+		case 'parent_guid':
+			continue(2);
+		default:
+			$value = get_input($name);
+			break;
+	}
+	
+	if (elgg_extract('required', $field) && elgg_is_empty($value)) {
+		if (in_array($name, ['title', 'description'])) {
+			return elgg_error_response(elgg_echo('static:action:edit:error:title_description'));
+		} elseif ($name === 'friendly_title') {
+			return elgg_error_response(elgg_echo('static:action:edit:error:friendly_title'));
+		}
+		
+		return elgg_error_response(elgg_echo('error:missing_data'));
+	}
+	
+	$values[$name] = $value;
 }
 
 $owner = get_entity($owner_guid);
@@ -43,8 +57,8 @@ if (!$parent instanceof \StaticPage) {
 	$parent = false;
 }
 
-$entity = false;
-if ($guid) {
+$entity = null;
+if (!empty($guid)) {
 	$entity = elgg_call(ELGG_IGNORE_ACCESS, function () use ($guid){
 		return get_entity($guid);
 	});
@@ -55,11 +69,10 @@ if ($guid) {
 }
 
 $new_entity = false;
-if (!$entity) {
+if (!$entity instanceof \StaticPage) {
 	$entity = new \StaticPage();
 	$entity->owner_guid = $owner->guid;
 	$entity->container_guid = $owner->guid;
-	$entity->access_id = $access_id;
 	
 	// new static pages should go on top
 	$entity->order = -time();
@@ -101,24 +114,15 @@ if ($parent_changed) {
 	}
 }
 
-// validate friendly title for existing entities if changed
-if (!$new_entity && ($entity->friendly_title !== $friendly_title)) {
-	$friendly_title = static_make_friendly_title($friendly_title, $guid);
-	if (empty($friendly_title)) {
-		return elgg_error_response(elgg_echo('static:action:edit:error:friendly_title'));
-	}
-}
-
-elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $title, $description, $access_id, $parent_guid, $friendly_title, $enable_comments, $moderators) {
+elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $values) {
 	// save all the content
-	$entity->title = $title;
-	$entity->description = $description;
-	$entity->access_id = $access_id;
-	
-	$entity->parent_guid = $parent_guid;
-	$entity->friendly_title = $friendly_title;
-	$entity->enable_comments = $enable_comments;
-	$entity->moderators = $moderators;
+	foreach ($values as $name => $value) {
+		if ($name === 'description') {
+			$entity->annotate('static_revision', $value);
+		}
+		
+		$entity->{$name} = $value;
+	}
 	
 	$entity->save();
 	
@@ -127,11 +131,7 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $title, $description, $ac
 	} else {
 		$entity->saveIconFromUploadedFile('header', 'header');
 	}
-	
-	$entity->annotate('static_revision', $description);
 });
-
-elgg_clear_sticky_form('static');
 
 // Need to subscribe for future updates as owner is not a user
 $entity->addSubscription();
