@@ -117,6 +117,12 @@ return [
 		],
 	],
 	'events' => [
+		'access:collections:write' => [
+			'user' => [
+				'\ColdTrick\StaticPages\Access::removeFriendsAccess' => [],
+				'\ColdTrick\StaticPages\Access::removeFriendsCollectionsAccess' => [],
+			],
+		],
 		'action:validate' => [
 			'entity/delete' => [
 				'\ColdTrick\StaticPages\Permissions::allowActionAccessToPrivateEntity' => [],
