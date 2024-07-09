@@ -286,8 +286,6 @@ function static_make_friendly_title(string $friendly_title, int $entity_guid = 0
 		return false;
 	}
 	
-	$entity_guid = (int) $entity_guid;
-	
 	$available = static_is_friendly_title_available($friendly_title, $entity_guid);
 	
 	if (!empty($entity_guid) && !$available) {
