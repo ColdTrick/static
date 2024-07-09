@@ -267,12 +267,11 @@ function static_get_parent_options(int $parent_guid = null, int $depth = 0): arr
  * @param string $friendly_title the input friendly title
  * @param int    $entity_guid    when provided it validates for uniques
  *
- * @return bool|string false when not unique, string otherwise
+ * @return null|string null when not unique, string otherwise
  */
-function static_make_friendly_title(string $friendly_title, int $entity_guid = 0) {
-	
+function static_make_friendly_title(string $friendly_title, int $entity_guid = 0): ?string {
 	if (empty($friendly_title)) {
-		return false;
+		return null;
 	}
 	
 	$friendly_title = strtolower($friendly_title);
@@ -283,14 +282,14 @@ function static_make_friendly_title(string $friendly_title, int $entity_guid = 0
 	
 	if (empty($friendly_title)) {
 		// only contained replaced chars
-		return false;
+		return null;
 	}
 	
 	$available = static_is_friendly_title_available($friendly_title, $entity_guid);
 	
 	if (!empty($entity_guid) && !$available) {
 		// when editing an existing entity we will not generate a new name
-		return false;
+		return null;
 	}
 	
 	if (!$available) {
