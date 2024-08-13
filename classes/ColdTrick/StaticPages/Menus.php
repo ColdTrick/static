@@ -251,7 +251,7 @@ class Menus {
 	}
 	
 	/**
-	 * Change some information in the delete link of static pages
+	 * Change some information in the delete/trash link of static pages
 	 *
 	 * @param \Elgg\Event $event 'register', 'menu:entity'
 	 *
@@ -267,7 +267,7 @@ class Menus {
 		/* @var $result MenuItems */
 		$result = $event->getValue();
 		
-		$delete = $result->get('delete');
+		$delete = $result->get('delete') ?: $result->get('trash');
 		if (!$delete instanceof \ElggMenuItem) {
 			return null;
 		}

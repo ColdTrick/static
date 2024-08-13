@@ -224,7 +224,7 @@ return [
 		],
 		'register' => [
 			'menu:entity' => [
-				'\ColdTrick\StaticPages\Menus::changeDeleteItem' => [],
+				'\ColdTrick\StaticPages\Menus::changeDeleteItem' => ['priority' => 9999],
 			],
 			'menu:entity:trash' => [
 				'\ColdTrick\StaticPages\Menus\EntityTrash::removeRestoreItem' => [],
