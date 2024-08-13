@@ -1,10 +1,14 @@
 <?php
 /**
- * This file was created by Translation Editor v11.1
- * On 2023-05-17 15:16
+ * This file was created by Translation Editor v14.0
+ * On 2024-08-13 12:09
  */
 
 return array (
+  'static:menu:filter:trashed' => 'Recent verwijderd',
+  'static:trashed:no_parent' => 'Deze pagina kon niet worden hersteld vanwege het ontbreken van een bovenliggende pagina.',
+  'static:trashed:restore_parent' => 'Deze pagina kan niet worden hersteld totdat de bovenliggende pagina %s is hersteld.',
+  'static:trashed:restore_parent:link' => 'Klik hier om de bovenliggende pagina te herstellen',
   'static:menu:owner_block:last_editor' => 'Statische pagina\'s',
   'static:last_editor:title' => 'Statische pagina\'s: %s',
   'collection:object:static' => 'Statische pagina\'s',
