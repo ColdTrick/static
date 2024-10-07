@@ -139,7 +139,10 @@ class StaticPage extends \ElggObject {
 	 * @return void
 	 */
 	public function clearMenuCache(): void {
-		elgg_delete_system_cache("static_menu_item_cache_{$this->guid}");
+		$languages = elgg()->translator->getAllowedLanguages();
+		foreach ($languages as $language) {
+			elgg_delete_system_cache("static_menu_item_cache_{$this->guid}_{$language}");
+		}
 	}
 
 	/**
@@ -150,7 +153,8 @@ class StaticPage extends \ElggObject {
 	 * @return void
 	 */
 	public function saveMenuCache($contents): void {
-		elgg_save_system_cache("static_menu_item_cache_{$this->guid}", $contents);
+		$current_language = elgg_get_current_language();
+		elgg_save_system_cache("static_menu_item_cache_{$this->guid}_{$current_language}", $contents);
 	}
 
 	/**
@@ -159,7 +163,8 @@ class StaticPage extends \ElggObject {
 	 * @return mixed
 	 */
 	public function getMenuCache() {
-		return elgg_load_system_cache("static_menu_item_cache_{$this->guid}");
+		$current_language = elgg_get_current_language();
+		return elgg_load_system_cache("static_menu_item_cache_{$this->guid}_{$current_language}");
 	}
 	
 	/**
@@ -169,6 +174,19 @@ class StaticPage extends \ElggObject {
 	 */
 	public function getFriendlyTitle(): string {
 		return $this->friendly_title ?: static_make_friendly_title($this->title);
+	}
+	
+	/**
+	 * {@inheritdoc}
+	 */
+	public function invalidateCache(): void {
+		if (!$this->guid) {
+			return;
+		}
+		
+		parent::invalidateCache();
+		
+		$this->getRootPage()->clearMenuCache();
 	}
 	
 	/**
