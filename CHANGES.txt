@@ -1,6 +1,12 @@
 Version history
 ===============
 
+13.1 (2024-10-10):
+
+- added: support for the fields service
+- fixed: correctly forward on trash of a static item
+- fixed: no longer show friends access when editing site static pages
+
 13.0 (2024-06-28):
 
 - added: restorable capability
