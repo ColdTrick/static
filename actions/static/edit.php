@@ -35,6 +35,10 @@ foreach ($fields as $field) {
 		return elgg_error_response(elgg_echo('error:missing_data'));
 	}
 	
+	if ($field['#type'] === 'tags') {
+		$value = elgg_string_to_array((string) $value);
+	}
+	
 	$values[$name] = $value;
 }
 
