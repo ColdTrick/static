@@ -127,6 +127,9 @@ return [
 			'entity/delete' => [
 				'\ColdTrick\StaticPages\Permissions::allowActionAccessToPrivateEntity' => [],
 			],
+			'entity/trash' => [
+				'\ColdTrick\StaticPages\Permissions::allowActionAccessToPrivateEntity' => [],
+			],
 			'entity_attachments/add' => [
 				'\ColdTrick\StaticPages\Permissions::allowActionAccessToPrivateEntity' => [],
 			],

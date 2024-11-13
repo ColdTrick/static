@@ -104,7 +104,7 @@ class Permissions {
 	/**
 	 * Allow access to (private) static pages during certain actions
 	 *
-	 * @param \Elgg\Event $event 'action:validate', 'entity/delete'|'entity_attachments/add'
+	 * @param \Elgg\Event $event 'action:validate', 'entity/delete'|'entity/trash'|'entity_attachments/add'
 	 *
 	 * @return void
 	 */
