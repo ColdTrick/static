@@ -162,13 +162,15 @@ class Cron {
 				continue;
 			}
 			
+			$recipient_language = $user->getLanguage();
+			
 			// build a list of all out-of-date pages
 			$list = '';
 			
 			$new = (array) elgg_extract('new', $info, []);
 			if (!empty($new)) {
 				// add a header
-				$list .= elgg_echo('static:out_of_date:notification:section:new') . PHP_EOL;
+				$list .= elgg_echo('static:out_of_date:notification:section:new', [], $recipient_language) . PHP_EOL;
 				
 				// list all pages
 				foreach ($new as $page_info) {
@@ -188,10 +190,10 @@ class Cron {
 				// section header
 				if (elgg_language_key_exists("static:out_of_date:notification:section:reminder:{$reminder}")) {
 					// custom header
-					$list .= elgg_echo("static:out_of_date:notification:section:reminder:{$reminder}") . PHP_EOL;
+					$list .= elgg_echo("static:out_of_date:notification:section:reminder:{$reminder}", [], $recipient_language) . PHP_EOL;
 				} else {
 					// default header
-					$list .= elgg_echo('static:out_of_date:notification:section:reminder', [$reminder]) . PHP_EOL;
+					$list .= elgg_echo('static:out_of_date:notification:section:reminder', [$reminder], $recipient_language) . PHP_EOL;
 				}
 				
 				// list all pages
@@ -206,13 +208,13 @@ class Cron {
 			}
 			
 			// build notification
-			$subject = elgg_echo('static:out_of_date:notification:subject');
+			$subject = elgg_echo('static:out_of_date:notification:subject', [], $recipient_language);
 			$message = elgg_echo('static:out_of_date:notification:message', [
 				$list,
 				elgg_generate_url('collection:object:static:user:out_of_date', [
 					'username' => $user->username,
 				]),
-			]);
+			], $recipient_language);
 			
 			notify_user($user->guid, $site->guid, $subject, $message, [], 'email');
 		}
