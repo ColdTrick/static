@@ -1,6 +1,12 @@
 Version history
 ===============
 
+13.1.1 (2024-11-21):
+
+- fixed: correctly save tag fields
+- fixed: out of date notification elgg_echo's respect recipient language
+- fixed: private static pages are not trashable
+
 13.1 (2024-10-10):
 
 - added: support for the fields service
