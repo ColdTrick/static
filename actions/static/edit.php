@@ -118,7 +118,9 @@ if ($parent_changed) {
 	}
 }
 
-elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $values) {
+elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity, $values, $parent_guid) {
+	$entity->parent_guid = $parent_guid;
+	
 	// save all the content
 	foreach ($values as $name => $value) {
 		if ($name === 'description') {
