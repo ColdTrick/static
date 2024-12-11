@@ -1,6 +1,10 @@
 Version history
 ===============
 
+13.1.2 (2024-12-11):
+
+- fixed: setting parent_guid not being saved correctly
+
 13.1.1 (2024-11-21):
 
 - fixed: correctly save tag fields
