@@ -45,6 +45,10 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($vars, &$body, &$sidebar) {
 		}
 	}
 	
+	if (!$entity instanceof \StaticPage && !$page_owner->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE)) {
+		throw new EntityPermissionsException();
+	}
+	
 	if ($page_owner instanceof \ElggGroup) {
 		elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE, $page_owner);
 	} else {

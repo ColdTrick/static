@@ -3,14 +3,10 @@
  * List the main static pages of this group
  */
 
-use Elgg\Exceptions\Http\PageNotFoundException;
+elgg_group_tool_gatekeeper('static');
 
-elgg_entity_gatekeeper(elgg_get_page_owner_guid(), 'group');
-
+/* @var $group \ElggGroup */
 $group = elgg_get_page_owner_entity();
-if (!static_group_enabled($group)) {
-	throw new PageNotFoundException();
-}
 
 elgg_push_collection_breadcrumbs('object', \StaticPage::SUBTYPE, $group);
 

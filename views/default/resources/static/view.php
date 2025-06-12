@@ -29,7 +29,9 @@ if ($entity->canEdit()) {
 		'text' => elgg_echo('edit'),
 		'link_class' => 'elgg-button elgg-button-action',
 	]);
-		
+}
+
+if ($entity->getOwnerEntity()?->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE)) {
 	elgg_register_menu_item('title', [
 		'name' => 'create_subpage',
 		'icon' => 'plus',

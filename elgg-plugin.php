@@ -7,6 +7,7 @@ use Elgg\Blog\GroupToolContainerLogicCheck;
 use Elgg\Router\Middleware\Gatekeeper;
 use Elgg\Router\Middleware\GroupPageOwnerCanEditGatekeeper;
 use Elgg\Router\Middleware\AdminGatekeeper;
+use Elgg\Router\Middleware\GroupPageOwnerGatekeeper;
 use Elgg\Router\Middleware\UserPageOwnerCanEditGatekeeper;
 
 require_once(dirname(__FILE__) . '/lib/functions.php');
@@ -61,6 +62,7 @@ return [
 			'resource' => 'static/group',
 			'middleware' => [
 				Gatekeeper::class,
+				GroupPageOwnerGatekeeper::class,
 			],
 		],
 		'collection:object:static:group:out_of_date' => [
