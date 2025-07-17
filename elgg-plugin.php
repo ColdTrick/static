@@ -141,6 +141,11 @@ return [
 				'\ColdTrick\StaticPages\Plugins\SearchAdvanced::searchAdvancedAutocomplete' => [],
 			],
 		],
+		'config' => [
+			'post_as' => [
+				'\ColdTrick\StaticPages\Plugins\PostAs::addConfig' => [],
+			],
+		],
 		'container_logic_check' => [
 			'object' => [
 				\ColdTrick\StaticPages\GroupToolContainerLogicCheck::class => [],
