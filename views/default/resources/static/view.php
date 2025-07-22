@@ -21,7 +21,8 @@ if (!$entity->hasAccess() && !$entity->canEdit()) {
 // since static has 'magic' URLs make sure context is correct
 elgg_set_context('static');
 
-if ($entity->canEdit()) {
+$can_edit = $entity->canEdit();
+if ($can_edit) {
 	elgg_register_menu_item('title', [
 		'name' => 'edit',
 		'icon' => 'edit',
@@ -31,7 +32,13 @@ if ($entity->canEdit()) {
 	]);
 }
 
-if ($entity->canEdit() || $entity->getOwnerEntity()?->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE)) {
+$owner = $entity->getOwnerEntity();
+$show_add_button = $owner?->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE);
+if (!$show_add_button && $can_edit) {
+	$show_add_button = !$owner instanceof \ElggGroup || $owner->isToolEnabled('static');
+}
+
+if ($show_add_button) {
 	elgg_register_menu_item('title', [
 		'name' => 'create_subpage',
 		'icon' => 'plus',
