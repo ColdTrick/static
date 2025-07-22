@@ -31,7 +31,7 @@ if ($entity->canEdit()) {
 	]);
 }
 
-if ($entity->getOwnerEntity()?->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE)) {
+if ($entity->canEdit() || $entity->getOwnerEntity()?->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE)) {
 	elgg_register_menu_item('title', [
 		'name' => 'create_subpage',
 		'icon' => 'plus',

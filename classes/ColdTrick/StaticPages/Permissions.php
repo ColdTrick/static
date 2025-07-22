@@ -78,12 +78,7 @@ class Permissions {
 	 * @return null|bool
 	 */
 	public static function containerPermissionsCheck(\Elgg\Event $event): ?bool {
-	
-		if ($event->getType() !== 'object') {
-			return null;
-		}
-
-		if ($event->getParam('subtype') !== 'static') {
+		if ($event->getType() !== 'object' || $event->getParam('subtype') !== \StaticPage::SUBTYPE) {
 			return null;
 		}
 		
@@ -93,7 +88,7 @@ class Permissions {
 			$return_value = false;
 			
 			$user = $event->getUserParam();
-			if ($user) {
+			if ($user instanceof \ElggUser) {
 				$return_value = static_is_moderator_in_container($container, $user);
 			}
 		}
