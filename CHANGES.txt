@@ -1,6 +1,11 @@
 Version history
 ===============
 
+13.2 (2025-07-30):
+
+- added: support for post_as plugin
+- fixed: unable to create site static sub-pages for moderators
+
 13.1.3 (2025-06-18):
 
 - fixed: improved user permissions checks on resource pages
