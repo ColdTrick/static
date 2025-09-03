@@ -224,7 +224,7 @@ function static_get_parent_moderators(\ElggObject $entity, bool $guid_only = fal
  *
  * @return array
  */
-function static_get_parent_options(int $parent_guid = null, int $depth = 0): array {
+function static_get_parent_options(?int $parent_guid = null, int $depth = 0): array {
 	$result = [];
 	
 	if ($parent_guid === null) {
@@ -406,7 +406,7 @@ function static_check_children_tree(\StaticPage $entity, int $tree_guid = 0): vo
  *
  * @return bool
  */
-function static_group_enabled(\ElggGroup $group = null): bool {
+function static_group_enabled(?\ElggGroup $group = null): bool {
 	static $plugin_setting;
 
 	if (!isset($plugin_setting)) {

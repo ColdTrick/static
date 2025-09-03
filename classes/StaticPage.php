@@ -1,8 +1,6 @@
 <?php
 
 use Elgg\Database\Clauses\OrderByClause;
-use Elgg\Database\QueryBuilder;
-use Imagine\Filter\Basic\Save;
 
 /**
  * StaticPage entity
@@ -53,7 +51,7 @@ class StaticPage extends \ElggObject {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function delete(bool $recursive = true, bool $persistent = null): bool {
+	public function delete(bool $recursive = true, ?bool $persistent = null): bool {
 		// do this here so we can ignore access later
 		if (!$this->canDelete()) {
 			return false;
