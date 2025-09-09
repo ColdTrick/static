@@ -1,8 +1,8 @@
 <?php
 
 use Elgg\Database\Clauses\OrderByClause;
-use Elgg\Values;
 use Elgg\Exceptions\Http\PageNotFoundException;
+use Elgg\Values;
 
 if (!static_out_of_date_enabled()) {
 	throw new PageNotFoundException();
@@ -36,7 +36,7 @@ $body .= elgg_list_entities([
 	'type' => 'object',
 	'subtype' => \StaticPage::SUBTYPE,
 	'container_guid' => $include_groups ? ELGG_ENTITIES_ANY_VALUE : elgg_get_site_entity()->guid,
-	'modified_time_upper' => Values::normalizeTime("-{$days} days"),
+	'updated_before' => Values::normalizeTime("-{$days} days"),
 	'order_by' => new OrderByClause('e.time_updated', 'DESC'),
 	'no_results' => elgg_echo('static:out_of_date:none'),
 ]);

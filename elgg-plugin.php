@@ -3,10 +3,9 @@
 use ColdTrick\StaticPages\Bootstrap;
 use ColdTrick\StaticPages\FieldsHandler;
 use ColdTrick\StaticPages\Forms\PrepareFields;
-use Elgg\Blog\GroupToolContainerLogicCheck;
+use Elgg\Router\Middleware\AdminGatekeeper;
 use Elgg\Router\Middleware\Gatekeeper;
 use Elgg\Router\Middleware\GroupPageOwnerCanEditGatekeeper;
-use Elgg\Router\Middleware\AdminGatekeeper;
 use Elgg\Router\Middleware\GroupPageOwnerGatekeeper;
 use Elgg\Router\Middleware\UserPageOwnerCanEditGatekeeper;
 
@@ -30,6 +29,7 @@ return [
 				'searchable' => true,
 				'likable' => true,
 				'restorable' => true,
+				'subscribable' => true,
 			],
 		],
 	],
@@ -60,6 +60,9 @@ return [
 		'collection:object:static:group' => [
 			'path' => '/static/group/{guid}',
 			'resource' => 'static/group',
+			'required_plugins' => [
+				'groups',
+			],
 			'middleware' => [
 				Gatekeeper::class,
 				GroupPageOwnerGatekeeper::class,
@@ -68,6 +71,9 @@ return [
 		'collection:object:static:group:out_of_date' => [
 			'path' => '/static/group/{guid}/out_of_date',
 			'resource' => 'static/out_of_date_group',
+			'required_plugins' => [
+				'groups',
+			],
 			'middleware' => [
 				Gatekeeper::class,
 				GroupPageOwnerCanEditGatekeeper::class,
@@ -252,9 +258,6 @@ return [
 			'menu:static_edit' => [
 				'\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems' => [],
 			],
-			'menu:title:object:static' => [
-				\Elgg\Notifications\RegisterSubscriptionMenuItemsHandler::class => [],
-			],
 		],
 		'response' => [
 			'all' => [
@@ -302,5 +305,12 @@ return [
 	],
 	'view_options' => [
 		'static/ajax/menu_static_edit' => ['ajax' => true],
+	],
+	'notifications' => [
+		'user' => [
+			'user' => [
+				'static_out_of_date' => \ColdTrick\StaticPages\Notifications\OutOfDateHandler::class,
+			],
+		],
 	],
 ];

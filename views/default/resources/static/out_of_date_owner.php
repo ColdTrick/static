@@ -2,8 +2,8 @@
 
 use Elgg\Database\Clauses\OrderByClause;
 use Elgg\Database\Clauses\WhereClause;
-use Elgg\Values;
 use Elgg\Exceptions\Http\PageNotFoundException;
+use Elgg\Values;
 
 if (!static_out_of_date_enabled()) {
 	throw new PageNotFoundException();
@@ -22,7 +22,7 @@ $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($page_owner) {
 	return elgg_list_entities([
 		'type' => 'object',
 		'subtype' => StaticPage::SUBTYPE,
-		'modified_time_upper' => Values::normalizeTime("-{$days} days"),
+		'updated_before' => Values::normalizeTime("-{$days} days"),
 		'wheres' => [
 			new WhereClause("e.guid IN (
 				SELECT revs.entity_guid
