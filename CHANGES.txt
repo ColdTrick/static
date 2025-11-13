@@ -1,6 +1,12 @@
 Version history
 ===============
 
+14.0 (2025-11-13):
+
+- changed: increased minimal Elgg requirement to v6.3
+- changed: updated for Elgg 6.3
+- fixed: PHP implicit null declaration
+
 13.2 (2025-07-30):
 
 - added: support for post_as plugin
