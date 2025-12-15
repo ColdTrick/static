@@ -78,8 +78,8 @@ if (!$entity instanceof \StaticPage) {
 	$entity->owner_guid = $owner->guid;
 	$entity->container_guid = $owner->guid;
 	
-	// new static pages should go on top
-	$entity->order = -time();
+	// new child static pages should go on top, root pages are last
+	$entity->order = $parent ? -time() : time();
 	
 	$saved = elgg_call(ELGG_IGNORE_ACCESS, function () use (&$entity) {
 		return $entity->save();

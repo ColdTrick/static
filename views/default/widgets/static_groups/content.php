@@ -13,8 +13,7 @@ if (!static_group_enabled($group)) {
 
 $ignore_access = $group->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE) ? ELGG_IGNORE_ACCESS : 0;
 echo elgg_call($ignore_access, function () use ($group) {
-	
-	$entities = elgg_get_entities([
+	$options = [
 		'type' => 'object',
 		'subtype' => \StaticPage::SUBTYPE,
 		'metadata_name_value_pairs' => [
@@ -26,22 +25,19 @@ echo elgg_call($ignore_access, function () use ($group) {
 			'property' => 'title',
 			'direction' => 'asc',
 		],
-	]);
-	
-	if (empty($entities)) {
-		return elgg_echo('static:admin:empty');
+		'item_view' => 'object/static/widget',
+		'no_results' => elgg_echo('static:admin:empty'),
+	];
+
+	$manual_sorting_enabled = (bool) $group->getPluginSetting('static', 'enable_manual_sorting', false);
+	if ($manual_sorting_enabled) {
+		$options['sort_by'] = [
+			'property' => 'order',
+			'direction' => 'asc',
+			'join_type' => 'left',
+			'signed' => true,
+		];
 	}
 	
-	$ordered_entities = [];
-	foreach ($entities as $index => $entity) {
-		$order = $entity->order;
-		if (empty($order)) {
-			$order = (1000000 + $index);
-		}
-	
-		$ordered_entities[$order] = elgg_view('object/static/widget', ['entity' => $entity]);
-	}
-	
-	ksort($ordered_entities);
-	return implode($ordered_entities);
+	return elgg_list_entities($options);
 });

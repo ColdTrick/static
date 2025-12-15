@@ -36,6 +36,7 @@ return [
 	'actions' => [
 		'static/edit' => [],
 		'static/reorder' => [],
+		'static/sort' => [],
 		'static/mark_not_out_of_date' => [],
 	],
 	'routes' => [
@@ -302,9 +303,13 @@ return [
 		'elgg.css' => [
 			'static/site.css' => [],
 		],
+		'groups/edit/settings' => [
+			'static/groups/settings' => [],
+		],
 	],
 	'view_options' => [
 		'static/ajax/menu_static_edit' => ['ajax' => true],
+		'forms/static/sort' => ['ajax' => true],
 	],
 	'notifications' => [
 		'user' => [

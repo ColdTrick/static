@@ -30,6 +30,7 @@ return [
 	
 	'static:groups:title' => "Manage group static pages",
 	'static:groups:owner_block' => "Group static pages",
+	'static:groups:edit:enable_manual_sorting' => "Enable manual sorting of static toppages",
 	'groups:tool:static' => "Enable static pages",
 	'groups:tool:static:description' => "Create static pages for the group. These can only be managed by the group owners/admins.",
 

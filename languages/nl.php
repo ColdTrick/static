@@ -1,10 +1,11 @@
 <?php
 /**
- * This file was created by Translation Editor v14.0
- * On 2024-08-13 12:09
+ * This file was created by Translation Editor v14.0.4
+ * On 2025-12-15 15:09
  */
 
 return array (
+  'static:groups:edit:enable_manual_sorting' => 'Sta handmatige sortering toe van hoofdpagina\'s',
   'static:menu:filter:trashed' => 'Recent verwijderd',
   'static:trashed:no_parent' => 'Deze pagina kon niet worden hersteld vanwege het ontbreken van een bovenliggende pagina.',
   'static:trashed:restore_parent' => 'Deze pagina kan niet worden hersteld totdat de bovenliggende pagina %s is hersteld.',
