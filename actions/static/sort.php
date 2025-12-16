@@ -1,20 +1,17 @@
 <?php
 
-use Elgg\Exceptions\Http\EntityNotFoundException;
-use Elgg\Exceptions\Http\EntityPermissionsException;
-
 $group = get_entity((int) get_input('container_guid'));
 if (!$group instanceof \ElggGroup) {
-	throw new EntityNotFoundException();
+	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
 if (!$group->canEdit() || !$group->canWriteToContainer(0, 'object', \StaticPage::SUBTYPE)) {
-	throw new EntityPermissionsException();
+	return elgg_error_response(elgg_echo('actionunauthorized'));
 }
 
 $guids = get_input('guids');
 if (empty($guids)) {
-	throw new EntityNotFoundException();
+	return elgg_error_response(elgg_echo('error:missing_data'));
 }
 
 $order = 1;
