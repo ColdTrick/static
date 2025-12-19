@@ -1,6 +1,10 @@
 Version history
 ===============
 
+14.1 (2025-12-19):
+
+- changed: added sorting capabilities to top pages for group owners
+
 14.0 (2025-11-13):
 
 - changed: increased minimal Elgg requirement to v6.3
