@@ -68,4 +68,4 @@ echo elgg_format_element('ul', ['class' => ['static-order-group-list', 'mbm']], 
 </script>
 <?php
 
-echo elgg_view_field(['#type' => 'submit', 'value' => elgg_echo('save')]);
+echo elgg_view_field(['#type' => 'submit', 'text' => elgg_echo('save')]);
