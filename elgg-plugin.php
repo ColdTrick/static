@@ -52,7 +52,7 @@ return [
 			],
 		],
 		'edit:object:static' => [
-			'path' => '/static/edit/{guid}',
+			'path' => '/static/edit/{guid}/{revision?}',
 			'resource' => 'static/edit',
 			'middleware' => [
 				Gatekeeper::class,

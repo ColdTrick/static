@@ -38,6 +38,9 @@ return [
 	'static:add:subpage' => "Create a subpage",
 		
 	'static:revisions' => "Revisions",
+	'static:revisions:view' => "View revision",
+	'static:revisions:notice' => "You are currently looking at a revision from %s. Save this version if you want to restore it.",
+	'static:revisions:notice:back' => "Back to latest",
 	
 	// last editor
 	'static:menu:owner_block:last_editor' => "Static pages",

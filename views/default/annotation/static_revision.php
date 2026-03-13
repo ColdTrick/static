@@ -1,13 +1,25 @@
 <?php
 
-/* @var $annotation ElggAnnotation */
 $annotation = elgg_extract('annotation', $vars);
+if (!$annotation instanceof \ElggAnnotation) {
+	return;
+}
 
 $owner = $annotation->getOwnerEntity();
 if (!$owner instanceof \ElggEntity) {
-	return true;
+	return;
 }
 
-echo elgg_view_entity_url($owner);
+$url = elgg_generate_entity_url($annotation->getEntity(), 'edit', null, ['revision' => $annotation->id]);
+$title = elgg_echo('static:revisions:view');
+if (!elgg_http_url_is_identical(elgg_get_current_url(), $url)) {
+	$title = elgg_view_url($url, $title);
+}
 
-echo elgg_format_element('span', ['class' => 'mls'], elgg_view_friendly_time($annotation->time_created));
+$vars['title'] = $title;
+$vars['icon'] = false;
+$vars['content'] = false;
+$vars['metadata'] = false;
+$vars['byline'] = true;
+
+echo elgg_view('annotation/default', $vars);

@@ -46,6 +46,12 @@ class PrepareFields {
 					$values[$field] = $entity->{$field};
 				}
 			}
+
+			// load the revision annotation if requested
+			$revision = elgg_extract('revision', $vars);
+			if ($revision instanceof \ElggAnnotation && $revision->entity_guid === $entity->guid) {
+				$values['description'] = $revision->value;
+			}
 		}
 		
 		return array_merge($values, $vars);

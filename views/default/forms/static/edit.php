@@ -1,7 +1,14 @@
 <?php
 
 $entity = elgg_extract('entity', $vars);
+$revision = elgg_extract('revision', $vars);
 $owner = elgg_extract('owner', $vars);
+
+if ($revision instanceof \ElggAnnotation) {
+	$back = elgg_view_url(elgg_generate_entity_url($entity, 'edit'), elgg_echo('static:revisions:notice:back'));
+	$message = elgg_echo('static:revisions:notice', [\Elgg\Values::normalizeTime($revision->time_created)->formatLocale(elgg_echo('friendlytime:date_format'))]);
+	echo elgg_view_message('notice', $message, ['menu' => $back]);
+}
 
 echo elgg_view('entity/edit/header', [
 	'entity_type' => 'object',
