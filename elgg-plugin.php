@@ -260,14 +260,14 @@ return [
 				'\ColdTrick\StaticPages\Menus::registerStaticEditMenuItems' => [],
 			],
 		],
-		'response' => [
-			'all' => [
-				'\ColdTrick\StaticPages\PageHandler::respondAll' => [],
-			],
-		],
 		'restore:after' => [
 			'object' => [
 				'\ColdTrick\StaticPages\Cache::resetMenuCache' => [],
+			],
+		],
+		'route:match' => [
+			'system' => [
+				'\ColdTrick\StaticPages\Route::serveStatic' => [],
 			],
 		],
 		'seeds' => [
@@ -314,7 +314,9 @@ return [
 	'notifications' => [
 		'user' => [
 			'user' => [
-				'static_out_of_date' => \ColdTrick\StaticPages\Notifications\OutOfDateHandler::class,
+				'static_out_of_date' => [
+					\ColdTrick\StaticPages\Notifications\OutOfDateHandler::class => [],
+				],
 			],
 		],
 	],
