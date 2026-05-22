@@ -285,17 +285,26 @@ function static_make_friendly_title(string $friendly_title, int $entity_guid = 0
 		return null;
 	}
 	
-	$available = static_is_friendly_title_available($friendly_title, $entity_guid);
-	
-	if (!empty($entity_guid) && !$available) {
-		// when editing an existing entity we will not generate a new name
-		return null;
+	$available = empty(elgg_get_route_for_url($friendly_title));
+	if (!empty($entity_guid)) {
+		$entity = elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DELETED_ENTITIES | ELGG_SHOW_DISABLED_ENTITIES, function () use ($entity_guid) {
+			return get_entity($entity_guid);
+		});
+		
+		if ($entity instanceof \ElggEntity && ($entity->friendly_title === $friendly_title)) {
+			return $friendly_title;
+		}
+		
+		if (!$available) {
+			// when editing an existing entity we will not generate a new name
+			return null;
+		}
 	}
 	
 	if (!$available) {
 		// generate a new name
 		$counter = 1;
-		while (!static_is_friendly_title_available($friendly_title . $counter, $entity_guid)) {
+		while (!elgg_get_route_for_url($friendly_title . $counter)) {
 			$counter++;
 		}
 		
@@ -303,51 +312,6 @@ function static_make_friendly_title(string $friendly_title, int $entity_guid = 0
 	}
 		
 	return $friendly_title;
-}
-
-/**
- * Checks if a friendly title/permalink is available for use
- *
- * @param string $friendly_title the input friendly title
- * @param int    $entity_guid    when provided it validates for uniques
- *
- * @return bool true if available, false otherwise
- */
-function static_is_friendly_title_available(string $friendly_title, int $entity_guid = 0): bool {
-	if (empty($friendly_title)) {
-		return false;
-	}
-	
-	// check handler
-	$dummy_request = _elgg_services()->request->create($friendly_title);
-	try {
-		_elgg_services()->urlMatcher->match($dummy_request->getPathInfo());
-		
-		return false;
-	} catch (Exception $e) {
-		// no route match found, can continue
-	}
-	
-	// check for duplicates
-	$options = [
-		'type' => 'object',
-		'subtype' => StaticPage::SUBTYPE,
-		'metadata_name_value_pairs' => [
-			'name' => 'friendly_title',
-			'value' => $friendly_title,
-		],
-		'metadata_case_sensitive' => false,
-	];
-	
-	if (!empty($entity_guid)) {
-		$options['wheres'][] = function(QueryBuilder $qb, $main_alias) use ($entity_guid) {
-			return $qb->compare("{$main_alias}.guid", '!=', $entity_guid, ELGG_VALUE_GUID);
-		};
-	}
-		
-	return elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DELETED_ENTITIES | ELGG_SHOW_DISABLED_ENTITIES, function() use ($options){
-		return empty(elgg_count_entities($options));
-	});
 }
 
 /**

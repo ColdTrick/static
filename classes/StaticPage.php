@@ -171,7 +171,7 @@ class StaticPage extends \ElggObject {
 	 * @return string
 	 */
 	public function getFriendlyTitle(): string {
-		return $this->friendly_title ?: static_make_friendly_title($this->title);
+		return $this->friendly_title ?: (string) static_make_friendly_title($this->title);
 	}
 	
 	/**
