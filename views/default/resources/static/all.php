@@ -5,8 +5,6 @@ if ($site->canWriteToContainer(elgg_get_logged_in_user_guid(), 'object', StaticP
 	elgg_register_title_button('add', 'object', StaticPage::SUBTYPE);
 }
 
-elgg_push_collection_breadcrumbs('object', StaticPage::SUBTYPE);
-
 $body = elgg_call(ELGG_IGNORE_ACCESS, function() use ($site) {
 	return elgg_list_entities([
 		'type' => 'object',
