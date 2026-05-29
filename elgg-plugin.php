@@ -13,7 +13,7 @@ require_once(dirname(__FILE__) . '/lib/functions.php');
 
 return [
 	'plugin' => [
-		'version' => '14.2',
+		'version' => '15.0',
 	],
 	'bootstrap' => Bootstrap::class,
 	'settings' => [

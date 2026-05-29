@@ -1,6 +1,11 @@
 Version history
 ===============
 
+15.0 (2026-05-29):
+
+- changed: canComment to container_logic check
+- changed: updated for Elgg 7
+
 14.2 (2026-03-24):
 
 - added: ability to restore previous versions of static pages
