@@ -144,4 +144,28 @@ class Permissions {
 			return $result;
 		});
 	}
+	
+	/**
+	 * Prevent comments on Static pages when comments are disabled
+	 *
+	 * @param \Elgg\Event $event 'container_logic_check', 'object'
+	 *
+	 * @return bool|null
+	 */
+	public static function preventStaticPageCommentsWhenDisabled(\Elgg\Event $event): ?bool {
+		if ($event->getParam('subtype') !== 'comment') {
+			return null;
+		}
+		
+		$container = $event->getParam('container');
+		if (!$container instanceof \StaticPage) {
+			return null;
+		}
+		
+		if ($container->enable_comments !== 'yes') {
+			return false;
+		}
+		
+		return null;
+	}
 }

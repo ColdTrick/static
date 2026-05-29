@@ -13,7 +13,7 @@ use Elgg\Database\Clauses\OrderByClause;
  */
 class StaticPage extends \ElggObject {
 	
-	const SUBTYPE = 'static';
+	public const SUBTYPE = 'static';
 	
 	/**
 	 * {@inheritdoc}
@@ -35,17 +35,6 @@ class StaticPage extends \ElggObject {
 		$url = elgg_trigger_event_results('entity:url', $this->getType(), ['entity' => $this], elgg_normalize_url($url));
 		
 		return elgg_normalize_url($url);
-	}
-	
-	/**
-	 * {@inheritdoc}
-	 */
-	public function canComment(int $user_guid = 0): bool {
-		if ($this->enable_comments !== 'yes') {
-			return false;
-		}
-		
-		return parent::canComment($user_guid);
 	}
 	
 	/**

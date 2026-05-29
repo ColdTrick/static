@@ -156,6 +156,7 @@ return [
 		'container_logic_check' => [
 			'object' => [
 				\ColdTrick\StaticPages\GroupToolContainerLogicCheck::class => [],
+				'\ColdTrick\StaticPages\Permissions::preventStaticPageCommentsWhenDisabled' => [],
 			],
 		],
 		'container_permissions_check' => [

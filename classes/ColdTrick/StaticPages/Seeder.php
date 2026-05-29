@@ -54,7 +54,10 @@ class Seeder extends Seed {
 				continue;
 			}
 			
-			$this->createComments($entity);
+			if ($entity->enable_comments === 'yes') {
+				$this->createComments($entity);
+			}
+			
 			$this->createLikes($entity);
 			
 			$this->addRevisions($entity);
@@ -219,7 +222,10 @@ class Seeder extends Seed {
 				continue;
 			}
 			
-			$this->createComments($subpage);
+			if ($subpage->enable_comments === 'yes') {
+				$this->createComments($subpage);
+			}
+			
 			$this->createLikes($subpage);
 			
 			$this->addRevisions($subpage);
