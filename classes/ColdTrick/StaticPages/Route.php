@@ -23,7 +23,7 @@ class Route {
 			return null;
 		}
 		
-		$entities = elgg_call(ELGG_IGNORE_ACCESS, function() use ($url) {
+		$entities = elgg_call(ELGG_IGNORE_ACCESS | ELGG_SHOW_DISABLED_ENTITIES | ELGG_SHOW_DELETED_ENTITIES, function() use ($url) {
 			return elgg_get_entities([
 				'type' => 'object',
 				'subtype' => \StaticPage::SUBTYPE,
