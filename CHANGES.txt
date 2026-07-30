@@ -1,6 +1,10 @@
 Version history
 ===============
 
+15.0.1 (2026-07-30):
+
+- fixed: generate route for disabled and deleted entities
+
 15.0 (2026-05-29):
 
 - changed: canComment to container_logic check
