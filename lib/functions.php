@@ -304,7 +304,7 @@ function static_make_friendly_title(string $friendly_title, int $entity_guid = 0
 	if (!$available) {
 		// generate a new name
 		$counter = 1;
-		while (!elgg_get_route_for_url($friendly_title . $counter)) {
+		while (!empty(elgg_get_route_for_url($friendly_title . $counter))) {
 			$counter++;
 		}
 		
