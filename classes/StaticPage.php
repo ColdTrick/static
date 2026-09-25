@@ -40,6 +40,17 @@ class StaticPage extends \ElggObject {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function save(): bool {
+		// ensure correct owner
+		// for special case like restore from deleted group to different group
+		$this->owner_guid = $this->container_guid;
+		
+		return parent::save();
+	}
+	
+	/**
+	 * {@inheritdoc}
+	 */
 	public function delete(bool $recursive = true, ?bool $persistent = null): bool {
 		// do this here so we can ignore access later
 		if (!$this->canDelete()) {
