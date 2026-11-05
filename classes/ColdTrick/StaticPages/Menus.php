@@ -160,14 +160,18 @@ class Menus {
 	 * @return null|MenuItems
 	 */
 	public static function filterMenuRegister(\Elgg\Event $event): ?MenuItems {
-		
-		if (!elgg_is_logged_in()) {
+		$user = elgg_get_logged_in_user_entity();
+		if (!$user instanceof \ElggUser) {
+			return null;
+		}
+
+		$page_owner = elgg_get_page_owner_entity();
+		if ($page_owner && ($page_owner->guid !== $user->guid)) {
 			return null;
 		}
 		
 		/* @var $return_value MenuItems */
 		$return_value = $event->getValue();
-		$page_owner = elgg_get_page_owner_entity();
 		
 		if (!$page_owner instanceof \ElggGroup) {
 			$return_value[] = \ElggMenuItem::factory([
