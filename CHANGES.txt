@@ -1,6 +1,10 @@
 Version history
 ===============
 
+15.0.4 (2026-11-12):
+
+- changed: filter menu no longer shows on other users listing pages
+
 15.0.3 (2026-10-01):
 
 - fixed: restore to different container has wrong owner
