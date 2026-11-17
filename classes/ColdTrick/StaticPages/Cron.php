@@ -41,7 +41,7 @@ class Cron {
 			];
 			
 			$batch = elgg_get_entities($options);
-			/* @var $entity \StaticPage */
+			/** @var \StaticPage $entity */
 			foreach ($batch as $entity) {
 				// allows an event to influence entities being notified
 				if (!$entity->isOutOfDate()) {
@@ -81,7 +81,7 @@ class Cron {
 					$options['updated_after'] = $compare_ts - (24 * 60 * 60);
 					
 					$batch = elgg_get_entities($options);
-					/* @var $entity \StaticPage */
+					/** @var \StaticPage $entity */
 					foreach ($batch as $entity) {
 						// allows an event to influence entities being notified
 						if (!$entity->isOutOfDate()) {

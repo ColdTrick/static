@@ -39,7 +39,7 @@ class Seeder extends Seed {
 			}
 			
 			try {
-				/* @var $entity \StaticPage */
+				/** @var \StaticPage $entity */
 				$entity = $this->createObject([
 					'subtype' => \StaticPage::SUBTYPE,
 					'owner_guid' => $container->guid,
@@ -80,7 +80,7 @@ class Seeder extends Seed {
 	 * {@inheritdoc}
 	 */
 	public function unseed() {
-		/* @var $entities \ElggBatch */
+		/** @var \ElggBatch $entities */
 		$entities = elgg_get_entities([
 			'type' => 'object',
 			'subtype' => \StaticPage::SUBTYPE,
@@ -90,7 +90,7 @@ class Seeder extends Seed {
 			'batch_inc_offset' => false,
 		]);
 		
-		/* @var $entity \StaticPage */
+		/** @var \StaticPage $entity */
 		foreach ($entities as $entity) {
 			if ($entity->delete()) {
 				$this->log("Deleted static page {$entity->guid}");
@@ -207,7 +207,7 @@ class Seeder extends Seed {
 		
 		for ($i = 0; $i < $this->faker()->numberBetween(1, 4); $i++) {
 			try {
-				/* @var $subpage \StaticPage */
+				/** @var \StaticPage $subpage */
 				$subpage = $this->createObject([
 					'subtype' => \StaticPage::SUBTYPE,
 					'owner_guid' => $entity->owner_guid,

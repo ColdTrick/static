@@ -1,6 +1,6 @@
 <?php
 
-/* @var $widget ElggWidget */
+/** @var ElggWidget $widget */
 $widget = elgg_extract('entity', $vars);
 $group = $widget->getOwnerEntity();
 if (!$group instanceof \ElggGroup) {

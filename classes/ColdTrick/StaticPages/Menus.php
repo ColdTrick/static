@@ -170,7 +170,7 @@ class Menus {
 			return null;
 		}
 		
-		/* @var $return_value MenuItems */
+		/** @var MenuItems $return_value */
 		$return_value = $event->getValue();
 		
 		if (!$page_owner instanceof \ElggGroup) {
@@ -268,7 +268,7 @@ class Menus {
 			return null;
 		}
 		
-		/* @var $result MenuItems */
+		/** @var MenuItems $result */
 		$result = $event->getValue();
 		
 		$delete = $result->get('delete') ?: $result->get('trash');

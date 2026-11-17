@@ -130,7 +130,7 @@ class Permissions {
 			
 			$result = $event->getValue();
 			
-			/* @var $qb QueryBuilder */
+			/** @var QueryBuilder $qb */
 			$qb = $event->getParam('query_builder');
 			$table_alias = $event->getParam('table_alias');
 			$guid_column = $event->getParam('guid_column');

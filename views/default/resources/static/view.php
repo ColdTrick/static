@@ -76,7 +76,7 @@ elgg_call(ELGG_IGNORE_ACCESS, function() use ($entity) {
 	
 	// correct order
 	$parents = array_reverse($parents);
-	/* @var $parent StaticPage */
+	/** @var StaticPage $parent */
 	foreach ($parents as $parent) {
 		elgg_push_breadcrumb($parent->getDisplayName(), $parent->getURL());
 	}

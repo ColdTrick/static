@@ -110,7 +110,7 @@ function static_check_moderator_in_list(array $guids): bool {
 	}
 	
 	$user_guids = [];
-	/* @var $metadata \ElggMetadata */
+	/** @var \ElggMetadata $metadata */
 	foreach ($md as $metadata) {
 		if ($metadata->value === '') {
 			// shouldn't happen
@@ -147,7 +147,7 @@ function static_is_moderator_in_container(\ElggEntity $container_entity, \ElggUs
 	}
 	
 	$user_guids = [];
-	/* @var $metadata ElggMetadata */
+	/** @var ElggMetadata $metadata */
 	foreach ($md as $metadata) {
 		if ($metadata->value === '') {
 			// shouldn't happen
@@ -349,7 +349,7 @@ function static_check_children_tree(\StaticPage $entity, int $tree_guid = 0): vo
 			'batch' => true,
 		]);
 		
-		/* @var $static StaticPage */
+		/** @var StaticPage $static */
 		foreach ($batch as $static) {
 			// remove old tree
 			$static->removeAllRelationships('subpage_of');

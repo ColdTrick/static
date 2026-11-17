@@ -5,7 +5,7 @@
 
 elgg_group_tool_gatekeeper('static');
 
-/* @var $group \ElggGroup */
+/** @var \ElggGroup $group */
 $group = elgg_get_page_owner_entity();
 
 $manual_sorting_enabled = (bool) $group->getPluginSetting('static', 'enable_manual_sorting', false);

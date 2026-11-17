@@ -65,7 +65,7 @@ class StaticPage extends \ElggObject {
 			}
 		
 			// remove sub pages
-			/* @var $batch \ElggBatch */
+			/** @var \ElggBatch $batch */
 			$batch = elgg_get_entities([
 				'type' => 'object',
 				'subtype' => self::SUBTYPE,
@@ -78,7 +78,7 @@ class StaticPage extends \ElggObject {
 				'batch_inc_offset' => false,
 			]);
 			
-			/* @var $entity \StaticPage */
+			/** @var \StaticPage $entity */
 			foreach ($batch as $entity) {
 				if (!$entity->delete($recursive, $persistent)) {
 					$batch->reportFailure();
