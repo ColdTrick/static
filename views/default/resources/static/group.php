@@ -29,9 +29,11 @@ if ($can_write) {
 		if ($count > 1) {
 			elgg_register_menu_item('title', [
 				'name' => 'sort_pages',
-				'text' => elgg_echo('sort'),
 				'icon' => 'sort',
-				'href' => elgg_http_add_url_query_elements('ajax/form/static/sort', [
+				'text' => elgg_echo('sort'),
+				'href' => elgg_generate_url('ajax', [
+					'type' => 'form',
+					'segments' => 'static/sort',
 					'container_guid' => $group->guid,
 				]),
 				'class' => ['elgg-button', 'elgg-button-action', 'elgg-lightbox'],
